@@ -5,10 +5,9 @@ import { SocialSupportWizardProvider } from '../context/SocialSupportWizardConte
 import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
 import PersonalInfoForm from './PersonalInfoForm';
 import FamilyFinancialInfoForm from './FamilyFinancialInfoForm';
-import type { FormRef as PersonalInfoFormRef } from './PersonalInfoForm';
-import type { FormRef as FamilyFinancialInfoFormRef } from './FamilyFinancialInfoForm';
 import SituationDescriptionsForm from './SituationDescriptionsForm';
 import type { FormRef as SituationDescriptionsFormRef } from './SituationDescriptionsForm';
+import type { FormRef } from '../types/formTypes';
 import { getItem, setItem } from '../utils/localStorage.util';
 // Removed unused import: import { submitFormData } from '../api/formService';
 
@@ -60,8 +59,8 @@ const SocialSupportFormWizard: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error' | 'warning' | 'info'>('success');
   
   // Refs for the form components to trigger validation and save
-  const personalInfoFormRef = React.useRef<PersonalInfoFormRef>(null);
- const familyFinancialInfoFormRef = React.useRef<FamilyFinancialInfoFormRef>(null);
+  const personalInfoFormRef = React.useRef<FormRef>(null);
+  const familyFinancialInfoFormRef = React.useRef<FormRef>(null);
   const situationDescriptionsFormRef = React.useRef<SituationDescriptionsFormRef>(null);
 
   const steps = [
@@ -363,7 +362,7 @@ const SocialSupportFormWizard: React.FC = () => {
         </Box>
 
         {/* Navigation buttons */}
-        {activeStep < 3 && (
+        
           <Box
             sx={{
               display: 'flex',
@@ -376,7 +375,7 @@ const SocialSupportFormWizard: React.FC = () => {
             aria-label={t('socialSupportFormWizard.title')}
           >
             {/* Show the general back button only for steps 1 and 2 (not for step 0) */}
-            {activeStep > 0 && activeStep !== 2 && (
+            {activeStep > 0  && (
               <Button
                 onClick={handleBack}
                 variant="outlined"
@@ -420,6 +419,9 @@ const SocialSupportFormWizard: React.FC = () => {
                 {t('socialSupportFormWizard.next')}
               </Button>
             )}
+
+
+            
             {/* Save buttons for steps 0 and 1 */}
             {activeStep === 0 && (
               <Button
@@ -473,7 +475,10 @@ const SocialSupportFormWizard: React.FC = () => {
                 {t('familyFinancialInfoForm.save')}
               </Button>
             )}
-            {/* {activeStep === 2 && (
+
+            
+            {/* Save button for step 2 */}
+            {activeStep === 2 && (
               <Button
                 variant="contained"
                 color="secondary"
@@ -498,9 +503,35 @@ const SocialSupportFormWizard: React.FC = () => {
               >
                 {t('situationDescriptionsForm.save')}
               </Button>
-            )} */}
+            )}
+            
+            {/* Submit button for step 2 */}
+            {activeStep === 2 && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                onClick={async () => {
+                  // Submit the situation descriptions form to trigger the full submission
+                  const isValid = await situationDescriptionsFormRef.current?.submitForm();
+                  if (!isValid) {
+                    setSnackbarMessage(t('socialSupportFormWizard.validationError'));
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
+                  }
+                }}
+                aria-label={t('situationDescriptionsForm.submitApplication')}
+              >
+                {t('situationDescriptionsForm.submitApplication')}
+              </Button>
+            )}
           </Box>
-        )}
+       
       </Box>
       
       {/* Snackbar for showing messages */}

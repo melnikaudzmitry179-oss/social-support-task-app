@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,17 +9,11 @@ import {
   Container,
   TextField,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
   CircularProgress,
-  Alert,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
-import { openAIService } from "../api/openaiService";
+import { useAiSuggestion } from "../hooks/useAiSuggestion";
+import AiSuggestionPopup from "./AiSuggestionPopup";
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) =>
@@ -54,7 +48,7 @@ interface SituationDescriptionsFormProps {
 const SituationDescriptionsForm = forwardRef<
   FormRef,
   SituationDescriptionsFormProps
->(({ onSubmit, onBack, defaultValues }, ref) => {
+>(({ onSubmit,  defaultValues }, ref) => {
   const { updateSituationDescriptions } = useSocialSupportWizard();
   const { t } = useTranslation();
 
@@ -66,80 +60,48 @@ const SituationDescriptionsForm = forwardRef<
     getValues,
     setValue,
     formState: { errors },
-    reset,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: defaultValues || {},
   });
 
-  // State for AI suggestions and popup
-  const [aiSuggestion, setAiSuggestion] = useState<string>("");
-  const [editableSuggestion, setEditableSuggestion] = useState<string>("");
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [currentField, setCurrentField] = useState<keyof FormData | null>(null);
-  const [showSuggestionPopup, setShowSuggestionPopup] =
-    useState<boolean>(false);
-  const [aiError, setAiError] = useState<string | null>(null);
+  // Use the AI suggestion hook
+  const {
+    editableSuggestion,
+    isGenerating,
+    currentField,
+    showSuggestionPopup,
+    aiError,
+    setEditableSuggestion,
+    handleGenerateSuggestion: handleGenerateSuggestionHook,
+    handleAcceptSuggestion: handleAcceptSuggestionHook,
+    handleDiscardSuggestion: handleDiscardSuggestionHook,
+  } = useAiSuggestion({
+    onAccept: (field, value) => {
+      setValue(field, value);
+    }
+  });
 
-  // Function to handle AI suggestion generation
+  // Wrapper functions to maintain existing interface
   const handleGenerateSuggestion = async (fieldName: keyof FormData) => {
     const currentValue = getValues(fieldName) || "";
-    setCurrentField(fieldName);
-    setIsGenerating(true);
-    setAiError(null);
-
-    try {
-      const suggestion = await openAIService.generateText({
-        fieldName: fieldName as keyof FormData, // This cast is safe since we're checking at runtime
-        currentValue,
-        timeout: 70000, // 30 second timeout
-      });
-      setAiSuggestion(suggestion);
-      setEditableSuggestion(suggestion);
-      setShowSuggestionPopup(true);
-    } catch (error) {
-      console.error("Error generating AI suggestion:", error);
-      let errorMessage = "An unknown error occurred";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === "string") {
-        errorMessage = error;
-      }
-      setAiError(errorMessage);
-      setAiSuggestion("");
-    } finally {
-      setIsGenerating(false);
-    }
+    await handleGenerateSuggestionHook(fieldName, currentValue);
   };
 
-  // Function to accept the AI suggestion
   const handleAcceptSuggestion = () => {
-    if (currentField) {
-      const suggestionToUse = editableSuggestion || aiSuggestion;
-      if (suggestionToUse) {
-        setValue(currentField, suggestionToUse);
-        setShowSuggestionPopup(false);
-        setAiSuggestion("");
-        setEditableSuggestion("");
-        setCurrentField(null);
-      }
-    }
+    handleAcceptSuggestionHook();
   };
 
-  // Function to discard the suggestion
   const handleDiscardSuggestion = () => {
-    setShowSuggestionPopup(false);
-    setAiSuggestion("");
-    setEditableSuggestion("");
-    setCurrentField(null);
+    handleDiscardSuggestionHook();
   };
 
-  // Handle form submission
-  const handleFormSubmit = (data: FormData) => {
-    console.log("Situation Descriptions Data:", data);
-    onSubmit(data);
-    reset(); // Reset form after successful submission
-  };
+   // Handle form submission
+   const handleFormSubmit = (data: FormData) => {
+     console.log("Situation Descriptions Data:", data);
+     onSubmit(data);
+     // Don't reset the form here since it's handled by the wizard
+   };
 
   // Handle save without submitting
   const handleSave = async () => {
@@ -447,145 +409,21 @@ const SituationDescriptionsForm = forwardRef<
                   {errors.reasonForApplying.message}
                 </Typography>
               )}
-
-              {/* Navigation Buttons */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", sm: "row" },
-                  justifyContent: "space-between",
-                  mt: 2,
-                  gap: { xs: 1, sm: 2 },
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  onClick={onBack || (() => {})}
-                  sx={{
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                    px: { xs: 3, sm: 4 },
-                    py: { xs: 1.5, sm: 1 },
-                  }}
-                  aria-label={t("situationDescriptionsForm.back")}
-                >
-                  {t("situationDescriptionsForm.back")}
-                </Button>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: { xs: "column", sm: "row" },
-                    gap: { xs: 1, sm: 2 },
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleSave}
-                    sx={{
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                      px: { xs: 2, sm: 3 },
-                      py: { xs: 1.5, sm: 1 },
-                    }}
-                    aria-label={t("situationDescriptionsForm.save")}
-                  >
-                    {t("situationDescriptionsForm.save")}
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    sx={{
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                      px: { xs: 3, sm: 4 },
-                      py: { xs: 1.5, sm: 1 },
-                    }}
-                    aria-label={t(
-                      "situationDescriptionsForm.submitApplication"
-                    )}
-                  >
-                    {t("situationDescriptionsForm.submitApplication")}
-                  </Button>
-                </Box>
-              </Box>
             </Box>
           </form>
         </Box>
       </Container>
 
       {/* AI Suggestion Popup */}
-      <Dialog
+      <AiSuggestionPopup
         open={showSuggestionPopup}
         onClose={handleDiscardSuggestion}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: { minHeight: "400px", maxHeight: "70vh" },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          {t("situationDescriptionsForm.aiSuggestion")}
-          <IconButton
-            aria-label={t("situationDescriptionsForm.close")}
-            onClick={handleDiscardSuggestion}
-            sx={{ color: "text.secondary" }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          {aiError ? (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {aiError}
-            </Alert>
-          ) : null}
-          {isGenerating ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                py: 4,
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : (
-            <TextField
-              fullWidth
-              multiline
-              rows={6}
-              value={editableSuggestion}
-              onChange={(e) => setEditableSuggestion(e.target.value)}
-              variant="outlined"
-              InputProps={{
-                sx: {
-                  fontSize: "1rem",
-                  lineHeight: 1.6,
-                }
-              }}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDiscardSuggestion} variant="outlined">
-            {t("situationDescriptionsForm.discard")}
-          </Button>
-          <Button
-            onClick={handleAcceptSuggestion}
-            variant="contained"
-            color="primary"
-          >
-            {t("situationDescriptionsForm.accept")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onAccept={handleAcceptSuggestion}
+        editableSuggestion={editableSuggestion}
+        setEditableSuggestion={setEditableSuggestion}
+        isGenerating={isGenerating}
+        aiError={aiError}
+      />
     </>
   );
 });
