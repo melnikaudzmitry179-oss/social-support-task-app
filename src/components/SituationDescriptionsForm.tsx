@@ -51,13 +51,26 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom align="center">
+    <Container maxWidth="md" sx={{
+      px: { xs: 1, sm: 2, md: 0 },
+      mt: { xs: 2, sm: 3, md: 4 },
+      mb: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Box>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          align="center"
+          sx={{
+            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' },
+            mb: { xs: 2, md: 3 }
+          }}
+        >
           Situation Descriptions
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Current Financial Situation Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
@@ -69,6 +82,15 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.currentFinancialSituation}
                 helperText={errors.currentFinancialSituation?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    py: { xs: 1, sm: 1.25 }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
@@ -83,6 +105,15 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.employmentCircumstances}
                 helperText={errors.employmentCircumstances?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    py: { xs: 1, sm: 1.25 }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
@@ -97,18 +128,50 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.reasonForApplying}
                 helperText={errors.reasonForApplying?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    py: { xs: 1, sm: 1.25 }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
             {/* Navigation Buttons */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <Button 
-                variant="outlined" 
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                mt: 2,
+                gap: { xs: 1, sm: 2 }
+              }}
+            >
+              <Button
+                variant="outlined"
                 onClick={onBack || (() => {})}
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
               >
                 Back
               </Button>
-              <Button type="submit" variant="contained" color="primary" size="large">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+              >
                 Submit Application
               </Button>
             </Box>

@@ -81,14 +81,27 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
     }
  };
 
-  return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom align="center">
+ return (
+    <Container maxWidth="md" sx={{
+      px: { xs: 1, sm: 2, md: 0 },
+      mt: { xs: 2, sm: 3, md: 4 },
+      mb: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Box>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{
+            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' },
+            mb: { xs: 2, md: 3 }
+          }}
+        >
           Personal Information Form
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Name Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
@@ -98,6 +111,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.name}
                 helperText={errors.name?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
@@ -110,6 +131,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.nationalId}
                 helperText={errors.nationalId?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
@@ -138,6 +167,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                     error={!!errors.dateOfBirth}
                     helperText={errors.dateOfBirth?.message}
                     variant="outlined"
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        fontSize: { xs: '0.875rem', sm: '1rem' }
+                      },
+                      '& .MuiInputLabel-root': {
+                        fontSize: { xs: '0.875rem', sm: '1rem' }
+                      }
+                    }}
                     {...field}
                   />
                 )}
@@ -146,7 +183,22 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
 
             {/* Gender Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl fullWidth variant="outlined" error={!!errors.gender}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.gender}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiFormHelperText-root': {
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }
+                }}
+              >
                 <InputLabel>Gender</InputLabel>
                 <Select
                   {...register('gender')}
@@ -172,12 +224,30 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.address}
                 helperText={errors.address?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
             {/* City and State Fields (in a row) */}
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-              <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 1.5, sm: 2 },
+                justifyContent: 'center'
+              }}
+            >
+              <Box sx={{
+                flex: 1,
+                width: { xs: '100%', sm: 'auto' }
+              }}>
                 <TextField
                   fullWidth
                   label="City"
@@ -185,9 +255,20 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.city}
                   helperText={errors.city?.message}
                   variant="outlined"
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{
+                flex: 1,
+                width: { xs: '100%', sm: 'auto' }
+              }}>
                 <TextField
                   fullWidth
                   label="State"
@@ -195,13 +276,31 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.state}
                   helperText={errors.state?.message}
                   variant="outlined"
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
               </Box>
             </Box>
 
             {/* Country and Phone Fields (in a row) */}
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-              <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 1.5, sm: 2 },
+                justifyContent: 'center'
+              }}
+            >
+              <Box sx={{
+                flex: 1,
+                width: { xs: '100%', sm: 'auto' }
+              }}>
                 <TextField
                   fullWidth
                   label="Country"
@@ -209,9 +308,20 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.country}
                   helperText={errors.country?.message}
                   variant="outlined"
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{
+                flex: 1,
+                width: { xs: '100%', sm: 'auto' }
+              }}>
                 <TextField
                   fullWidth
                   label="Phone"
@@ -219,6 +329,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
                   variant="outlined"
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
               </Box>
             </Box>
@@ -232,12 +350,38 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 variant="outlined"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
             {/* Submit Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Button type="submit" variant="contained" color="primary" size="large">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: { xs: 'center', sm: 'flex-end' },
+                mt: 2,
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 1, sm: 2 }
+              }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+              >
                 Submit
               </Button>
             </Box>

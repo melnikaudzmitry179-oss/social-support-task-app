@@ -205,29 +205,47 @@ const SocialSupportFormWizard: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="md" sx={{
+      px: { xs: 1, sm: 2, md: 0 },
+      mt: { xs: 2, sm: 3, md: 4 },
+      mb: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Box>
         {/* Progress bar */}
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: { xs: 2, sm: 3 } }}>
           <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map((label) => (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepLabel
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' }
+                    }
+                  }}
+                >
+                  {label}
+                </StepLabel>
               </Step>
             ))}
           </Stepper>
         </Box>
 
         {/* Progress indicator */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ flex: 1 }}>
-            <LinearProgress 
-              variant="determinate" 
-              value={(activeStep / steps.length) * 100} 
-              sx={{ height: 8, borderRadius: 4 }}
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 2 } }}>
+          <Box sx={{ flex: 1, width: { xs: '100%', sm: 'auto' } }}>
+            <LinearProgress
+              variant="determinate"
+              value={(activeStep / steps.length) * 100}
+              sx={{ height: { xs: 6, sm: 8 }, borderRadius: 4 }}
             />
           </Box>
-          <Typography variant="body2" sx={{ ml: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              ml: { xs: 0, sm: 2 },
+              textAlign: { xs: 'center', sm: 'left' }
+            }}
+          >
             Step {activeStep + 1} of {steps.length}
           </Typography>
         </Box>
@@ -239,11 +257,24 @@ const SocialSupportFormWizard: React.FC = () => {
 
         {/* Navigation buttons */}
         {activeStep < 3 && (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'space-between',
+              mt: 3,
+              gap: { xs: 1, sm: 2 }
+            }}
+          >
             <Button
               disabled={activeStep === 0}
               onClick={handleBack}
               variant="outlined"
+              sx={{
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                px: { xs: 3, sm: 4 },
+                py: { xs: 1.5, sm: 1 }
+              }}
             >
               Back
             </Button>
@@ -252,6 +283,11 @@ const SocialSupportFormWizard: React.FC = () => {
                 variant="contained"
                 onClick={() => setActiveStep(2)}
                 color="primary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
               >
                 Next
               </Button>

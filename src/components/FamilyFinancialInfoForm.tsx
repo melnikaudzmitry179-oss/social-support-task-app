@@ -80,16 +80,44 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom align="center">
+    <Container maxWidth="md" sx={{
+      px: { xs: 1, sm: 2, md: 0 },
+      mt: { xs: 2, sm: 3, md: 4 },
+      mb: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Box>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          align="center"
+          sx={{
+            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' },
+            mb: { xs: 2, md: 3 }
+          }}
+        >
           Family & Financial Info
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Marital Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl fullWidth variant="outlined" error={!!errors.maritalStatus}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.maritalStatus}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiFormHelperText-root': {
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }
+                }}
+              >
                 <InputLabel>Marital Status</InputLabel>
                 <Select
                   {...register('maritalStatus')}
@@ -118,12 +146,35 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 helperText={errors.dependents?.message}
                 variant="outlined"
                 inputProps={{ min: 0 }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
             {/* Employment Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl fullWidth variant="outlined" error={!!errors.employmentStatus}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.employmentStatus}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiFormHelperText-root': {
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }
+                }}
+              >
                 <InputLabel>Employment Status</InputLabel>
                 <Select
                   {...register('employmentStatus')}
@@ -153,12 +204,35 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 helperText={errors.monthlyIncome?.message}
                 variant="outlined"
                 inputProps={{ min: 0 }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }
+                }}
               />
             </Box>
 
             {/* Housing Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl fullWidth variant="outlined" error={!!errors.housingStatus}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.housingStatus}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  },
+                  '& .MuiFormHelperText-root': {
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }
+                }}
+              >
                 <InputLabel>Housing Status</InputLabel>
                 <Select
                   {...register('housingStatus')}
@@ -178,8 +252,26 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
             </Box>
 
             {/* Submit Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Button type="submit" variant="contained" color="primary" size="large">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: { xs: 'center', sm: 'flex-end' },
+                mt: 2,
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: { xs: 1, sm: 2 }
+              }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+              >
                 Submit
               </Button>
             </Box>
