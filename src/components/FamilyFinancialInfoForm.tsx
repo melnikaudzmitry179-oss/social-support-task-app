@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,17 +15,17 @@ import {
   Typography,
 } from '@mui/material';
 
-// Define the validation schema using Yup
-const schema = yup.object({
-  maritalStatus: yup.string().required('Marital Status is required'),
-  dependents: yup.number().min(0, 'Dependents must be at least 0').required('Dependents is required'),
-  employmentStatus: yup.string().required('Employment Status is required'),
-  monthlyIncome: yup.number().min(0, 'Monthly Income must be at least 0').required('Monthly Income is required'),
-  housingStatus: yup.string().required('Housing Status is required'),
+// Define the validation schema using Yup with translated error messages
+const getSchema = (t: (key: string) => string) => yup.object({
+  maritalStatus: yup.string().required(t('validation.maritalStatusRequired')),
+  dependents: yup.number().min(0, t('validation.dependentsMin')).required(t('validation.dependentsRequired')),
+  employmentStatus: yup.string().required(t('validation.employmentStatusRequired')),
+  monthlyIncome: yup.number().min(0, t('validation.monthlyIncomeMin')).required(t('validation.monthlyIncomeRequired')),
+  housingStatus: yup.string().required(t('validation.housingStatusRequired')),
 }).required();
 
 // Define the form data type
-export type FormData = yup.InferType<typeof schema>;
+export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
 interface FamilyFinancialInfoFormProps {
   onSubmit: (data: FormData) => void;
@@ -32,7 +33,10 @@ interface FamilyFinancialInfoFormProps {
 }
 
 const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSubmit, defaultValues }) => {
+  const { t } = useTranslation();
+  
   // Initialize the form with react-hook-form and yup validation
+  const schema = getSchema(t);
   const {
     register,
     handleSubmit,
@@ -95,7 +99,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
             mb: { xs: 2, md: 3 }
           }}
         >
-          Family & Financial Info
+          {t('familyFinancialInfoForm.title')}
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
@@ -118,20 +122,20 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 }}
                 id="marital-status-form-control"
               >
-                <InputLabel htmlFor="marital-status-select">Marital Status</InputLabel>
+                <InputLabel htmlFor="marital-status-select">{t('familyFinancialInfoForm.maritalStatus')}</InputLabel>
                 <Select
                   {...register('maritalStatus')}
-                  label="Marital Status"
+                  label={t('familyFinancialInfoForm.maritalStatus')}
                   value={watchedMaritalStatus || defaultValues?.maritalStatus || ''}
                   inputProps={{
                     id: 'marital-status-select',
                     'aria-describedby': errors.maritalStatus ? 'marital-status-error' : undefined
                   }}
                 >
-                  <MenuItem value="single">Single</MenuItem>
-                  <MenuItem value="married">Married</MenuItem>
-                  <MenuItem value="divorced">Divorced</MenuItem>
-                  <MenuItem value="widowed">Widowed</MenuItem>
+                  <MenuItem value="single">{t('familyFinancialInfoForm.maritalStatusOptions.single')}</MenuItem>
+                  <MenuItem value="married">{t('familyFinancialInfoForm.maritalStatusOptions.married')}</MenuItem>
+                  <MenuItem value="divorced">{t('familyFinancialInfoForm.maritalStatusOptions.divorced')}</MenuItem>
+                  <MenuItem value="widowed">{t('familyFinancialInfoForm.maritalStatusOptions.widowed')}</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -152,7 +156,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Dependents"
+                label={t('familyFinancialInfoForm.dependents')}
                 type="number"
                 {...register('dependents', { valueAsNumber: true })}
                 error={!!errors.dependents}
@@ -209,21 +213,21 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 }}
                 id="employment-status-form-control"
               >
-                <InputLabel htmlFor="employment-status-select">Employment Status</InputLabel>
+                <InputLabel htmlFor="employment-status-select">{t('familyFinancialInfoForm.employmentStatus')}</InputLabel>
                 <Select
                   {...register('employmentStatus')}
-                  label="Employment Status"
+                  label={t('familyFinancialInfoForm.employmentStatus')}
                   value={watchedEmploymentStatus || defaultValues?.employmentStatus || ''}
                   inputProps={{
                     id: 'employment-status-select',
                     'aria-describedby': errors.employmentStatus ? 'employment-status-error' : undefined
                   }}
                 >
-                  <MenuItem value="employed">Employed</MenuItem>
-                  <MenuItem value="unemployed">Unemployed</MenuItem>
-                  <MenuItem value="self-employed">Self-Employed</MenuItem>
-                  <MenuItem value="retired">Retired</MenuItem>
-                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="employed">{t('familyFinancialInfoForm.employmentStatusOptions.employed')}</MenuItem>
+                  <MenuItem value="unemployed">{t('familyFinancialInfoForm.employmentStatusOptions.unemployed')}</MenuItem>
+                  <MenuItem value="self-employed">{t('familyFinancialInfoForm.employmentStatusOptions.selfEmployed')}</MenuItem>
+                  <MenuItem value="retired">{t('familyFinancialInfoForm.employmentStatusOptions.retired')}</MenuItem>
+                  <MenuItem value="student">{t('familyFinancialInfoForm.employmentStatusOptions.student')}</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -244,7 +248,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Monthly Income ($)"
+                label={t('familyFinancialInfoForm.monthlyIncome')}
                 type="number"
                 {...register('monthlyIncome', { valueAsNumber: true })}
                 error={!!errors.monthlyIncome}
@@ -301,21 +305,21 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 }}
                 id="housing-status-form-control"
               >
-                <InputLabel htmlFor="housing-status-select">Housing Status</InputLabel>
+                <InputLabel htmlFor="housing-status-select">{t('familyFinancialInfoForm.housingStatus')}</InputLabel>
                 <Select
                   {...register('housingStatus')}
-                  label="Housing Status"
+                  label={t('familyFinancialInfoForm.housingStatus')}
                   value={watchedHousingStatus || defaultValues?.housingStatus || ''}
                   inputProps={{
                     id: 'housing-status-select',
                     'aria-describedby': errors.housingStatus ? 'housing-status-error' : undefined
                   }}
                 >
-                  <MenuItem value="own">Own</MenuItem>
-                  <MenuItem value="rent">Rent</MenuItem>
-                  <MenuItem value="with-family-friends">Living with Family/Friends</MenuItem>
-                  <MenuItem value="temporary">Temporary Accommodation</MenuItem>
-                  <MenuItem value="homeless">Homeless</MenuItem>
+                  <MenuItem value="own">{t('familyFinancialInfoForm.housingStatusOptions.own')}</MenuItem>
+                  <MenuItem value="rent">{t('familyFinancialInfoForm.housingStatusOptions.rent')}</MenuItem>
+                  <MenuItem value="with-family-friends">{t('familyFinancialInfoForm.housingStatusOptions.withFamilyFriends')}</MenuItem>
+                  <MenuItem value="temporary">{t('familyFinancialInfoForm.housingStatusOptions.temporary')}</MenuItem>
+                  <MenuItem value="homeless">{t('familyFinancialInfoForm.housingStatusOptions.homeless')}</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -352,9 +356,9 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Submit family and financial information form"
+                aria-label={t('familyFinancialInfoForm.submit')}
               >
-                Submit
+                {t('familyFinancialInfoForm.submit')}
               </Button>
             </Box>
           </Box>

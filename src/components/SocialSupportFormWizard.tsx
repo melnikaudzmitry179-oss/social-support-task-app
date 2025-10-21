@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Button, Container, LinearProgress, Typography, Step, StepLabel, Stepper } from '@mui/material';
 import { SocialSupportWizardProvider } from '../context/SocialSupportWizardContext';
 import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
@@ -45,13 +46,18 @@ const SocialSupportFormWizardWithProvider: React.FC = () => {
 };
 
 const SocialSupportFormWizard: React.FC = () => {
+  const { t } = useTranslation();
   const { formData, updatePersonalInfo, updateFamilyFinancialInfo, updateSituationDescriptions, resetFormData } = useSocialSupportWizard();
   const [loading, setLoading] = React.useState(true);
 
-  const steps = ['Personal Information', 'Family & Financial Info', 'Situation Descriptions'];
+  const steps = [
+    t('socialSupportFormWizard.stepLabels.0'),
+    t('socialSupportFormWizard.stepLabels.1'),
+    t('socialSupportFormWizard.stepLabels.2')
+  ];
 
   // Determine the active step based on form completion
- const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [hasLoaded, setHasLoaded] = React.useState(false);
 
   // Load saved form data from localStorage on component mount
@@ -177,14 +183,14 @@ const SocialSupportFormWizard: React.FC = () => {
         return (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography variant="h4" gutterBottom>
-              Application Submitted Successfully!
+              {t('socialSupportFormWizard.applicationSubmitted')}
             </Typography>
             <Typography variant="body1" sx={{ mb: 3 }}>
-              Thank you for completing the application form. Your information has been saved.
+              {t('socialSupportFormWizard.thankYouMessage')}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
               <Button variant="contained" color="primary" onClick={handleReset}>
-                Start New Application
+                {t('socialSupportFormWizard.startNewApplication')}
               </Button>
             </Box>
           </Box>
@@ -213,7 +219,7 @@ const SocialSupportFormWizard: React.FC = () => {
         mb: { xs: 2, sm: 3, md: 4 }
       }}
       role="main"
-      aria-label="Social Support Application Form Wizard"
+      aria-label={t('socialSupportFormWizard.title')}
     >
       <Box>
         {/* Skip link for screen readers */}
@@ -229,19 +235,19 @@ const SocialSupportFormWizard: React.FC = () => {
             overflow: 'hidden'
           }}
         >
-          Skip to main content
+          {t('skipToMainContent', 'Skip to main content')}
         </a>
         
         {/* Progress bar */}
         <Box
           sx={{ mb: { xs: 2, sm: 3 } }}
           role="region"
-          aria-label="Application progress steps"
+          aria-label={t('socialSupportFormWizard.title')}
         >
           <Stepper
             activeStep={activeStep}
             alternativeLabel
-            aria-label="Application steps navigation"
+            aria-label={t('socialSupportFormWizard.title')}
           >
             {steps.map((label, index) => (
               <Step key={label}>
@@ -273,7 +279,7 @@ const SocialSupportFormWizard: React.FC = () => {
           aria-valuenow={activeStep + 1}
           aria-valuemin={1}
           aria-valuemax={steps.length}
-          aria-label={`Step ${activeStep + 1} of ${steps.length}`}
+          aria-label={`${t('socialSupportFormWizard.stepLabels.0')} ${activeStep + 1} ${t('of')} ${steps.length}`}
         >
           <Box sx={{ flex: 1, width: { xs: '100%', sm: 'auto' } }}>
             <LinearProgress
@@ -290,7 +296,7 @@ const SocialSupportFormWizard: React.FC = () => {
               textAlign: { xs: 'center', sm: 'left' }
             }}
           >
-            Step {activeStep + 1} of {steps.length}
+            {t('socialSupportFormWizard.stepLabels.0')} {activeStep + 1} {t('of')} {steps.length}
           </Typography>
         </Box>
 
@@ -310,7 +316,7 @@ const SocialSupportFormWizard: React.FC = () => {
               gap: { xs: 1, sm: 2 }
             }}
             role="group"
-            aria-label="Form navigation buttons"
+            aria-label={t('socialSupportFormWizard.title')}
           >
             <Button
               disabled={activeStep === 0}
@@ -321,9 +327,9 @@ const SocialSupportFormWizard: React.FC = () => {
                 px: { xs: 3, sm: 4 },
                 py: { xs: 1.5, sm: 1 }
               }}
-              aria-label="Go to previous step"
+              aria-label={t('socialSupportFormWizard.back')}
             >
-              Back
+              {t('socialSupportFormWizard.back')}
             </Button>
             {activeStep === 1 && (
               <Button
@@ -335,9 +341,9 @@ const SocialSupportFormWizard: React.FC = () => {
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Go to next step"
+                aria-label={t('socialSupportFormWizard.next')}
               >
-                Next
+                {t('socialSupportFormWizard.next')}
               </Button>
             )}
             {activeStep === 0 && (
@@ -350,9 +356,9 @@ const SocialSupportFormWizard: React.FC = () => {
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Go to next step"
+                aria-label={t('socialSupportFormWizard.next')}
               >
-                Next
+                {t('socialSupportFormWizard.next')}
               </Button>
             )}
             {activeStep === 2 && (
@@ -365,9 +371,9 @@ const SocialSupportFormWizard: React.FC = () => {
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Complete application"
+                aria-label={t('socialSupportFormWizard.submit')}
               >
-                Submit Application
+                {t('socialSupportFormWizard.submit')}
               </Button>
             )}
           </Box>

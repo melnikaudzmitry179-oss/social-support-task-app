@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -10,15 +11,15 @@ import {
   Typography,
 } from '@mui/material';
 
-// Define the validation schema using Yup
-const schema = yup.object({
-  currentFinancialSituation: yup.string().required('Current Financial Situation is required'),
-  employmentCircumstances: yup.string().required('Employment Circumstances is required'),
-  reasonForApplying: yup.string().required('Reason for Applying is required'),
+// Define the validation schema using Yup with translated error messages
+const getSchema = (t: (key: string) => string) => yup.object({
+  currentFinancialSituation: yup.string().required(t('validation.currentFinancialSituationRequired')),
+  employmentCircumstances: yup.string().required(t('validation.employmentCircumstancesRequired')),
+  reasonForApplying: yup.string().required(t('validation.reasonForApplyingRequired')),
 }).required();
 
 // Define the form data type
-export type FormData = yup.InferType<typeof schema>;
+export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
 interface SituationDescriptionsFormProps {
   onSubmit: (data: FormData) => void;
@@ -27,7 +28,10 @@ interface SituationDescriptionsFormProps {
 }
 
 const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ onSubmit, onBack, defaultValues }) => {
+  const { t } = useTranslation();
+  
   // Initialize the form with react-hook-form and yup validation
+  const schema = getSchema(t);
   const {
     register,
     handleSubmit,
@@ -67,7 +71,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
             mb: { xs: 2, md: 3 }
           }}
         >
-          Situation Descriptions
+          {t('situationDescriptionsForm.title')}
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
@@ -75,7 +79,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Current Financial Situation"
+                label={t('situationDescriptionsForm.currentFinancialSituation')}
                 multiline
                 rows={4}
                 {...register('currentFinancialSituation')}
@@ -118,7 +122,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Employment Circumstances"
+                label={t('situationDescriptionsForm.employmentCircumstances')}
                 multiline
                 rows={4}
                 {...register('employmentCircumstances')}
@@ -161,7 +165,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Reason for Applying"
+                label={t('situationDescriptionsForm.reasonForApplying')}
                 multiline
                 rows={4}
                 {...register('reasonForApplying')}
@@ -218,9 +222,9 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Go back to previous step"
+                aria-label={t('situationDescriptionsForm.back')}
               >
-                Back
+                {t('situationDescriptionsForm.back')}
               </Button>
               <Button
                 type="submit"
@@ -232,9 +236,9 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Submit application"
+                aria-label={t('situationDescriptionsForm.submitApplication')}
               >
-                Submit Application
+                {t('situationDescriptionsForm.submitApplication')}
               </Button>
             </Box>
           </Box>

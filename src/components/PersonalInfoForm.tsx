@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,22 +15,22 @@ import {
   Typography,
 } from '@mui/material';
 
-// Define the validation schema using Yup
-const schema = yup.object({
-  name: yup.string().required('Name is required'),
-  nationalId: yup.string().required('National ID is required'),
-  dateOfBirth: yup.date().required('Date of Birth is required'),
-  gender: yup.string().required('Gender is required'),
-  address: yup.string().required('Address is required'),
-  city: yup.string().required('City is required'),
-  state: yup.string().required('State is required'),
-  country: yup.string().required('Country is required'),
-  phone: yup.string().required('Phone is required'),
-  email: yup.string().email('Invalid email format').required('Email is required'),
+// Define the validation schema using Yup with translated error messages
+const getSchema = (t: (key: string) => string) => yup.object({
+  name: yup.string().required(t('validation.nameRequired')),
+  nationalId: yup.string().required(t('validation.nationalIdRequired')),
+  dateOfBirth: yup.date().required(t('validation.dateOfBirthRequired')),
+  gender: yup.string().required(t('validation.genderRequired')),
+  address: yup.string().required(t('validation.addressRequired')),
+  city: yup.string().required(t('validation.cityRequired')),
+  state: yup.string().required(t('validation.stateRequired')),
+  country: yup.string().required(t('validation.countryRequired')),
+  phone: yup.string().required(t('validation.phoneRequired')),
+  email: yup.string().email(t('validation.emailInvalid')).required(t('validation.emailRequired')),
 }).required();
 
 // Define the form data type
-export type FormData = yup.InferType<typeof schema>;
+export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
 interface PersonalInfoFormProps {
   onSubmit?: (data: FormData) => void;
@@ -37,7 +38,10 @@ interface PersonalInfoFormProps {
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultValues }) => {
+  const { t } = useTranslation();
+  
   // Initialize the form with react-hook-form and yup validation
+  const schema = getSchema(t);
   const {
     register,
     handleSubmit,
@@ -75,7 +79,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
     if (onSubmit) {
       onSubmit(data);
     } else {
-      alert('Form submitted successfully!');
+      alert(t('personalInfoForm.formSubmitted'));
       reset(); // Reset form after successful submission
     }
  };
@@ -97,7 +101,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             mb: { xs: 2, md: 3 }
           }}
         >
-          Personal Information Form
+          {t('personalInfoForm.title')}
         </Typography>
         <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
@@ -105,7 +109,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Name"
+                label={t('personalInfoForm.name')}
                 {...register('name')}
                 error={!!errors.name}
                 helperText={errors.name?.message}
@@ -145,7 +149,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="National ID"
+                label={t('personalInfoForm.nationalId')}
                 {...register('nationalId')}
                 error={!!errors.nationalId}
                 helperText={errors.nationalId?.message}
@@ -189,7 +193,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 render={({ field: { onChange, value, ...field } }) => (
                   <TextField
                     fullWidth
-                    label="Date of Birth"
+                    label={t('personalInfoForm.dateOfBirth')}
                     type="date"
                     InputLabelProps={{
                       htmlFor: "date-of-birth-input",
@@ -254,19 +258,19 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 }}
                 id="gender-form-control"
               >
-                <InputLabel htmlFor="gender-select">Gender</InputLabel>
+                <InputLabel htmlFor="gender-select">{t('personalInfoForm.gender')}</InputLabel>
                 <Select
                   {...register('gender')}
-                  label="Gender"
+                  label={t('personalInfoForm.gender')}
                   value={watchedGender || defaultValues?.gender || ''}
                   inputProps={{
                     id: 'gender-select',
                     'aria-describedby': errors.gender ? 'gender-error' : undefined
                   }}
                 >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  <MenuItem value="male">{t('personalInfoForm.genderOptions.male')}</MenuItem>
+                  <MenuItem value="female">{t('personalInfoForm.genderOptions.female')}</MenuItem>
+                  <MenuItem value="other">{t('personalInfoForm.genderOptions.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -287,7 +291,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Address"
+                label={t('personalInfoForm.address')}
                 {...register('address')}
                 error={!!errors.address}
                 helperText={errors.address?.message}
@@ -338,7 +342,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
               }}>
                 <TextField
                   fullWidth
-                  label="City"
+                  label={t('personalInfoForm.city')}
                   {...register('city')}
                   error={!!errors.city}
                   helperText={errors.city?.message}
@@ -379,7 +383,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
               }}>
                 <TextField
                   fullWidth
-                  label="State"
+                  label={t('personalInfoForm.state')}
                   {...register('state')}
                   error={!!errors.state}
                   helperText={errors.state?.message}
@@ -431,7 +435,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
               }}>
                 <TextField
                   fullWidth
-                  label="Country"
+                  label={t('personalInfoForm.country')}
                   {...register('country')}
                   error={!!errors.country}
                   helperText={errors.country?.message}
@@ -472,7 +476,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
               }}>
                 <TextField
                   fullWidth
-                  label="Phone"
+                  label={t('personalInfoForm.phone')}
                   {...register('phone')}
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
@@ -513,7 +517,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <TextField
                 fullWidth
-                label="Email"
+                label={t('personalInfoForm.email')}
                 {...register('email')}
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -569,9 +573,9 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label="Submit personal information form"
+                aria-label={t('personalInfoForm.submit')}
               >
-                Submit
+                {t('personalInfoForm.submit')}
               </Button>
             </Box>
           </Box>

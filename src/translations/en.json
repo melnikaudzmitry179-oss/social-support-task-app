@@ -1,0 +1,101 @@
+{
+  "appTitle": "Social Support Application",
+  "skipToMainContent": "Skip to main content",
+  "of": "of",
+  "socialSupportFormWizard": {
+    "title": "Social Support Application",
+    "stepLabels": [
+      "Personal Information",
+      "Family & Financial Info",
+      "Situation Descriptions"
+    ],
+    "step1Title": "Personal Information Form",
+    "step2Title": "Family & Financial Info",
+    "step3Title": "Situation Descriptions",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Submit Application",
+    "applicationSubmitted": "Application Submitted Successfully!",
+    "thankYouMessage": "Thank you for completing the application form. Your information has been saved.",
+    "startNewApplication": "Start New Application"
+  },
+  "personalInfoForm": {
+    "title": "Personal Information Form",
+    "name": "Name",
+    "nationalId": "National ID",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "phone": "Phone",
+    "email": "Email",
+    "submit": "Submit"
+  },
+  "familyFinancialInfoForm": {
+    "title": "Family & Financial Info",
+    "maritalStatus": "Marital Status",
+    "maritalStatusOptions": {
+      "single": "Single",
+      "married": "Married",
+      "divorced": "Divorced",
+      "widowed": "Widowed"
+    },
+    "dependents": "Dependents",
+    "employmentStatus": "Employment Status",
+    "employmentStatusOptions": {
+      "employed": "Employed",
+      "unemployed": "Unemployed",
+      "selfEmployed": "Self-Employed",
+      "retired": "Retired",
+      "student": "Student"
+    },
+    "monthlyIncome": "Monthly Income ($)",
+    "housingStatus": "Housing Status",
+    "housingStatusOptions": {
+      "own": "Own",
+      "rent": "Rent",
+      "withFamilyFriends": "Living with Family/Friends",
+      "temporary": "Temporary Accommodation",
+      "homeless": "Homeless"
+    },
+    "submit": "Submit"
+  },
+  "situationDescriptionsForm": {
+    "title": "Situation Descriptions",
+    "currentFinancialSituation": "Current Financial Situation",
+    "employmentCircumstances": "Employment Circumstances",
+    "reasonForApplying": "Reason for Applying",
+    "back": "Back",
+    "submitApplication": "Submit Application"
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "nationalIdRequired": "National ID is required",
+    "dateOfBirthRequired": "Date of Birth is required",
+    "genderRequired": "Gender is required",
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "stateRequired": "State is required",
+    "countryRequired": "Country is required",
+    "phoneRequired": "Phone is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "maritalStatusRequired": "Marital Status is required",
+    "dependentsRequired": "Dependents is required",
+    "dependentsMin": "Dependents must be at least 0",
+    "employmentStatusRequired": "Employment Status is required",
+    "monthlyIncomeRequired": "Monthly Income is required",
+    "monthlyIncomeMin": "Monthly Income must be at least 0",
+    "housingStatusRequired": "Housing Status is required",
+    "currentFinancialSituationRequired": "Current Financial Situation is required",
+    "employmentCircumstancesRequired": "Employment Circumstances is required",
+    "reasonForApplyingRequired": "Reason for Applying is required"
+  }
+}

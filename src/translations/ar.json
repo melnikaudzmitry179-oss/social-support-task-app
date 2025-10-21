@@ -1,0 +1,101 @@
+{
+  "appTitle": "طلب الدعم الاجتماعي",
+  "skipToMainContent": "تخطي إلى المحتوى الرئيسي",
+  "of": "من",
+  "socialSupportFormWizard": {
+    "title": "طلب الدعم الاجتماعي",
+    "stepLabels": [
+      "المعلومات الشخصية",
+      "المعلومات العائلية والمادية",
+      "أوصاف الوضع"
+    ],
+    "step1Title": "نموذج المعلومات الشخصية",
+    "step2Title": "المعلومات العائلية والمادية",
+    "step3Title": "أوصاف الوضع",
+    "next": "التالي",
+    "back": "السابق",
+    "submit": "تقديم الطلب",
+    "applicationSubmitted": "تم تقديم الطلب بنجاح!",
+    "thankYouMessage": "شكرًا لك على إكمال نموذج الطلب. تم حفظ معلوماتك.",
+    "startNewApplication": "بدء طلب جديد"
+  },
+  "personalInfoForm": {
+    "title": "نموذج المعلومات الشخصية",
+    "name": "الاسم",
+    "nationalId": "الرقم الوطني",
+    "dateOfBirth": "تاريخ الميلاد",
+    "gender": "الجنس",
+    "genderOptions": {
+      "male": "ذكر",
+      "female": "أنثى",
+      "other": "آخر"
+    },
+    "address": "العنوان",
+    "city": "المدينة",
+    "state": "الولاية",
+    "country": "البلد",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "submit": "إرسال"
+  },
+  "familyFinancialInfoForm": {
+    "title": "المعلومات العائلية والمادية",
+    "maritalStatus": "الحالة الاجتماعية",
+    "maritalStatusOptions": {
+      "single": "أعزب",
+      "married": "متزوج",
+      "divorced": "مطلق",
+      "widowed": "أرمل"
+    },
+    "dependents": "المعالون",
+    "employmentStatus": "حالة العمل",
+    "employmentStatusOptions": {
+      "employed": "يعمل",
+      "unemployed": "عاطل عن العمل",
+      "selfEmployed": "يعمل لحسابه الخاص",
+      "retired": "متقاعد",
+      "student": "طالب"
+    },
+    "monthlyIncome": "الدخل الشهري ($)",
+    "housingStatus": "حالة السكن",
+    "housingStatusOptions": {
+      "own": "ملك",
+      "rent": "إيجار",
+      "withFamilyFriends": "يعيش مع العائلة/الأصدقاء",
+      "temporary": "سكن مؤقت",
+      "homeless": "مشرد"
+    },
+    "submit": "إرسال"
+  },
+  "situationDescriptionsForm": {
+    "title": "أوصاف الوضع",
+    "currentFinancialSituation": "الوضع المالي الحالي",
+    "employmentCircumstances": "ظروف العمل",
+    "reasonForApplying": "سبب تقديم الطلب",
+    "back": "السابق",
+    "submitApplication": "تقديم الطلب"
+  },
+  "validation": {
+    "nameRequired": "الاسم مطلوب",
+    "nationalIdRequired": "الرقم الوطني مطلوب",
+    "dateOfBirthRequired": "تاريخ الميلاد مطلوب",
+    "genderRequired": "الجنس مطلوب",
+    "addressRequired": "العنوان مطلوب",
+    "cityRequired": "المدينة مطلوبة",
+    "stateRequired": "الولاية مطلوبة",
+    "countryRequired": "البلد مطلوب",
+    "phoneRequired": "الهاتف مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
+    "maritalStatusRequired": "الحالة الاجتماعية مطلوبة",
+    "dependentsRequired": "المعالون مطلوبون",
+    "dependentsMin": "يجب أن يكون عدد المعالين على الأقل 0",
+    "employmentStatusRequired": "حالة العمل مطلوبة",
+    "monthlyIncomeRequired": "الدخل الشهري مطلوب",
+    "monthlyIncomeMin": "يجب أن يكون الدخل الشهري على الأقل 0",
+    "housingStatusRequired": "حالة السكن مطلوبة",
+    "currentFinancialSituationRequired": "الوضع المالي الحالي مطلوب",
+    "employmentCircumstancesRequired": "ظروف العمل مطلوبة",
+    "reasonForApplyingRequired": "سبب تقديم الطلب مطلوب"
+  }
+}

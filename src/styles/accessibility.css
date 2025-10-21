@@ -27,20 +27,27 @@ a:focus,
 .skip-link {
  position: absolute;
  top: -40px;
-  left: 6px;
-  background: #0000;
-  color: white;
+ left: 6px;
+ right: auto; /* For LTR */
+ background: #0000;
+ color: white;
  padding: 8px;
-  text-decoration: none;
-  border-radius: 4px;
-  z-index: 1000;
-  transition: top 0.3s;
+ text-decoration: none;
+ border-radius: 4px;
+ z-index: 1000;
+ transition: top 0.3s;
 }
 
 .skip-link:focus {
   top: 6px;
   outline: 2px solid #ffffff;
   outline-offset: 2px;
+}
+
+/* RTL support for skip link */
+body.rtl .skip-link {
+  left: auto;
+  right: 6px;
 }
 
 /* Focus visible only when using keyboard navigation */
@@ -61,4 +68,50 @@ a:focus,
 .js-focus-visible [tabindex].focus-visible {
   outline: 2px solid #005fcc;
   outline-offset: 2px;
+}
+
+/* RTL support for form elements */
+body.rtl input,
+body.rtl select,
+body.rtl textarea {
+  text-align: right;
+}
+
+/* RTL support for labels */
+body.rtl label {
+  text-align: right;
+}
+
+/* Ensure proper spacing for RTL layouts */
+body.rtl .container {
+  direction: rtl;
+  text-align: right;
+}
+
+body.rtl .form-group {
+  direction: rtl;
+}
+
+/* RTL support for buttons */
+body.rtl button {
+  direction: rtl;
+}
+
+/* RTL support for navigation */
+body.rtl nav {
+  direction: rtl;
+}
+
+body.rtl nav ul {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+body.rtl nav li {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+body.rtl nav li:last-child {
+  margin-left: 0;
 }
