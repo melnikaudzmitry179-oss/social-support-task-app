@@ -29,7 +29,7 @@ class OpenAIService {
   async generateText({
     fieldName,
     currentValue,
-    timeout = 10000,
+    timeout = 70000,
   }: GenerateTextParams): Promise<string> {
     // Check if API key is available
     if (!this.apiKey) {

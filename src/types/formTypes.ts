@@ -30,3 +30,8 @@ export interface FormData {
   familyFinancialInfo: FamilyFinancialInfoFormData;
   situationDescriptions: SituationDescriptionsFormData;
 }
+
+// Define the ref type for form submission used across all forms
+export interface FormRef {
+  submitForm: () => Promise<boolean>; // Returns true if validation passes
+};

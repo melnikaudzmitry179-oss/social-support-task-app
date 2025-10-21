@@ -74,6 +74,7 @@ const SituationDescriptionsForm = forwardRef<
 
   // State for AI suggestions and popup
   const [aiSuggestion, setAiSuggestion] = useState<string>("");
+  const [editableSuggestion, setEditableSuggestion] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [currentField, setCurrentField] = useState<keyof FormData | null>(null);
   const [showSuggestionPopup, setShowSuggestionPopup] =
@@ -91,9 +92,10 @@ const SituationDescriptionsForm = forwardRef<
       const suggestion = await openAIService.generateText({
         fieldName: fieldName as keyof FormData, // This cast is safe since we're checking at runtime
         currentValue,
-        timeout: 30000, // 30 second timeout
+        timeout: 70000, // 30 second timeout
       });
       setAiSuggestion(suggestion);
+      setEditableSuggestion(suggestion);
       setShowSuggestionPopup(true);
     } catch (error) {
       console.error("Error generating AI suggestion:", error);
@@ -112,11 +114,15 @@ const SituationDescriptionsForm = forwardRef<
 
   // Function to accept the AI suggestion
   const handleAcceptSuggestion = () => {
-    if (currentField && aiSuggestion) {
-      setValue(currentField, aiSuggestion);
-      setShowSuggestionPopup(false);
-      setAiSuggestion("");
-      setCurrentField(null);
+    if (currentField) {
+      const suggestionToUse = editableSuggestion || aiSuggestion;
+      if (suggestionToUse) {
+        setValue(currentField, suggestionToUse);
+        setShowSuggestionPopup(false);
+        setAiSuggestion("");
+        setEditableSuggestion("");
+        setCurrentField(null);
+      }
     }
   };
 
@@ -124,6 +130,7 @@ const SituationDescriptionsForm = forwardRef<
   const handleDiscardSuggestion = () => {
     setShowSuggestionPopup(false);
     setAiSuggestion("");
+    setEditableSuggestion("");
     setCurrentField(null);
   };
 
@@ -550,9 +557,20 @@ const SituationDescriptionsForm = forwardRef<
               <CircularProgress />
             </Box>
           ) : (
-            <Typography variant="body1" paragraph>
-              {aiSuggestion}
-            </Typography>
+            <TextField
+              fullWidth
+              multiline
+              rows={6}
+              value={editableSuggestion}
+              onChange={(e) => setEditableSuggestion(e.target.value)}
+              variant="outlined"
+              InputProps={{
+                sx: {
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                }
+              }}
+            />
           )}
         </DialogContent>
         <DialogActions>

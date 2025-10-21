@@ -14,11 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
-
-// Define the ref type for form submission
-export interface FormRef {
-  submitForm: () => Promise<boolean>; // Returns true if validation passes
-}
+import type { FormRef } from '../types/formTypes';
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) => yup.object({
