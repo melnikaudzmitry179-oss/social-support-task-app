@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
@@ -34,18 +34,41 @@ export type FormData = yup.InferType<typeof schema>;
 
 interface PersonalInfoFormProps {
   onSubmit?: (data: FormData) => void;
+ defaultValues?: Partial<FormData>;
 }
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultValues }) => {
   // Initialize the form with react-hook-form and yup validation
- const {
+  const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    defaultValues: defaultValues || {},
   });
+
+  // Watch the gender field to trigger re-render when it changes
+  const watchedGender = watch('gender');
+
+  // Reset form when defaultValues change to ensure selects are properly populated
+  React.useEffect(() => {
+    if (defaultValues) {
+      // Reset the entire form with new default values
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
+
+  // Ensure the select values are properly set when defaultValues change
+ React.useEffect(() => {
+    if (defaultValues?.gender) {
+      setValue('gender', defaultValues.gender);
+    }
+  }, [defaultValues?.gender, setValue]);
 
   // Handle form submission
  const handleFormSubmit = (data: FormData) => {
@@ -92,17 +115,32 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
 
             {/* Date of Birth Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                {...register('dateOfBirth')}
-                error={!!errors.dateOfBirth}
-                helperText={errors.dateOfBirth?.message}
-                variant="outlined"
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <TextField
+                    fullWidth
+                    label="Date of Birth"
+                    type="date"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      max: new Date().toISOString().split('T')[0] // Prevent future dates
+                    }}
+                    onChange={(e) => {
+                      // Convert the date string from input to Date object for form state
+                      const dateValue = e.target.value ? new Date(e.target.value) : null;
+                      onChange(dateValue);
+                    }}
+                    value={value instanceof Date ? value.toISOString().split('T')[0] : value || ''}
+                    error={!!errors.dateOfBirth}
+                    helperText={errors.dateOfBirth?.message}
+                    variant="outlined"
+                    {...field}
+                  />
+                )}
               />
             </Box>
 
@@ -113,6 +151,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
                 <Select
                   {...register('gender')}
                   label="Gender"
+                  value={watchedGender || defaultValues?.gender || ''}
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>

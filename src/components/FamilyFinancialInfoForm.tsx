@@ -29,18 +29,48 @@ export type FormData = yup.InferType<typeof schema>;
 
 interface FamilyFinancialInfoFormProps {
   onSubmit: (data: FormData) => void;
+  defaultValues?: Partial<FormData>;
 }
 
-const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSubmit }) => {
- // Initialize the form with react-hook-form and yup validation
- const {
+const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSubmit, defaultValues }) => {
+  // Initialize the form with react-hook-form and yup validation
+  const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    defaultValues: defaultValues || {},
   });
+
+  // Watch the fields to trigger re-render when they change
+  const watchedMaritalStatus = watch('maritalStatus');
+  const watchedEmploymentStatus = watch('employmentStatus');
+  const watchedHousingStatus = watch('housingStatus');
+
+  // Reset form when defaultValues change to ensure selects are properly populated
+  React.useEffect(() => {
+    if (defaultValues) {
+      // Reset the entire form with new default values
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
+
+  // Ensure the select values are properly set when defaultValues change
+ React.useEffect(() => {
+    if (defaultValues?.maritalStatus) {
+      setValue('maritalStatus', defaultValues.maritalStatus);
+    }
+    if (defaultValues?.employmentStatus) {
+      setValue('employmentStatus', defaultValues.employmentStatus);
+    }
+    if (defaultValues?.housingStatus) {
+      setValue('housingStatus', defaultValues.housingStatus);
+    }
+  }, [defaultValues?.maritalStatus, defaultValues?.employmentStatus, defaultValues?.housingStatus, setValue]);
 
   // Handle form submission
   const handleFormSubmit = (data: FormData) => {
@@ -64,6 +94,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 <Select
                   {...register('maritalStatus')}
                   label="Marital Status"
+                  value={watchedMaritalStatus || defaultValues?.maritalStatus || ''}
                 >
                   <MenuItem value="single">Single</MenuItem>
                   <MenuItem value="married">Married</MenuItem>
@@ -97,6 +128,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 <Select
                   {...register('employmentStatus')}
                   label="Employment Status"
+                  value={watchedEmploymentStatus || defaultValues?.employmentStatus || ''}
                 >
                   <MenuItem value="employed">Employed</MenuItem>
                   <MenuItem value="unemployed">Unemployed</MenuItem>
@@ -131,6 +163,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 <Select
                   {...register('housingStatus')}
                   label="Housing Status"
+                  value={watchedHousingStatus || defaultValues?.housingStatus || ''}
                 >
                   <MenuItem value="own">Own</MenuItem>
                   <MenuItem value="rent">Rent</MenuItem>

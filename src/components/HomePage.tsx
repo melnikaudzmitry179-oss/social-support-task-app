@@ -1,5 +1,5 @@
 import React from "react";
-import FormWizard from "./FormWizard";
+import SocialSupportFormWizard from "./SocialSupportFormWizard";
 
 const HomePage: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
       </h1>
 
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <FormWizard />
+        <SocialSupportFormWizard />
       </div>
     </div>
   );
