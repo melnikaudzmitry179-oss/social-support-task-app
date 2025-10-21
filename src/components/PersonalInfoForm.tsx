@@ -7,7 +7,6 @@ import {
   Button,
   Container,
   FormControl,
-  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -100,7 +99,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
         >
           Personal Information Form
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Name Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -111,6 +110,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.name}
                 helperText={errors.name?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "name-input",
+                  shrink: true,
+                }}
+                id="name-input"
+                inputProps={{
+                  'aria-describedby': errors.name ? 'name-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -121,6 +128,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 }}
               />
             </Box>
+            {errors.name && (
+              <Typography
+                id="name-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.name.message}
+              </Typography>
+            )}
 
             {/* National ID Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -131,6 +150,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.nationalId}
                 helperText={errors.nationalId?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "national-id-input",
+                  shrink: true,
+                }}
+                id="national-id-input"
+                inputProps={{
+                  'aria-describedby': errors.nationalId ? 'national-id-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -141,6 +168,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 }}
               />
             </Box>
+            {errors.nationalId && (
+              <Typography
+                id="national-id-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.nationalId.message}
+              </Typography>
+            )}
 
             {/* Date of Birth Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -153,10 +192,13 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                     label="Date of Birth"
                     type="date"
                     InputLabelProps={{
+                      htmlFor: "date-of-birth-input",
                       shrink: true,
                     }}
+                    id="date-of-birth-input"
                     inputProps={{
-                      max: new Date().toISOString().split('T')[0] // Prevent future dates
+                      max: new Date().toISOString().split('T')[0], // Prevent future dates
+                      'aria-describedby': errors.dateOfBirth ? 'date-of-birth-error' : undefined
                     }}
                     onChange={(e) => {
                       // Convert the date string from input to Date object for form state
@@ -180,6 +222,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 )}
               />
             </Box>
+            {errors.dateOfBirth && (
+              <Typography
+                id="date-of-birth-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.dateOfBirth.message}
+              </Typography>
+            )}
 
             {/* Gender Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -198,22 +252,36 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                     fontSize: { xs: '0.75rem', sm: '0.875rem' }
                   }
                 }}
+                id="gender-form-control"
               >
-                <InputLabel>Gender</InputLabel>
+                <InputLabel htmlFor="gender-select">Gender</InputLabel>
                 <Select
                   {...register('gender')}
                   label="Gender"
                   value={watchedGender || defaultValues?.gender || ''}
+                  inputProps={{
+                    id: 'gender-select',
+                    'aria-describedby': errors.gender ? 'gender-error' : undefined
+                  }}
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
-                {errors.gender && (
-                  <FormHelperText>{errors.gender.message}</FormHelperText>
-                )}
               </FormControl>
             </Box>
+            {errors.gender && (
+              <Typography
+                id="gender-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.gender.message}
+              </Typography>
+            )}
 
             {/* Address Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -224,6 +292,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.address}
                 helperText={errors.address?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "address-input",
+                  shrink: true,
+                }}
+                id="address-input"
+                inputProps={{
+                  'aria-describedby': errors.address ? 'address-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -234,6 +310,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 }}
               />
             </Box>
+            {errors.address && (
+              <Typography
+                id="address-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.address.message}
+              </Typography>
+            )}
 
             {/* City and State Fields (in a row) */}
             <Box
@@ -255,6 +343,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.city}
                   helperText={errors.city?.message}
                   variant="outlined"
+                  InputLabelProps={{
+                    htmlFor: "city-input",
+                    shrink: true,
+                  }}
+                  id="city-input"
+                  inputProps={{
+                    'aria-describedby': errors.city ? 'city-error' : undefined
+                  }}
                   sx={{
                     '& .MuiInputBase-input': {
                       fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -265,6 +361,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   }}
                 />
               </Box>
+              {errors.city && (
+                <Typography
+                  id="city-error"
+                  variant="caption"
+                  color="error"
+                  sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                  role="alert"
+                  aria-live="polite"
+                >
+                  {errors.city.message}
+                </Typography>
+              )}
               <Box sx={{
                 flex: 1,
                 width: { xs: '100%', sm: 'auto' }
@@ -276,6 +384,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.state}
                   helperText={errors.state?.message}
                   variant="outlined"
+                  InputLabelProps={{
+                    htmlFor: "state-input",
+                    shrink: true,
+                  }}
+                  id="state-input"
+                  inputProps={{
+                    'aria-describedby': errors.state ? 'state-error' : undefined
+                  }}
                   sx={{
                     '& .MuiInputBase-input': {
                       fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -286,6 +402,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   }}
                 />
               </Box>
+              {errors.state && (
+                <Typography
+                  id="state-error"
+                  variant="caption"
+                  color="error"
+                  sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                  role="alert"
+                  aria-live="polite"
+                >
+                  {errors.state.message}
+                </Typography>
+              )}
             </Box>
 
             {/* Country and Phone Fields (in a row) */}
@@ -308,6 +436,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.country}
                   helperText={errors.country?.message}
                   variant="outlined"
+                  InputLabelProps={{
+                    htmlFor: "country-input",
+                    shrink: true,
+                  }}
+                  id="country-input"
+                  inputProps={{
+                    'aria-describedby': errors.country ? 'country-error' : undefined
+                  }}
                   sx={{
                     '& .MuiInputBase-input': {
                       fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -318,6 +454,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   }}
                 />
               </Box>
+              {errors.country && (
+                <Typography
+                  id="country-error"
+                  variant="caption"
+                  color="error"
+                  sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                  role="alert"
+                  aria-live="polite"
+                >
+                  {errors.country.message}
+                </Typography>
+              )}
               <Box sx={{
                 flex: 1,
                 width: { xs: '100%', sm: 'auto' }
@@ -329,6 +477,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
                   variant="outlined"
+                  InputLabelProps={{
+                    htmlFor: "phone-input",
+                    shrink: true,
+                  }}
+                  id="phone-input"
+                  inputProps={{
+                    'aria-describedby': errors.phone ? 'phone-error' : undefined
+                  }}
                   sx={{
                     '& .MuiInputBase-input': {
                       fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -339,6 +495,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   }}
                 />
               </Box>
+              {errors.phone && (
+                <Typography
+                  id="phone-error"
+                  variant="caption"
+                  color="error"
+                  sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                  role="alert"
+                  aria-live="polite"
+                >
+                  {errors.phone.message}
+                </Typography>
+              )}
             </Box>
 
             {/* Email Field */}
@@ -350,6 +518,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "email-input",
+                  shrink: true,
+                }}
+                id="email-input"
+                inputProps={{
+                  'aria-describedby': errors.email ? 'email-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -360,6 +536,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                 }}
               />
             </Box>
+            {errors.email && (
+              <Typography
+                id="email-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.email.message}
+              </Typography>
+            )}
 
             {/* Submit Button */}
             <Box
@@ -381,6 +569,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
+                aria-label="Submit personal information form"
               >
                 Submit
               </Button>

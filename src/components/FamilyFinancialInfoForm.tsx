@@ -7,7 +7,6 @@ import {
   Button,
   Container,
   FormControl,
-  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -98,7 +97,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
         >
           Family & Financial Info
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Marital Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -117,23 +116,37 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                     fontSize: { xs: '0.75rem', sm: '0.875rem' }
                   }
                 }}
+                id="marital-status-form-control"
               >
-                <InputLabel>Marital Status</InputLabel>
+                <InputLabel htmlFor="marital-status-select">Marital Status</InputLabel>
                 <Select
                   {...register('maritalStatus')}
                   label="Marital Status"
                   value={watchedMaritalStatus || defaultValues?.maritalStatus || ''}
+                  inputProps={{
+                    id: 'marital-status-select',
+                    'aria-describedby': errors.maritalStatus ? 'marital-status-error' : undefined
+                  }}
                 >
                   <MenuItem value="single">Single</MenuItem>
                   <MenuItem value="married">Married</MenuItem>
                   <MenuItem value="divorced">Divorced</MenuItem>
                   <MenuItem value="widowed">Widowed</MenuItem>
                 </Select>
-                {errors.maritalStatus && (
-                  <FormHelperText>{errors.maritalStatus.message}</FormHelperText>
-                )}
               </FormControl>
             </Box>
+            {errors.maritalStatus && (
+              <Typography
+                id="marital-status-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.maritalStatus.message}
+              </Typography>
+            )}
 
             {/* Dependents Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -145,7 +158,15 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 error={!!errors.dependents}
                 helperText={errors.dependents?.message}
                 variant="outlined"
-                inputProps={{ min: 0 }}
+                InputLabelProps={{
+                  htmlFor: "dependents-input",
+                  shrink: true,
+                }}
+                id="dependents-input"
+                inputProps={{
+                  min: 0,
+                  'aria-describedby': errors.dependents ? 'dependents-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -156,6 +177,18 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 }}
               />
             </Box>
+            {errors.dependents && (
+              <Typography
+                id="dependents-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.dependents.message}
+              </Typography>
+            )}
 
             {/* Employment Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -174,12 +207,17 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                     fontSize: { xs: '0.75rem', sm: '0.875rem' }
                   }
                 }}
+                id="employment-status-form-control"
               >
-                <InputLabel>Employment Status</InputLabel>
+                <InputLabel htmlFor="employment-status-select">Employment Status</InputLabel>
                 <Select
                   {...register('employmentStatus')}
                   label="Employment Status"
                   value={watchedEmploymentStatus || defaultValues?.employmentStatus || ''}
+                  inputProps={{
+                    id: 'employment-status-select',
+                    'aria-describedby': errors.employmentStatus ? 'employment-status-error' : undefined
+                  }}
                 >
                   <MenuItem value="employed">Employed</MenuItem>
                   <MenuItem value="unemployed">Unemployed</MenuItem>
@@ -187,11 +225,20 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                   <MenuItem value="retired">Retired</MenuItem>
                   <MenuItem value="student">Student</MenuItem>
                 </Select>
-                {errors.employmentStatus && (
-                  <FormHelperText>{errors.employmentStatus.message}</FormHelperText>
-                )}
               </FormControl>
             </Box>
+            {errors.employmentStatus && (
+              <Typography
+                id="employment-status-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.employmentStatus.message}
+              </Typography>
+            )}
 
             {/* Monthly Income Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -203,7 +250,15 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 error={!!errors.monthlyIncome}
                 helperText={errors.monthlyIncome?.message}
                 variant="outlined"
-                inputProps={{ min: 0 }}
+                InputLabelProps={{
+                  htmlFor: "monthly-income-input",
+                  shrink: true,
+                }}
+                id="monthly-income-input"
+                inputProps={{
+                  min: 0,
+                  'aria-describedby': errors.monthlyIncome ? 'monthly-income-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' }
@@ -214,6 +269,18 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                 }}
               />
             </Box>
+            {errors.monthlyIncome && (
+              <Typography
+                id="monthly-income-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.monthlyIncome.message}
+              </Typography>
+            )}
 
             {/* Housing Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -232,12 +299,17 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                     fontSize: { xs: '0.75rem', sm: '0.875rem' }
                   }
                 }}
+                id="housing-status-form-control"
               >
-                <InputLabel>Housing Status</InputLabel>
+                <InputLabel htmlFor="housing-status-select">Housing Status</InputLabel>
                 <Select
                   {...register('housingStatus')}
                   label="Housing Status"
                   value={watchedHousingStatus || defaultValues?.housingStatus || ''}
+                  inputProps={{
+                    id: 'housing-status-select',
+                    'aria-describedby': errors.housingStatus ? 'housing-status-error' : undefined
+                  }}
                 >
                   <MenuItem value="own">Own</MenuItem>
                   <MenuItem value="rent">Rent</MenuItem>
@@ -245,11 +317,20 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                   <MenuItem value="temporary">Temporary Accommodation</MenuItem>
                   <MenuItem value="homeless">Homeless</MenuItem>
                 </Select>
-                {errors.housingStatus && (
-                  <FormHelperText>{errors.housingStatus.message}</FormHelperText>
-                )}
               </FormControl>
             </Box>
+            {errors.housingStatus && (
+              <Typography
+                id="housing-status-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.housingStatus.message}
+              </Typography>
+            )}
 
             {/* Submit Button */}
             <Box
@@ -271,6 +352,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
+                aria-label="Submit family and financial information form"
               >
                 Submit
               </Button>

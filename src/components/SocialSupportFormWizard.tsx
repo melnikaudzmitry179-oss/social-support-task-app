@@ -205,16 +205,45 @@ const SocialSupportFormWizard: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{
-      px: { xs: 1, sm: 2, md: 0 },
-      mt: { xs: 2, sm: 3, md: 4 },
-      mb: { xs: 2, sm: 3, md: 4 }
-    }}>
+    <Container
+      maxWidth="md"
+      sx={{
+        px: { xs: 1, sm: 2, md: 0 },
+        mt: { xs: 2, sm: 3, md: 4 },
+        mb: { xs: 2, sm: 3, md: 4 }
+      }}
+      role="main"
+      aria-label="Social Support Application Form Wizard"
+    >
       <Box>
+        {/* Skip link for screen readers */}
+        <a
+          href="#form-content"
+          className="skip-link"
+          style={{
+            position: 'absolute',
+            left: '-10000px',
+            top: 'auto',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden'
+          }}
+        >
+          Skip to main content
+        </a>
+        
         {/* Progress bar */}
-        <Box sx={{ mb: { xs: 2, sm: 3 } }}>
-          <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((label) => (
+        <Box
+          sx={{ mb: { xs: 2, sm: 3 } }}
+          role="region"
+          aria-label="Application progress steps"
+        >
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            aria-label="Application steps navigation"
+          >
+            {steps.map((label, index) => (
               <Step key={label}>
                 <StepLabel
                   sx={{
@@ -222,6 +251,7 @@ const SocialSupportFormWizard: React.FC = () => {
                       fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' }
                     }
                   }}
+                  aria-current={index === activeStep ? 'step' : undefined}
                 >
                   {label}
                 </StepLabel>
@@ -231,12 +261,26 @@ const SocialSupportFormWizard: React.FC = () => {
         </Box>
 
         {/* Progress indicator */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 2 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            mb: 2,
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 1, sm: 2 }
+          }}
+          role="progressbar"
+          aria-valuenow={activeStep + 1}
+          aria-valuemin={1}
+          aria-valuemax={steps.length}
+          aria-label={`Step ${activeStep + 1} of ${steps.length}`}
+        >
           <Box sx={{ flex: 1, width: { xs: '100%', sm: 'auto' } }}>
             <LinearProgress
               variant="determinate"
               value={(activeStep / steps.length) * 100}
               sx={{ height: { xs: 6, sm: 8 }, borderRadius: 4 }}
+              aria-hidden="true"
             />
           </Box>
           <Typography
@@ -251,7 +295,7 @@ const SocialSupportFormWizard: React.FC = () => {
         </Box>
 
         {/* Form content */}
-        <Box>
+        <Box id="form-content" tabIndex={-1}>
           {renderStepContent()}
         </Box>
 
@@ -265,6 +309,8 @@ const SocialSupportFormWizard: React.FC = () => {
               mt: 3,
               gap: { xs: 1, sm: 2 }
             }}
+            role="group"
+            aria-label="Form navigation buttons"
           >
             <Button
               disabled={activeStep === 0}
@@ -275,6 +321,7 @@ const SocialSupportFormWizard: React.FC = () => {
                 px: { xs: 3, sm: 4 },
                 py: { xs: 1.5, sm: 1 }
               }}
+              aria-label="Go to previous step"
             >
               Back
             </Button>
@@ -288,8 +335,39 @@ const SocialSupportFormWizard: React.FC = () => {
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
+                aria-label="Go to next step"
               >
                 Next
+              </Button>
+            )}
+            {activeStep === 0 && (
+              <Button
+                variant="contained"
+                onClick={() => setActiveStep(1)}
+                color="primary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                aria-label="Go to next step"
+              >
+                Next
+              </Button>
+            )}
+            {activeStep === 2 && (
+              <Button
+                variant="contained"
+                onClick={() => setActiveStep(3)}
+                color="primary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                aria-label="Complete application"
+              >
+                Submit Application
               </Button>
             )}
           </Box>

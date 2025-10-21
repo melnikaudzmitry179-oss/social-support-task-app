@@ -1,0 +1,64 @@
+/* Accessibility improvements for focus indicators */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus,
+[tabindex]:focus {
+  outline: 2px solid #005fcc;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* High contrast focus for better visibility */
+@media (prefers-contrast: high) {
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  a:focus,
+  [tabindex]:focus {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+  }
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+ position: absolute;
+ top: -40px;
+  left: 6px;
+  background: #0000;
+  color: white;
+ padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Focus visible only when using keyboard navigation */
+.js-focus-visible button:focus:not(.focus-visible),
+.js-focus-visible input:focus:not(.focus-visible),
+.js-focus-visible select:focus:not(.focus-visible),
+.js-focus-visible textarea:focus:not(.focus-visible),
+.js-focus-visible a:focus:not(.focus-visible),
+.js-focus-visible [tabindex]:focus:not(.focus-visible) {
+  outline: none;
+}
+
+.js-focus-visible button.focus-visible,
+.js-focus-visible input.focus-visible,
+.js-focus-visible select.focus-visible,
+.js-focus-visible textarea.focus-visible,
+.js-focus-visible a.focus-visible,
+.js-focus-visible [tabindex].focus-visible {
+  outline: 2px solid #005fcc;
+  outline-offset: 2px;
+}

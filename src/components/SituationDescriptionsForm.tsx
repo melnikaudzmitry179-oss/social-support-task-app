@@ -69,7 +69,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
         >
           Situation Descriptions
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Current Financial Situation Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -82,6 +82,14 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.currentFinancialSituation}
                 helperText={errors.currentFinancialSituation?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "current-financial-situation-input",
+                  shrink: true,
+                }}
+                id="current-financial-situation-input"
+                inputProps={{
+                  'aria-describedby': errors.currentFinancialSituation ? 'current-financial-situation-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
@@ -93,6 +101,18 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 }}
               />
             </Box>
+            {errors.currentFinancialSituation && (
+              <Typography
+                id="current-financial-situation-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.currentFinancialSituation.message}
+              </Typography>
+            )}
 
             {/* Employment Circumstances Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -105,6 +125,14 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.employmentCircumstances}
                 helperText={errors.employmentCircumstances?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "employment-circumstances-input",
+                  shrink: true,
+                }}
+                id="employment-circumstances-input"
+                inputProps={{
+                  'aria-describedby': errors.employmentCircumstances ? 'employment-circumstances-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
@@ -116,6 +144,18 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 }}
               />
             </Box>
+            {errors.employmentCircumstances && (
+              <Typography
+                id="employment-circumstances-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.employmentCircumstances.message}
+              </Typography>
+            )}
 
             {/* Reason for Applying Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -128,6 +168,14 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 error={!!errors.reasonForApplying}
                 helperText={errors.reasonForApplying?.message}
                 variant="outlined"
+                InputLabelProps={{
+                  htmlFor: "reason-for-applying-input",
+                  shrink: true,
+                }}
+                id="reason-for-applying-input"
+                inputProps={{
+                  'aria-describedby': errors.reasonForApplying ? 'reason-for-applying-error' : undefined
+                }}
                 sx={{
                   '& .MuiInputBase-input': {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
@@ -139,6 +187,18 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                 }}
               />
             </Box>
+            {errors.reasonForApplying && (
+              <Typography
+                id="reason-for-applying-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: '14px', sm: '24px' }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.reasonForApplying.message}
+              </Typography>
+            )}
 
             {/* Navigation Buttons */}
             <Box
@@ -158,6 +218,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
+                aria-label="Go back to previous step"
               >
                 Back
               </Button>
@@ -171,6 +232,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
+                aria-label="Submit application"
               >
                 Submit Application
               </Button>
