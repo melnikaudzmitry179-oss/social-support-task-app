@@ -24,7 +24,11 @@
     "tryAgain": "حاول مرة أخرى",
     "missingDataError": "بعض بيانات النموذج المطلوبة مفقودة.",
     "savedSuccessfully": "تم الحفظ بنجاح",
-    "validationError": "يرجى ملء جميع الحقول المطلوبة"
+    "validationError": "يرجى ملء جميع الحقول المطلوبة",
+    "saveConfirmationTitle": "تأكيد الحفظ",
+    "saveConfirmationMessage": "هل أنت متأكد أنك تريد حفظ هذه البيانات؟",
+    "confirmYes": "نعم",
+    "confirmNo": "لا"
   },
   "personalInfoForm": {
     "title": "نموذج المعلومات الشخصية",

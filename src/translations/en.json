@@ -24,7 +24,11 @@
     "tryAgain": "Try Again",
     "missingDataError": "Some required form data is missing.",
     "savedSuccessfully": "saved successfully",
-    "validationError": "Please fill in all required fields"
+    "validationError": "Please fill in all required fields",
+    "saveConfirmationTitle": "Confirm Save",
+    "saveConfirmationMessage": "Are you sure you want to save this data?",
+    "confirmYes": "Yes",
+    "confirmNo": "No"
   },
   "personalInfoForm": {
     "title": "Personal Information Form",

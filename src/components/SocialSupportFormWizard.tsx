@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Container, LinearProgress, Typography, Step, StepLabel, Stepper } from '@mui/material';
+import { Box, Button, Container, LinearProgress, Typography, Step, StepLabel, Stepper, Snackbar, Alert } from '@mui/material';
 import { SocialSupportWizardProvider } from '../context/SocialSupportWizardContext';
 import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
 import PersonalInfoForm from './PersonalInfoForm';
@@ -8,6 +8,7 @@ import FamilyFinancialInfoForm from './FamilyFinancialInfoForm';
 import type { FormRef as PersonalInfoFormRef } from './PersonalInfoForm';
 import type { FormRef as FamilyFinancialInfoFormRef } from './FamilyFinancialInfoForm';
 import SituationDescriptionsForm from './SituationDescriptionsForm';
+import type { FormRef as SituationDescriptionsFormRef } from './SituationDescriptionsForm';
 import { getItem, setItem } from '../utils/localStorage.util';
 // Removed unused import: import { submitFormData } from '../api/formService';
 
@@ -50,14 +51,18 @@ const SocialSupportFormWizardWithProvider: React.FC = () => {
 
 const SocialSupportFormWizard: React.FC = () => {
   const { t } = useTranslation();
-  const { formData, updatePersonalInfo, updateFamilyFinancialInfo, updateSituationDescriptions, resetFormData } = useSocialSupportWizard();
+ const { formData, updatePersonalInfo, updateFamilyFinancialInfo, updateSituationDescriptions, resetFormData } = useSocialSupportWizard();
   const [loading, setLoading] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error' | 'warning' | 'info'>('success');
   
   // Refs for the form components to trigger validation and save
   const personalInfoFormRef = React.useRef<PersonalInfoFormRef>(null);
-  const familyFinancialInfoFormRef = React.useRef<FamilyFinancialInfoFormRef>(null);
+ const familyFinancialInfoFormRef = React.useRef<FamilyFinancialInfoFormRef>(null);
+  const situationDescriptionsFormRef = React.useRef<SituationDescriptionsFormRef>(null);
 
   const steps = [
     t('socialSupportFormWizard.stepLabels.0'),
@@ -66,7 +71,7 @@ const SocialSupportFormWizard: React.FC = () => {
   ];
 
   // Determine the active step based on form completion
-  const [activeStep, setActiveStep] = React.useState(0);
+ const [activeStep, setActiveStep] = React.useState(0);
   const [hasLoaded, setHasLoaded] = React.useState(false);
 
   // Load saved form data from localStorage on component mount
@@ -115,7 +120,7 @@ const SocialSupportFormWizard: React.FC = () => {
       };
       setItem('formData', localStorageData);
     }
-  }, [formData, hasLoaded]);
+ }, [formData, hasLoaded]);
 
 
   const handleSituationDescriptionsSubmit = async (data: {
@@ -148,6 +153,9 @@ const SocialSupportFormWizard: React.FC = () => {
     
     // Complete the submission flow immediately
     setActiveStep(3); // Move to final step (completed)
+    
+    // Set submitting to false immediately since we're not actually submitting to a backend
+    setIsSubmitting(false);
     
     // Original submission code (commented out)
     // try {
@@ -193,6 +201,7 @@ const SocialSupportFormWizard: React.FC = () => {
       case 2:
         return (
           <SituationDescriptionsForm
+            ref={situationDescriptionsFormRef}
             onSubmit={handleSituationDescriptionsSubmit}
             onBack={() => setActiveStep(1)}
             defaultValues={formData.situationDescriptions || undefined}
@@ -276,7 +285,7 @@ const SocialSupportFormWizard: React.FC = () => {
           className="skip-link"
           style={{
             position: 'absolute',
-            left: '-10000px',
+            left: '-1000px',
             top: 'auto',
             width: '1px',
             height: '1px',
@@ -425,9 +434,13 @@ const SocialSupportFormWizard: React.FC = () => {
                 onClick={async () => {
                   const isValid = await personalInfoFormRef.current?.submitForm();
                   if (isValid) {
-                    alert(t('personalInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                    setSnackbarMessage(t('personalInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
                   } else {
-                    alert(t('socialSupportFormWizard.validationError'));
+                    setSnackbarMessage(t('socialSupportFormWizard.validationError'));
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
                   }
                 }}
               >
@@ -447,9 +460,13 @@ const SocialSupportFormWizard: React.FC = () => {
                 onClick={async () => {
                   const isValid = await familyFinancialInfoFormRef.current?.submitForm();
                   if (isValid) {
-                    alert(t('familyFinancialInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                    setSnackbarMessage(t('familyFinancialInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
                   } else {
-                    alert(t('socialSupportFormWizard.validationError'));
+                    setSnackbarMessage(t('socialSupportFormWizard.validationError'));
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
                   }
                 }}
               >
@@ -459,22 +476,49 @@ const SocialSupportFormWizard: React.FC = () => {
             {/* {activeStep === 2 && (
               <Button
                 variant="contained"
-                onClick={() => setActiveStep(3)}
-                color="primary"
-                disabled={isSubmitting}
+                color="secondary"
                 sx={{
                   fontSize: { xs: '0.875rem', sm: '1rem' },
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label={isSubmitting ? t('socialSupportFormWizard.submitting') : t('socialSupportFormWizard.submit')}
+                aria-label={t('situationDescriptionsForm.save')}
+                onClick={async () => {
+                  const isValid = await situationDescriptionsFormRef.current?.submitForm();
+                  if (isValid) {
+                    setSnackbarMessage(t('situationDescriptionsForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
+                  } else {
+                    setSnackbarMessage(t('socialSupportFormWizard.validationError'));
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
+                  }
+                }}
               >
-                {isSubmitting ? t('socialSupportFormWizard.submitting') : t('socialSupportFormWizard.submit')}
+                {t('situationDescriptionsForm.save')}
               </Button>
             )} */}
           </Box>
         )}
       </Box>
+      
+      {/* Snackbar for showing messages */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

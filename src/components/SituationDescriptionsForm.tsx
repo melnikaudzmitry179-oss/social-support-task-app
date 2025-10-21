@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,13 +22,18 @@ const getSchema = (t: (key: string) => string) => yup.object({
 // Define the form data type
 export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
+// Define the ref type for form submission
+export interface FormRef {
+  submitForm: () => Promise<boolean>; // Returns true if validation passes
+}
+
 interface SituationDescriptionsFormProps {
   onSubmit: (data: FormData) => void;
   onBack?: () => void;
   defaultValues?: Partial<FormData>;
 }
 
-const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ onSubmit, onBack, defaultValues }) => {
+const SituationDescriptionsForm = forwardRef<FormRef, SituationDescriptionsFormProps>(({ onSubmit, onBack, defaultValues }, ref) => {
   const { updateSituationDescriptions } = useSocialSupportWizard();
   const { t } = useTranslation();
   
@@ -45,11 +50,6 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
     defaultValues: defaultValues || {},
   });
 
-  // Reset form when defaultValues change to ensure fields are properly populated
-  React.useEffect(() => {
-    reset(defaultValues || {});
-  }, [defaultValues, reset]);
-
   // Handle form submission
   const handleFormSubmit = (data: FormData) => {
     console.log('Situation Descriptions Data:', data);
@@ -58,7 +58,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
   };
 
   // Handle save without submitting
-  const handleSave = () => {
+  const handleSave = async () => {
     // Get current form values using getValues method
     const currentData = {
       currentFinancialSituation: getValues('currentFinancialSituation'),
@@ -67,6 +67,18 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
     };
     updateSituationDescriptions(currentData);
   };
+
+  // Expose the submitForm function via ref
+  useImperativeHandle(ref, () => ({
+    submitForm: async () => {
+      try {
+        await handleSubmit(handleSave)();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }));
 
   return (
     <Container maxWidth="md" sx={{
@@ -281,6 +293,6 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
       </Box>
     </Container>
   );
-};
+});
 
 export default SituationDescriptionsForm;
