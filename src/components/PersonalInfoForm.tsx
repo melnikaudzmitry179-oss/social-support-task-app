@@ -30,9 +30,13 @@ const schema = yup.object({
 }).required();
 
 // Define the form data type
-type FormData = yup.InferType<typeof schema>;
+export type FormData = yup.InferType<typeof schema>;
 
-const PersonalInfoForm: React.FC = () => {
+interface PersonalInfoFormProps {
+  onSubmit?: (data: FormData) => void;
+}
+
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
   // Initialize the form with react-hook-form and yup validation
  const {
     register,
@@ -44,10 +48,14 @@ const PersonalInfoForm: React.FC = () => {
   });
 
   // Handle form submission
- const onSubmit = (data: FormData) => {
+ const handleFormSubmit = (data: FormData) => {
     console.log('Form Data:', data);
-    alert('Form submitted successfully!');
-    reset(); // Reset form after successful submission
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      alert('Form submitted successfully!');
+      reset(); // Reset form after successful submission
+    }
  };
 
   return (
@@ -56,7 +64,7 @@ const PersonalInfoForm: React.FC = () => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Personal Information Form
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Name Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>

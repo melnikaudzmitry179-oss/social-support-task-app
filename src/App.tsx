@@ -1,11 +1,11 @@
 import './App.css'
-import PersonalInfoForm from './components/PersonalInfoForm'
+import HomePage from './components/HomePage'
 
 function App() {
 
   return (
     <>
-      <PersonalInfoForm/>
+      <HomePage/>
     </>
   )
 }
