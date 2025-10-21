@@ -15,9 +15,14 @@
     "next": "التالي",
     "back": "السابق",
     "submit": "تقديم الطلب",
+    "submitting": "جاري تقديم الطلب...",
     "applicationSubmitted": "تم تقديم الطلب بنجاح!",
     "thankYouMessage": "شكرًا لك على إكمال نموذج الطلب. تم حفظ معلوماتك.",
-    "startNewApplication": "بدء طلب جديد"
+    "startNewApplication": "بدء طلب جديد",
+    "submitError": "فشل في تقديم النموذج. يرجى المحاولة مرة أخرى.",
+    "submitErrorTitle": "خطأ في التقديم",
+    "tryAgain": "حاول مرة أخرى",
+    "missingDataError": "بعض بيانات النموذج المطلوبة مفقودة."
   },
   "personalInfoForm": {
     "title": "نموذج المعلومات الشخصية",

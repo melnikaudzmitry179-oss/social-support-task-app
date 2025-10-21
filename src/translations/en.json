@@ -15,9 +15,14 @@
     "next": "Next",
     "back": "Back",
     "submit": "Submit Application",
+    "submitting": "Submitting Application...",
     "applicationSubmitted": "Application Submitted Successfully!",
     "thankYouMessage": "Thank you for completing the application form. Your information has been saved.",
-    "startNewApplication": "Start New Application"
+    "startNewApplication": "Start New Application",
+    "submitError": "Failed to submit form. Please try again.",
+    "submitErrorTitle": "Submission Error",
+    "tryAgain": "Try Again",
+    "missingDataError": "Some required form data is missing."
   },
   "personalInfoForm": {
     "title": "Personal Information Form",

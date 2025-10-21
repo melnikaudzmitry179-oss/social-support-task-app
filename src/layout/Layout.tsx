@@ -18,12 +18,12 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     updateDocumentDirection(i18n.language);
-    const handleLanguageChange = (lng: string) => updateDocumentDirection(lng);
+    const handleLanguageChangeInternal = (lng: string) => updateDocumentDirection(lng);
 
-    i18n.on("languageChanged", handleLanguageChange);
+    i18n.on("languageChanged", handleLanguageChangeInternal);
 
     return () => {
-      i18n.off("languageChanged", handleLanguageChange);
+      i18n.off("languageChanged", handleLanguageChangeInternal);
     };
   }, [i18n]);
 
@@ -42,7 +42,6 @@ const Layout: React.FC = () => {
       <Header />
       <div className="flex justify-center w-full mt-[80px]">
         <main
-          //id="main-content"
           className="max-w-[1200px] px-8 flex-grow pb-8"
         >
           {renderContent()}
