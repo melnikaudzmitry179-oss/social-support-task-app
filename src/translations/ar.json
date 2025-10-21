@@ -22,7 +22,9 @@
     "submitError": "فشل في تقديم النموذج. يرجى المحاولة مرة أخرى.",
     "submitErrorTitle": "خطأ في التقديم",
     "tryAgain": "حاول مرة أخرى",
-    "missingDataError": "بعض بيانات النموذج المطلوبة مفقودة."
+    "missingDataError": "بعض بيانات النموذج المطلوبة مفقودة.",
+    "savedSuccessfully": "تم الحفظ بنجاح",
+    "validationError": "يرجى ملء جميع الحقول المطلوبة"
   },
   "personalInfoForm": {
     "title": "نموذج المعلومات الشخصية",
@@ -41,7 +43,8 @@
     "country": "البلد",
     "phone": "الهاتف",
     "email": "البريد الإلكتروني",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "save": "حفظ"
   },
   "familyFinancialInfoForm": {
     "title": "المعلومات العائلية والمادية",
@@ -70,7 +73,8 @@
       "temporary": "سكن مؤقت",
       "homeless": "مشرد"
     },
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "save": "حفظ"
   },
   "situationDescriptionsForm": {
     "title": "أوصاف الوضع",
@@ -78,7 +82,8 @@
     "employmentCircumstances": "ظروف العمل",
     "reasonForApplying": "سبب تقديم الطلب",
     "back": "السابق",
-    "submitApplication": "تقديم الطلب"
+    "submitApplication": "تقديم الطلب",
+    "save": "حفظ"
   },
   "validation": {
     "nameRequired": "الاسم مطلوب",

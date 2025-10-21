@@ -5,6 +5,8 @@ import { SocialSupportWizardProvider } from '../context/SocialSupportWizardConte
 import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
 import PersonalInfoForm from './PersonalInfoForm';
 import FamilyFinancialInfoForm from './FamilyFinancialInfoForm';
+import type { FormRef as PersonalInfoFormRef } from './PersonalInfoForm';
+import type { FormRef as FamilyFinancialInfoFormRef } from './FamilyFinancialInfoForm';
 import SituationDescriptionsForm from './SituationDescriptionsForm';
 import { getItem, setItem } from '../utils/localStorage.util';
 // Removed unused import: import { submitFormData } from '../api/formService';
@@ -52,6 +54,10 @@ const SocialSupportFormWizard: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
+  
+  // Refs for the form components to trigger validation and save
+  const personalInfoFormRef = React.useRef<PersonalInfoFormRef>(null);
+  const familyFinancialInfoFormRef = React.useRef<FamilyFinancialInfoFormRef>(null);
 
   const steps = [
     t('socialSupportFormWizard.stepLabels.0'),
@@ -111,32 +117,6 @@ const SocialSupportFormWizard: React.FC = () => {
     }
   }, [formData, hasLoaded]);
 
-  const handlePersonalInfoSubmit = (data: {
-    name: string;
-    nationalId: string;
-    dateOfBirth: Date;
-    gender: string;
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    phone: string;
-    email: string;
-  }) => {
-    updatePersonalInfo(data);
-    setActiveStep(1);
-  };
-
-  const handleFamilyFinancialInfoSubmit = (data: {
-    maritalStatus: string;
-    dependents: number;
-    employmentStatus: string;
-    monthlyIncome: number;
-    housingStatus: string;
-  }) => {
-    updateFamilyFinancialInfo(data);
-    setActiveStep(2); // Move to third step (situation descriptions)
-  };
 
   const handleSituationDescriptionsSubmit = async (data: {
     currentFinancialSituation: string;
@@ -199,14 +179,14 @@ const SocialSupportFormWizard: React.FC = () => {
       case 0:
         return (
           <PersonalInfoForm
-            onSubmit={handlePersonalInfoSubmit}
+            ref={personalInfoFormRef}
             defaultValues={formData.personalInfo || undefined}
           />
         );
       case 1:
         return (
           <FamilyFinancialInfoForm
-            onSubmit={handleFamilyFinancialInfoSubmit}
+            ref={familyFinancialInfoFormRef}
             defaultValues={formData.familyFinancialInfo || undefined}
           />
         );
@@ -386,32 +366,19 @@ const SocialSupportFormWizard: React.FC = () => {
             role="group"
             aria-label={t('socialSupportFormWizard.title')}
           >
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              variant="outlined"
-              sx={{
-                fontSize: { xs: '0.875rem', sm: '1rem' },
-                px: { xs: 3, sm: 4 },
-                py: { xs: 1.5, sm: 1 }
-              }}
-              aria-label={t('socialSupportFormWizard.back')}
-            >
-              {t('socialSupportFormWizard.back')}
-            </Button>
-            {activeStep === 1 && (
+            {/* Show the general back button only for steps 1 and 2 (not for step 0) */}
+            {activeStep > 0 && activeStep !== 2 && (
               <Button
-                variant="contained"
-                onClick={() => setActiveStep(2)}
-                color="primary"
+                onClick={handleBack}
+                variant="outlined"
                 sx={{
                   fontSize: { xs: '0.875rem', sm: '1rem' },
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1.5, sm: 1 }
                 }}
-                aria-label={t('socialSupportFormWizard.next')}
+                aria-label={t('socialSupportFormWizard.back')}
               >
-                {t('socialSupportFormWizard.next')}
+                {t('socialSupportFormWizard.back')}
               </Button>
             )}
             {activeStep === 0 && (
@@ -429,7 +396,67 @@ const SocialSupportFormWizard: React.FC = () => {
                 {t('socialSupportFormWizard.next')}
               </Button>
             )}
-            {activeStep === 2 && (
+            {activeStep === 1 && (
+              <Button
+                variant="contained"
+                onClick={() => setActiveStep(2)}
+                color="primary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                aria-label={t('socialSupportFormWizard.next')}
+              >
+                {t('socialSupportFormWizard.next')}
+              </Button>
+            )}
+            {/* Save buttons for steps 0 and 1 */}
+            {activeStep === 0 && (
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                aria-label={t('personalInfoForm.save')}
+                onClick={async () => {
+                  const isValid = await personalInfoFormRef.current?.submitForm();
+                  if (isValid) {
+                    alert(t('personalInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                  } else {
+                    alert(t('socialSupportFormWizard.validationError'));
+                  }
+                }}
+              >
+                {t('personalInfoForm.save')}
+              </Button>
+            )}
+            {activeStep === 1 && (
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 1 }
+                }}
+                aria-label={t('familyFinancialInfoForm.save')}
+                onClick={async () => {
+                  const isValid = await familyFinancialInfoFormRef.current?.submitForm();
+                  if (isValid) {
+                    alert(t('familyFinancialInfoForm.save') + ' ' + t('socialSupportFormWizard.savedSuccessfully'));
+                  } else {
+                    alert(t('socialSupportFormWizard.validationError'));
+                  }
+                }}
+              >
+                {t('familyFinancialInfoForm.save')}
+              </Button>
+            )}
+            {/* {activeStep === 2 && (
               <Button
                 variant="contained"
                 onClick={() => setActiveStep(3)}
@@ -444,7 +471,7 @@ const SocialSupportFormWizard: React.FC = () => {
               >
                 {isSubmitting ? t('socialSupportFormWizard.submitting') : t('socialSupportFormWizard.submit')}
               </Button>
-            )}
+            )} */}
           </Box>
         )}
       </Box>

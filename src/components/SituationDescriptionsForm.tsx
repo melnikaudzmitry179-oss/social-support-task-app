@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) => yup.object({
@@ -28,6 +29,7 @@ interface SituationDescriptionsFormProps {
 }
 
 const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ onSubmit, onBack, defaultValues }) => {
+  const { updateSituationDescriptions } = useSocialSupportWizard();
   const { t } = useTranslation();
   
   // Initialize the form with react-hook-form and yup validation
@@ -35,6 +37,7 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
     reset,
   } = useForm<FormData>({
@@ -52,6 +55,17 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
     console.log('Situation Descriptions Data:', data);
     onSubmit(data);
     reset(); // Reset form after successful submission
+  };
+
+  // Handle save without submitting
+  const handleSave = () => {
+    // Get current form values using getValues method
+    const currentData = {
+      currentFinancialSituation: getValues('currentFinancialSituation'),
+      employmentCircumstances: getValues('employmentCircumstances'),
+      reasonForApplying: getValues('reasonForApplying'),
+    };
+    updateSituationDescriptions(currentData);
   };
 
   return (
@@ -226,20 +240,41 @@ const SituationDescriptionsForm: React.FC<SituationDescriptionsFormProps> = ({ o
               >
                 {t('situationDescriptionsForm.back')}
               </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
+              <Box
                 sx={{
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                  px: { xs: 3, sm: 4 },
-                  py: { xs: 1.5, sm: 1 }
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: { xs: 1, sm: 2 }
                 }}
-                aria-label={t('situationDescriptionsForm.submitApplication')}
               >
-                {t('situationDescriptionsForm.submitApplication')}
-              </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSave}
+                  sx={{
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 1.5, sm: 1 }
+                  }}
+                  aria-label={t('situationDescriptionsForm.save')}
+                >
+                  {t('situationDescriptionsForm.save')}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    px: { xs: 3, sm: 4 },
+                    py: { xs: 1.5, sm: 1 }
+                  }}
+                  aria-label={t('situationDescriptionsForm.submitApplication')}
+                >
+                  {t('situationDescriptionsForm.submitApplication')}
+                </Button>
+              </Box>
             </Box>
           </Box>
         </form>

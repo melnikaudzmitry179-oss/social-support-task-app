@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
   Box,
-  Button,
   Container,
   FormControl,
   InputLabel,
@@ -14,6 +13,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
+
+// Define the ref type for form submission
+export interface FormRef {
+  submitForm: () => Promise<boolean>; // Returns true if validation passes
+}
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) => yup.object({
@@ -28,12 +33,12 @@ const getSchema = (t: (key: string) => string) => yup.object({
 export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
 interface FamilyFinancialInfoFormProps {
-  onSubmit: (data: FormData) => void;
   defaultValues?: Partial<FormData>;
 }
 
-const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSubmit, defaultValues }) => {
+const FamilyFinancialInfoForm = forwardRef<FormRef, FamilyFinancialInfoFormProps>(({ defaultValues }, ref) => {
   const { t } = useTranslation();
+  const { updateFamilyFinancialInfo } = useSocialSupportWizard();
   
   // Initialize the form with react-hook-form and yup validation
   const schema = getSchema(t);
@@ -78,10 +83,21 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
   // Handle form submission
   const handleFormSubmit = (data: FormData) => {
     console.log('Family & Financial Info Data:', data);
-    onSubmit(data);
-    reset(); // Reset form after successful submission
+    // Update the context with form data
+    updateFamilyFinancialInfo(data);
   };
 
+  // Expose the submitForm function via ref
+  useImperativeHandle(ref, () => ({
+    submitForm: async () => {
+      try {
+        await handleSubmit(handleFormSubmit)();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }));
   return (
     <Container maxWidth="md" sx={{
       px: { xs: 1, sm: 2, md: 0 },
@@ -101,7 +117,7 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
         >
           {t('familyFinancialInfoForm.title')}
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate autoComplete="off">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Marital Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -336,36 +352,11 @@ const FamilyFinancialInfoForm: React.FC<FamilyFinancialInfoFormProps> = ({ onSub
               </Typography>
             )}
 
-            {/* Submit Button */}
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: { xs: 'center', sm: 'flex-end' },
-                mt: 2,
-                flexDirection: { xs: 'column', sm: 'row' },
-                gap: { xs: 1, sm: 2 }
-              }}
-            >
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                sx={{
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                  px: { xs: 3, sm: 4 },
-                  py: { xs: 1.5, sm: 1 }
-                }}
-                aria-label={t('familyFinancialInfoForm.submit')}
-              >
-                {t('familyFinancialInfoForm.submit')}
-              </Button>
-            </Box>
           </Box>
         </form>
       </Box>
     </Container>
   );
-};
+});
 
 export default FamilyFinancialInfoForm;

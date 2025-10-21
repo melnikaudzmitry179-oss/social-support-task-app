@@ -22,7 +22,9 @@
     "submitError": "Failed to submit form. Please try again.",
     "submitErrorTitle": "Submission Error",
     "tryAgain": "Try Again",
-    "missingDataError": "Some required form data is missing."
+    "missingDataError": "Some required form data is missing.",
+    "savedSuccessfully": "saved successfully",
+    "validationError": "Please fill in all required fields"
   },
   "personalInfoForm": {
     "title": "Personal Information Form",
@@ -41,7 +43,8 @@
     "country": "Country",
     "phone": "Phone",
     "email": "Email",
-    "submit": "Submit"
+    "submit": "Submit",
+    "save": "Save"
   },
   "familyFinancialInfoForm": {
     "title": "Family & Financial Info",
@@ -70,7 +73,8 @@
       "temporary": "Temporary Accommodation",
       "homeless": "Homeless"
     },
-    "submit": "Submit"
+    "submit": "Submit",
+    "save": "Save"
   },
   "situationDescriptionsForm": {
     "title": "Situation Descriptions",
@@ -78,7 +82,8 @@
     "employmentCircumstances": "Employment Circumstances",
     "reasonForApplying": "Reason for Applying",
     "back": "Back",
-    "submitApplication": "Submit Application"
+    "submitApplication": "Submit Application",
+    "save": "Save"
   },
   "validation": {
     "nameRequired": "Name is required",

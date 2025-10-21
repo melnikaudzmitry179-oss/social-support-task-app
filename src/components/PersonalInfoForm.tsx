@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
   Box,
-  Button,
   Container,
   FormControl,
   InputLabel,
@@ -14,6 +13,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useSocialSupportWizard } from '../context/useSocialSupportWizard';
+
+// Define the ref type for form submission
+export interface FormRef {
+  submitForm: () => Promise<boolean>; // Returns true if validation passes
+}
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) => yup.object({
@@ -33,12 +38,12 @@ const getSchema = (t: (key: string) => string) => yup.object({
 export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
 interface PersonalInfoFormProps {
-  onSubmit?: (data: FormData) => void;
- defaultValues?: Partial<FormData>;
+  defaultValues?: Partial<FormData>;
 }
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultValues }) => {
+const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(({ defaultValues }, ref) => {
   const { t } = useTranslation();
+  const { updatePersonalInfo } = useSocialSupportWizard();
   
   // Initialize the form with react-hook-form and yup validation
   const schema = getSchema(t);
@@ -67,24 +72,32 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
   }, [defaultValues, reset]);
 
   // Ensure the select values are properly set when defaultValues change
- React.useEffect(() => {
+  React.useEffect(() => {
     if (defaultValues?.gender) {
       setValue('gender', defaultValues.gender);
     }
   }, [defaultValues?.gender, setValue]);
 
   // Handle form submission
- const handleFormSubmit = (data: FormData) => {
+  const handleFormSubmit = (data: FormData) => {
     console.log('Form Data:', data);
-    if (onSubmit) {
-      onSubmit(data);
-    } else {
-      alert(t('personalInfoForm.formSubmitted'));
-      reset(); // Reset form after successful submission
-    }
- };
+    // Update the context with form data
+    updatePersonalInfo(data);
+  };
 
- return (
+  // Expose the submitForm function via ref
+  useImperativeHandle(ref, () => ({
+    submitForm: async () => {
+      try {
+        await handleSubmit(handleFormSubmit)();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }));
+
+  return (
     <Container maxWidth="md" sx={{
       px: { xs: 1, sm: 2, md: 0 },
       mt: { xs: 2, sm: 3, md: 4 },
@@ -103,7 +116,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
         >
           {t('personalInfoForm.title')}
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate autoComplete="off">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Name Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -431,7 +444,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
             >
               <Box sx={{
                 flex: 1,
-                width: { xs: '100%', sm: 'auto' }
+                width: { xs: '10%', sm: 'auto' }
               }}>
                 <TextField
                   fullWidth
@@ -553,36 +566,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit, defaultVa
               </Typography>
             )}
 
-            {/* Submit Button */}
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: { xs: 'center', sm: 'flex-end' },
-                mt: 2,
-                flexDirection: { xs: 'column', sm: 'row' },
-                gap: { xs: 1, sm: 2 }
-              }}
-            >
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                sx={{
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                  px: { xs: 3, sm: 4 },
-                  py: { xs: 1.5, sm: 1 }
-                }}
-                aria-label={t('personalInfoForm.submit')}
-              >
-                {t('personalInfoForm.submit')}
-              </Button>
-            </Box>
           </Box>
         </form>
       </Box>
     </Container>
   );
-};
+});
 
 export default PersonalInfoForm;
