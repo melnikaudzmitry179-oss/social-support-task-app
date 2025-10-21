@@ -87,7 +87,12 @@
     "reasonForApplying": "سبب تقديم الطلب",
     "back": "السابق",
     "submitApplication": "تقديم الطلب",
-    "save": "حفظ"
+    "save": "حفظ",
+    "helpMeWrite": "ساعدنى بالكتابة",
+    "aiSuggestion": "اقتراح الذكاء الاصطناعي",
+    "close": "إغلاق",
+    "discard": "تجاهل",
+    "accept": "قبول"
   },
   "validation": {
     "nameRequired": "الاسم مطلوب",

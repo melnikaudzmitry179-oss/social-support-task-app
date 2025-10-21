@@ -87,7 +87,12 @@
     "reasonForApplying": "Reason for Applying",
     "back": "Back",
     "submitApplication": "Submit Application",
-    "save": "Save"
+    "save": "Save",
+    "helpMeWrite": "Help Me Write",
+    "aiSuggestion": "AI Suggestion",
+    "close": "Close",
+    "discard": "Discard",
+    "accept": "Accept"
   },
   "validation": {
     "nameRequired": "Name is required",
