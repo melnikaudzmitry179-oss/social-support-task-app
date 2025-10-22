@@ -79,11 +79,6 @@ In the project directory, you can run:
 - `tsconfig.json` - Main TypeScript configuration
 - `tsconfig.node.json` - TypeScript configuration for Node.js
 - `vite.config.ts` - Vite build configuration
-- `i18n/` - Internationalization configuration
-  - `i18n/i18n.ts` - i18n setup and configuration
-  - `i18n/translations.d.ts` - Translation type definitions
-- `pages/` - Page components for the application
-  - `pages/HomePage.tsx` - Home page component
 - `public/` - Static assets
   - `public/vite.svg` - Vite logo asset
 - `src/` - Main source code directory
@@ -91,6 +86,11 @@ In the project directory, you can run:
   - `src/App.tsx` - Main application component
   - `src/index.css` - Global styles
   - `src/main.tsx` - Main entry point
+  - `src/pages/` - Page components for the application
+    - `pages/HomePage.tsx` - Home page component
+  - `src/i18n/` - Internationalization configuration
+    - `i18n/i18n.ts` - i18n setup and configuration
+    - `i18n/translations.d.ts` - Translation type definitions
   - `src/api/` - API service files, including OpenAI integration
     - `src/api/formService.ts` - Form data service
     - `src/api/index.ts` - API index file

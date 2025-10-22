@@ -1,9 +1,9 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
-import enTranslation from '../src/translations/en.json';
-import arTranslation from '../src/translations/ar.json';
+import enTranslation from "../src/translations/en.json";
+import arTranslation from "../src/translations/ar.json";
 
 i18n
   // .use(Backend) // Temporarily disable Backend as we are importing translations directly
@@ -12,29 +12,29 @@ i18n
   .init({
     resources: {
       en: {
-        translation: enTranslation
+        translation: enTranslation,
       },
       ar: {
-        translation: arTranslation
-      }
+        translation: arTranslation,
+      },
     },
-    fallbackLng: 'en',
+    fallbackLng: "en",
     debug: true,
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     detection: {
-      order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag'],
-      
-      lookupQuerystring: 'lng',
-      lookupCookie: 'i18next',
-      lookupLocalStorage: 'i18nextLng',
-      
-      caches: ['localStorage', 'cookie'],
-      excludeCacheFor: ['cimode'],
-      
-      htmlTag: document.documentElement
-    }
+      order: ["querystring", "cookie", "localStorage", "navigator", "htmlTag"],
+
+      lookupQuerystring: "lng",
+      lookupCookie: "i18next",
+      lookupLocalStorage: "i18nextLng",
+
+      caches: ["localStorage", "cookie"],
+      excludeCacheFor: ["cimode"],
+
+      htmlTag: document.documentElement,
+    },
   });
 
 export default i18n;

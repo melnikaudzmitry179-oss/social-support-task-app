@@ -1,4 +1,4 @@
-import i18n from '../../i18n/i18n';
+import i18n from "../i18n/i18n";
 
 /**
  * Utility function to translate text using the i18n instance

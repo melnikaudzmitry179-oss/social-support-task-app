@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
-import HomePage from "../../pages/HomePage";
+import HomePage from "../pages/HomePage";
 
 const Layout: React.FC = () => {
   const { i18n } = useTranslation();
@@ -18,7 +18,8 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     updateDocumentDirection(i18n.language);
-    const handleLanguageChangeInternal = (lng: string) => updateDocumentDirection(lng);
+    const handleLanguageChangeInternal = (lng: string) =>
+      updateDocumentDirection(lng);
 
     i18n.on("languageChanged", handleLanguageChangeInternal);
 
@@ -40,9 +41,7 @@ const Layout: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <div className="flex justify-center w-full mt-[80px]">
-        <main
-          className="max-w-[1200px] px-8 flex-grow pb-8"
-        >
+        <main className="max-w-[1200px] px-8 flex-grow pb-8">
           {renderContent()}
         </main>
       </div>
