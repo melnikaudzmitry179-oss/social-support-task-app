@@ -27,12 +27,12 @@ const Header: React.FC = () => {
       className="fixed top-0 left-0 w-full bg-blue-700 text-white shadow-lg z-50 h-[80px]"
       style={{ backgroundColor: "#1e40af", color: "white" }}
     >
-      <div className="px-4 h-full flex items-center justify-end">
+      <div className="h-full flex items-center justify-end">
         <div className="flex items-center space-x-4">
           <FormControl
             variant="outlined"
             size="small"
-            sx={{ minWidth: 80, backgroundColor: "white", borderRadius: 1 }}
+            sx={{ minWidth: 80, backgroundColor: "white", borderRadius: 1, marginRight: '16px' }}
           >
             <Select
               value={language}

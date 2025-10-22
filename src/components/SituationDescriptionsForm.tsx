@@ -14,6 +14,7 @@ import {
 import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
 import { useAiSuggestion } from "../hooks/useAiSuggestion";
 import AiSuggestionPopup from "./AiSuggestionPopup";
+import type { FormRef } from '../types/formTypes';
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) =>
@@ -34,21 +35,16 @@ const getSchema = (t: (key: string) => string) =>
 // Define the form data type
 export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
 
-// Define the ref type for form submission
-export interface FormRef {
-  submitForm: () => Promise<boolean>; // Returns true if validation passes
-}
+
 
 interface SituationDescriptionsFormProps {
-  onSubmit: (data: FormData) => void;
-  onBack?: () => void;
   defaultValues?: Partial<FormData>;
 }
 
 const SituationDescriptionsForm = forwardRef<
   FormRef,
   SituationDescriptionsFormProps
->(({ onSubmit,  defaultValues }, ref) => {
+>(({ defaultValues }, ref) => {
   const { updateSituationDescriptions } = useSocialSupportWizard();
   const { t } = useTranslation();
 
@@ -99,26 +95,14 @@ const SituationDescriptionsForm = forwardRef<
    // Handle form submission
    const handleFormSubmit = (data: FormData) => {
      console.log("Situation Descriptions Data:", data);
-     onSubmit(data);
-     // Don't reset the form here since it's handled by the wizard
+    updateSituationDescriptions(data);
    };
-
-  // Handle save without submitting
-  const handleSave = async () => {
-    // Get current form values using getValues method
-    const currentData = {
-      currentFinancialSituation: getValues("currentFinancialSituation"),
-      employmentCircumstances: getValues("employmentCircumstances"),
-      reasonForApplying: getValues("reasonForApplying"),
-    };
-    updateSituationDescriptions(currentData);
-  };
 
   // Expose the submitForm function via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
       try {
-        await handleSubmit(handleSave)();
+        await handleSubmit(handleFormSubmit)();
         return true;
       } catch {
         return false;
