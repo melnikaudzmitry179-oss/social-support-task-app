@@ -18,16 +18,64 @@ import type { FormRef } from '../types/formTypes';
 
 // Define the validation schema using Yup with translated error messages
 const getSchema = (t: (key: string) => string) => yup.object({
-  name: yup.string().required(t('validation.nameRequired')),
-  nationalId: yup.string().required(t('validation.nationalIdRequired')),
-  dateOfBirth: yup.date().required(t('validation.dateOfBirthRequired')),
+  name: yup
+    .string()
+    .required(t('validation.nameRequired'))
+    .min(2, t('validation.nameMinLength') || 'Name must be at least 2 characters')
+    .max(100, t('validation.nameMaxLength') || 'Name must not exceed 100 characters'),
+  nationalId: yup
+    .string()
+    .required(t('validation.nationalIdRequired'))
+    .min(5, t('validation.nationalIdMinLength') || 'National ID must be at least 5 characters')
+    .max(20, t('validation.nationalIdMaxLength') || 'National ID must not exceed 20 characters'),
+  dateOfBirth: yup
+    .date()
+    .required(t('validation.dateOfBirthRequired'))
+    .max(new Date(), t('validation.dateOfBirthPast') || 'Date of birth must be in the past')
+    .test(
+      'not-too-old',
+      t('validation.dateOfBirthNotTooOld') || 'Date of birth must be within reasonable range (not older than 120 years)',
+      function(value) {
+        if (!value) return true;
+        const today = new Date();
+        const birthDate = new Date(value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        return age <= 120;
+      }
+    ),
   gender: yup.string().required(t('validation.genderRequired')),
-  address: yup.string().required(t('validation.addressRequired')),
-  city: yup.string().required(t('validation.cityRequired')),
-  state: yup.string().required(t('validation.stateRequired')),
-  country: yup.string().required(t('validation.countryRequired')),
-  phone: yup.string().required(t('validation.phoneRequired')),
-  email: yup.string().email(t('validation.emailInvalid')).required(t('validation.emailRequired')),
+  address: yup
+    .string()
+    .required(t('validation.addressRequired'))
+    .min(5, t('validation.addressMinLength') || 'Address must be at least 5 characters')
+    .max(200, t('validation.addressMaxLength') || 'Address must not exceed 200 characters'),
+  city: yup
+    .string()
+    .required(t('validation.cityRequired'))
+    .min(2, t('validation.cityMinLength') || 'City must be at least 2 characters')
+    .max(50, t('validation.cityMaxLength') || 'City must not exceed 50 characters'),
+  state: yup
+    .string()
+    .required(t('validation.stateRequired'))
+    .min(2, t('validation.stateMinLength') || 'State must be at least 2 characters')
+    .max(50, t('validation.stateMaxLength') || 'State must not exceed 50 characters'),
+  country: yup
+    .string()
+    .required(t('validation.countryRequired'))
+    .min(2, t('validation.countryMinLength') || 'Country must be at least 2 characters')
+    .max(50, t('validation.countryMaxLength') || 'Country must not exceed 50 characters'),
+  phone: yup
+    .string()
+    .required(t('validation.phoneRequired'))
+    .matches(
+      /^\+?[1-9]\d{0,15}$/,
+      t('validation.phoneInvalid') || 'Invalid phone number format'
+    ),
+  email: yup
+    .string()
+    .email(t('validation.emailInvalid'))
+    .required(t('validation.emailRequired'))
+    .max(100, t('validation.emailMaxLength') || 'Email must not exceed 100 characters'),
 }).required();
 
 // Define the form data type
@@ -84,12 +132,19 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(({ defaultVa
   // Expose the submitForm function via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      try {
-        await handleSubmit(handleFormSubmit)();
-        return true;
-      } catch {
-        return false;
-      }
+      return new Promise((resolve) => {
+        const handleValidSubmit = (data: FormData) => {
+          handleFormSubmit(data);
+          resolve(true); // Validation passed and form was submitted
+        };
+        
+        const handleInvalidSubmit = () => {
+          // This is called when validation fails
+          resolve(false); // Validation failed
+        };
+        
+        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
+      });
     }
   }));
 
@@ -112,7 +167,7 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(({ defaultVa
         >
           {t('personalInfoForm.title')}
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate autoComplete="off">
+        <form noValidate autoComplete="off">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Name Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>

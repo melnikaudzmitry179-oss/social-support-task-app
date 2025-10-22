@@ -86,12 +86,19 @@ const FamilyFinancialInfoForm = forwardRef<FormRef, FamilyFinancialInfoFormProps
   // Expose the submitForm function via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      try {
-        await handleSubmit(handleFormSubmit)();
-        return true;
-      } catch {
-        return false;
-      }
+      return new Promise((resolve) => {
+        const handleValidSubmit = (data: FormData) => {
+          handleFormSubmit(data);
+          resolve(true); // Validation passed and form was submitted
+        };
+        
+        const handleInvalidSubmit = () => {
+          // This is called when validation fails
+          resolve(false); // Validation failed
+        };
+        
+        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
+      });
     }
   }));
   return (
@@ -113,7 +120,7 @@ const FamilyFinancialInfoForm = forwardRef<FormRef, FamilyFinancialInfoFormProps
         >
           {t('familyFinancialInfoForm.title')}
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate autoComplete="off">
+        <form noValidate autoComplete="off">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2, md: 2 } }}>
             {/* Marital Status Field */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>

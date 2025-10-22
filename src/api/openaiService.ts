@@ -1,4 +1,5 @@
 import type { SituationDescriptionsFormData } from "../types/formTypes";
+import { t } from "../utils/i18n.util";
 
 const OPENAI_API_URL = "/api/openai/chat/completions"; // Using proxy endpoint to avoid CORS issues
 const OPENAI_MODEL = "glm-4.6"; // Using the correct model for the Zhipu AI API
@@ -29,7 +30,7 @@ class OpenAIService {
   async generateText({
     fieldName,
     currentValue,
-    timeout = 70000,
+    timeout = 100000,
   }: GenerateTextParams): Promise<string> {
     // Check if API key is available
     if (!this.apiKey) {
@@ -38,29 +39,29 @@ class OpenAIService {
       );
     }
 
-    // Create a descriptive prompt based on the field name
+    // Create a descriptive prompt based on the field name using i18n translations
     let prompt = "";
     switch (fieldName) {
       case "currentFinancialSituation":
-        prompt = ` ${
-          currentValue
-            ? `"${currentValue}". Please improve this.`
-            : ""
-        }`;
+        if (currentValue && currentValue.trim() !== "") {
+          prompt = `${t("aiPrompts.currentFinancialSituation")} ${t("aiPrompts.expandPrompt", { currentValue })}`;
+        } else {
+          prompt = t("aiPrompts.currentFinancialSituation");
+        }
         break;
       case "employmentCircumstances":
-        prompt = `  ${
-          currentValue
-            ? `"${currentValue}". Please improve this.`
-            : ""
-        }`;
+        if (currentValue && currentValue.trim() !== "") {
+          prompt = `${t("aiPrompts.employmentCircumstances")} ${t("aiPrompts.expandPrompt", { currentValue })}`;
+        } else {
+          prompt = t("aiPrompts.employmentCircumstances");
+        }
         break;
       case "reasonForApplying":
-        prompt = `Write a description of why someone is applying for social support.  ${
-          currentValue
-            ? `The user has already written: "${currentValue}". Please expand or improve this.`
-            : ""
-        }`;
+        if (currentValue && currentValue.trim() !== "") {
+          prompt = `${t("aiPrompts.reasonForApplying")} ${t("aiPrompts.expandPromptShort", { currentValue })}`;
+        } else {
+          prompt = t("aiPrompts.reasonForApplying");
+        }
         break;
       default:
         throw new Error(`Unknown field name: ${fieldName}`);

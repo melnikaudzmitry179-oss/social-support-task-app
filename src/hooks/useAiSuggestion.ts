@@ -38,7 +38,7 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
       const suggestion = await openAIService.generateText({
         fieldName,
         currentValue,
-        timeout: 70000, // 70 second timeout
+        timeout: 100000, // 70 second timeout
       });
       setAiSuggestion(suggestion);
       setEditableSuggestion(suggestion);

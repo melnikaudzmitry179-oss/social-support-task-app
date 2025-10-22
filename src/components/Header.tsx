@@ -32,7 +32,7 @@ const Header: React.FC = () => {
           <FormControl
             variant="outlined"
             size="small"
-            sx={{ minWidth: 80, backgroundColor: "white", borderRadius: 1, marginRight: '16px' }}
+            sx={{ minWidth: 80, backgroundColor: "white", borderRadius: 1, margin: '0 16px' }}
           >
             <Select
               value={language}

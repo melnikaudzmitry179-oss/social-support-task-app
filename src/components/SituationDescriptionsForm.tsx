@@ -101,12 +101,19 @@ const SituationDescriptionsForm = forwardRef<
   // Expose the submitForm function via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      try {
-        await handleSubmit(handleFormSubmit)();
-        return true;
-      } catch {
-        return false;
-      }
+      return new Promise((resolve) => {
+        const handleValidSubmit = (data: FormData) => {
+          handleFormSubmit(data);
+          resolve(true); // Validation passed and form was submitted
+        };
+        
+        const handleInvalidSubmit = () => {
+          // This is called when validation fails
+          resolve(false); // Validation failed
+        };
+        
+        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
+      });
     },
   }));
 
@@ -133,7 +140,7 @@ const SituationDescriptionsForm = forwardRef<
           >
             {t("situationDescriptionsForm.title")}
           </Typography>
-          <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+          <form noValidate>
             <Box
               sx={{
                 display: "flex",
