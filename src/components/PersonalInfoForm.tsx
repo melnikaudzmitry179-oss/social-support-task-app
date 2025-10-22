@@ -235,7 +235,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                           : undefined,
                       }}
                       onChange={(e) => {
-                        // Convert the date string from input to Date object for form state
                         const dateValue = e.target.value
                           ? new Date(e.target.value)
                           : null;
@@ -488,7 +487,7 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 <Box
                   sx={{
                     flex: 1,
-                    width: { xs: "10%", sm: "auto" },
+                    width: { xs: "auto", sm: "auto" },
                   }}
                 >
                   <TextField

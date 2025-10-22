@@ -401,13 +401,29 @@ const SocialSupportFormWizard: React.FC = () => {
 
         {/* Progress bar */}
         <Box
-          sx={{ mb: { xs: 2, sm: 3 } }}
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            '& .MuiStepper-root': {
+              '& .MuiStep-root': {
+                '& .MuiStepLabel-root': {
+                  // Ensure proper alignment in both LTR and RTL
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                },
+                '& .MuiStepLabel-label': {
+                  mt: 1, // Add margin to separate label from icon
+                  textAlign: 'center',
+                }
+              }
+            }
+          }}
           role="region"
           aria-label={t("socialSupportFormWizard.title")}
         >
           <Stepper
             activeStep={activeStep}
-            alternativeLabel
+            orientation="horizontal"
             aria-label={t("socialSupportFormWizard.title")}
           >
             {steps.map((label, index) => (
@@ -416,6 +432,7 @@ const SocialSupportFormWizard: React.FC = () => {
                   sx={{
                     "& .MuiStepLabel-label": {
                       fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1rem" },
+                      textAlign: 'center',
                     },
                   }}
                   aria-current={index === activeStep ? "step" : undefined}

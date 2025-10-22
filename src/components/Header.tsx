@@ -8,8 +8,8 @@ const Header: React.FC = () => {
   const [language, setLanguage] = useState(i18n.language || "en");
 
   useEffect(() => {
-    // Set the initial language if available
-    setLanguage(i18n.language || "en");
+    const normalizedLanguage = i18n.language.startsWith('ar') ? 'ar' : 'en';
+    setLanguage(normalizedLanguage);
   }, [i18n.language]);
 
   const changeLanguage = (lng: string) => {
@@ -32,12 +32,16 @@ const Header: React.FC = () => {
           <FormControl
             variant="outlined"
             size="small"
-            sx={{ minWidth: 80, backgroundColor: "white", borderRadius: 1, margin: '0 16px' }}
+            sx={{
+              minWidth: 80,
+              backgroundColor: "white",
+              borderRadius: 1,
+              margin: "0 16px",
+            }}
           >
             <Select
               value={language}
               onChange={handleLanguageChange}
-              displayEmpty
               inputProps={{ "aria-label": "Language" }}
               sx={{
                 color: "#1e40af",
@@ -51,7 +55,7 @@ const Header: React.FC = () => {
               }}
             >
               <MenuItem value="en">EN</MenuItem>
-              <MenuItem value="ar">AR</MenuItem>
+              <MenuItem value="ar">العربية</MenuItem>
             </Select>
           </FormControl>
         </div>
