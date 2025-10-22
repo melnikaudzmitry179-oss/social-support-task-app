@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
-import HomePage from "../components/HomePage";
+import HomePage from "../../pages/HomePage";
 
 const Layout: React.FC = () => {
   const { i18n } = useTranslation();
@@ -27,7 +27,6 @@ const Layout: React.FC = () => {
     };
   }, [i18n]);
 
-  // Render dynamic content based on the current path
   const renderContent = () => {
     switch (location.pathname) {
       case "/":

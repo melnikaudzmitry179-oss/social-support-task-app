@@ -1,7 +1,7 @@
 export interface PersonalInfoFormData {
   name: string;
   nationalId: string;
-  dateOfBirth: Date | string; // Can be Date object or string depending on context
+  dateOfBirth: Date | string;
   gender: string;
   address: string;
   city: string;
@@ -31,8 +31,7 @@ export interface FormData {
   situationDescriptions: SituationDescriptionsFormData;
 }
 
-// Define the ref type for form submission used across all forms
 export interface FormRef {
-  submitForm: () => Promise<boolean>; // Returns true if validation passes
-  saveForm?: () => Promise<boolean>; // Optional alias for submitForm for backward compatibility
+  submitForm: () => Promise<boolean>;
+  saveForm?: () => Promise<boolean>;
 };

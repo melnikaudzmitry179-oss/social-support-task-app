@@ -12,9 +12,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
-import type { FormRef } from "../types/formTypes";
-import { getFamilyFinancialInfoSchema, type FamilyFinancialInfoFormData } from "../utils/validation.util";
+import { useSocialSupportWizard } from "../../context/useSocialSupportWizard";
+import type { FormRef } from "../../types/formTypes";
+import {
+  getFamilyFinancialInfoSchema,
+  type FamilyFinancialInfoFormData,
+} from "../../utils/validation.util";
 
 type FormData = FamilyFinancialInfoFormData;
 
@@ -29,7 +32,6 @@ const FamilyFinancialInfoForm = forwardRef<
   const { t } = useTranslation();
   const { updateFamilyFinancialInfo } = useSocialSupportWizard();
 
-  // Initialize the form with react-hook-form and yup validation
   const schema = getFamilyFinancialInfoSchema(t);
   const {
     register,
@@ -43,20 +45,16 @@ const FamilyFinancialInfoForm = forwardRef<
     defaultValues: defaultValues || {},
   });
 
-  // Watch the fields to trigger re-render when they change
   const watchedMaritalStatus = watch("maritalStatus");
   const watchedEmploymentStatus = watch("employmentStatus");
   const watchedHousingStatus = watch("housingStatus");
 
-  // Reset form when defaultValues change to ensure selects are properly populated
   React.useEffect(() => {
     if (defaultValues) {
-      // Reset the entire form with new default values
       reset(defaultValues);
     }
   }, [defaultValues, reset]);
 
-  // Ensure the select values are properly set when defaultValues change
   React.useEffect(() => {
     if (defaultValues?.maritalStatus) {
       setValue("maritalStatus", defaultValues.maritalStatus);
@@ -74,25 +72,21 @@ const FamilyFinancialInfoForm = forwardRef<
     setValue,
   ]);
 
-  // Handle form submission
   const handleFormSubmit = (data: FormData) => {
     console.log("Family & Financial Info Data:", data);
-    // Update the context with form data
     updateFamilyFinancialInfo(data);
   };
 
-  // Expose the submitForm and saveForm functions via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
       return new Promise((resolve) => {
         const handleValidSubmit = (data: FormData) => {
           handleFormSubmit(data);
-          resolve(true); // Validation passed and form was submitted
+          resolve(true);
         };
 
         const handleInvalidSubmit = () => {
-          // This is called when validation fails
-          resolve(false); // Validation failed
+          resolve(false);
         };
 
         handleSubmit(handleValidSubmit, handleInvalidSubmit)();
@@ -102,12 +96,11 @@ const FamilyFinancialInfoForm = forwardRef<
       return new Promise((resolve) => {
         const handleValidSubmit = (data: FormData) => {
           handleFormSubmit(data);
-          resolve(true); // Validation passed and form was submitted
+          resolve(true);
         };
 
         const handleInvalidSubmit = () => {
-          // This is called when validation fails
-          resolve(false); // Validation failed
+          resolve(false);
         };
 
         handleSubmit(handleValidSubmit, handleInvalidSubmit)();
@@ -144,7 +137,6 @@ const FamilyFinancialInfoForm = forwardRef<
               gap: { xs: 1.5, sm: 2, md: 2 },
             }}
           >
-            {/* Marital Status Field */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <FormControl
                 fullWidth
@@ -207,7 +199,6 @@ const FamilyFinancialInfoForm = forwardRef<
               </Typography>
             )}
 
-            {/* Dependents Field */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <TextField
                 fullWidth
@@ -251,7 +242,6 @@ const FamilyFinancialInfoForm = forwardRef<
               </Typography>
             )}
 
-            {/* Employment Status Field */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <FormControl
                 fullWidth
@@ -329,7 +319,6 @@ const FamilyFinancialInfoForm = forwardRef<
               </Typography>
             )}
 
-            {/* Monthly Income Field */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <TextField
                 fullWidth
@@ -373,7 +362,6 @@ const FamilyFinancialInfoForm = forwardRef<
               </Typography>
             )}
 
-            {/* Housing Status Field */}
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <FormControl
                 fullWidth

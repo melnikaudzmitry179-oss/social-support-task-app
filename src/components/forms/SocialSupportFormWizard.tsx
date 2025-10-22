@@ -12,26 +12,23 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { SocialSupportWizardProvider } from "../context/SocialSupportWizardContext";
-import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
+import { SocialSupportWizardProvider } from "../../context/SocialSupportWizardContext";
+import { useSocialSupportWizard } from "../../context/useSocialSupportWizard";
 import PersonalInfoForm from "./PersonalInfoForm";
 import FamilyFinancialInfoForm from "./FamilyFinancialInfoForm";
 import SituationDescriptionsForm from "./SituationDescriptionsForm";
-import type { FormRef } from "../types/formTypes";
-import { getItem, setItem } from "../utils/localStorage.util";
+import type { FormRef } from "../../types/formTypes";
+import { getItem, setItem } from "../../utils/localStorage.util";
 import {
   validatePersonalInfo,
   validateFamilyFinancialInfo,
-} from "../utils/validation.util";
+} from "../../utils/validation.util";
 
-// Removed unused import: import { submitFormData } from '../api/formService';
-
-// Define the structure for localStorage data (with date as string)
 interface LocalStorageFormData {
   personalInfo: {
     name: string;
     nationalId: string;
-    dateOfBirth: string; // Stored as string in localStorage
+    dateOfBirth: string;
     gender: string;
     address: string;
     city: string;
@@ -54,7 +51,6 @@ interface LocalStorageFormData {
   } | null;
 }
 
-// Wrapper component to provide the context
 const SocialSupportFormWizardWithProvider: React.FC = () => {
   return (
     <SocialSupportWizardProvider>
@@ -81,7 +77,6 @@ const SocialSupportFormWizard: React.FC = () => {
     "success" | "error" | "warning" | "info"
   >("success");
 
-  // Refs for the form components to trigger validation and save
   const personalInfoFormRef = React.useRef<FormRef>(null);
   const familyFinancialInfoFormRef = React.useRef<FormRef>(null);
   const situationDescriptionsFormRef = React.useRef<FormRef>(null);
@@ -92,20 +87,16 @@ const SocialSupportFormWizard: React.FC = () => {
     t("socialSupportFormWizard.stepLabels.2"),
   ];
 
-  // Determine the active step based on form completion
   const [activeStep, setActiveStep] = React.useState(0);
   const [hasLoaded, setHasLoaded] = React.useState(false);
 
-  // Load saved form data from localStorage on component mount
   useEffect(() => {
     const savedData = getItem<LocalStorageFormData>("formData");
     if (savedData) {
-      // Update the context with saved data
       if (savedData.personalInfo) {
-        // Convert date string back to Date object if needed
         updatePersonalInfo({
           ...savedData.personalInfo,
-          dateOfBirth: new Date(savedData.personalInfo.dateOfBirth), // Convert string back to Date
+          dateOfBirth: new Date(savedData.personalInfo.dateOfBirth),
         });
       }
       if (savedData.familyFinancialInfo) {
@@ -115,29 +106,25 @@ const SocialSupportFormWizard: React.FC = () => {
         updateSituationDescriptions(savedData.situationDescriptions);
       }
 
-      // Determine starting step based on saved data
       if (savedData.situationDescriptions) {
-        setActiveStep(2); // If all forms are filled, start at the final step
+        setActiveStep(2);
       } else if (savedData.familyFinancialInfo) {
-        setActiveStep(1); // If first two forms are filled, start at the second step
+        setActiveStep(1);
       } else if (savedData.personalInfo) {
-        setActiveStep(0); // If only first form is filled, start at the first step
+        setActiveStep(0);
       }
     }
     setLoading(false);
     setHasLoaded(true);
   }, []);
 
-  // Save form data to localStorage whenever it changes (after initial load)
   useEffect(() => {
     if (hasLoaded) {
-      // Only save after the initial load is complete
-      // Convert form data to localStorage format
       const localStorageData: LocalStorageFormData = {
         personalInfo: formData.personalInfo
           ? {
               ...formData.personalInfo,
-              dateOfBirth: formData.personalInfo.dateOfBirth.toString(), // Convert Date to string for storage
+              dateOfBirth: formData.personalInfo.dateOfBirth.toString(),
             }
           : null,
         familyFinancialInfo: formData.familyFinancialInfo,
@@ -148,13 +135,10 @@ const SocialSupportFormWizard: React.FC = () => {
   }, [formData, hasLoaded]);
 
   const handleSubmitAllForms = async () => {
-
     try {
-      // Validate the current (and only mounted) form via its ref
       const isSituationDescriptionsValid =
         await situationDescriptionsFormRef.current?.submitForm();
 
-      // Programmatically validate data for other forms from context
       const isPersonalInfoValid = await validatePersonalInfo(
         formData.personalInfo || {},
         t
@@ -164,7 +148,6 @@ const SocialSupportFormWizard: React.FC = () => {
         t
       );
 
-      // Check if all forms are valid
       if (
         !isPersonalInfoValid ||
         !isFamilyFinancialInfoValid ||
@@ -174,28 +157,24 @@ const SocialSupportFormWizard: React.FC = () => {
           t("socialSupportFormWizard.validationError") ||
             "Please correct errors in the forms before submitting."
         );
-        // Move to the step with validation errors so user can see them
         if (!isPersonalInfoValid) {
           setActiveStep(0);
         } else if (!isFamilyFinancialInfoValid) {
           setActiveStep(1);
         } else if (!isSituationDescriptionsValid) {
-          setActiveStep(2); // Stay on the current step where the error occurred
+          setActiveStep(2);
         }
         return;
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setSubmitError(
         t("socialSupportFormWizard.validationError") ||
           "Please correct errors in the forms before submitting."
-          
       );
       return;
     }
 
-    // Prepare the form data to submit, converting date to string
-    // At this point, all form data should be available since user has completed all steps
     const fullFormData = {
       personalInfo: {
         ...formData.personalInfo,
@@ -206,7 +185,6 @@ const SocialSupportFormWizard: React.FC = () => {
     };
     console.log("Full Form Data:", fullFormData);
 
-    // Verify that all required data is present before submitting
     if (
       !fullFormData.personalInfo ||
       !fullFormData.familyFinancialInfo ||
@@ -219,40 +197,24 @@ const SocialSupportFormWizard: React.FC = () => {
       return;
     }
 
-    // Skip backend submission and complete the flow directly
     setIsSubmitting(true);
     setSubmitError(null);
 
-    // Complete the submission flow immediately
-    setActiveStep(3); // Move to final step (completed)
+    setActiveStep(3);
 
-    // Set submitting to false immediately since we're not actually submitting to a backend
     setIsSubmitting(false);
-
-    // Original submission code (commented out)
-    // try {
-    //   setIsSubmitting(true);
-    //   setSubmitError(null);
-    //   await submitFormData(fullFormData);
-    //   setActiveStep(3); // Move to final step (completed)
-    // } catch (error) {
-    //   setSubmitError(t('socialSupportFormWizard.submitError') || 'Failed to submit form. Please try again.');
-    //   console.error('Error submitting form:', error);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
   };
 
   const handleBack = () => {
-    setSubmitError(null); // Clear error when navigating away
+    setSubmitError(null);
     setActiveStep((prev) => Math.max(prev - 1, 0));
   };
 
   const handleReset = () => {
     resetFormData();
     setActiveStep(0);
-    setSubmitError(null); // Clear error when resetting
-    // Clear saved data from localStorage
+    setSubmitError(null);
+
     localStorage.removeItem("formData");
   };
 
@@ -329,7 +291,10 @@ const SocialSupportFormWizard: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {setSubmitError(null); setActiveStep(2);}} // Go back to form to try again
+                    onClick={() => {
+                      setSubmitError(null);
+                      setActiveStep(2);
+                    }}
                   >
                     {t("socialSupportFormWizard.tryAgain") || "Try Again"}
                   </Button>
@@ -383,7 +348,6 @@ const SocialSupportFormWizard: React.FC = () => {
       aria-label={t("socialSupportFormWizard.title")}
     >
       <Box>
-        {/* Skip link for screen readers */}
         <a
           href="#form-content"
           className="skip-link"
@@ -399,24 +363,22 @@ const SocialSupportFormWizard: React.FC = () => {
           {t("skipToMainContent", "Skip to main content")}
         </a>
 
-        {/* Progress bar */}
         <Box
           sx={{
             mb: { xs: 2, sm: 3 },
-            '& .MuiStepper-root': {
-              '& .MuiStep-root': {
-                '& .MuiStepLabel-root': {
-                  // Ensure proper alignment in both LTR and RTL
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
+            "& .MuiStepper-root": {
+              "& .MuiStep-root": {
+                "& .MuiStepLabel-root": {
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
                 },
-                '& .MuiStepLabel-label': {
-                  mt: 1, // Add margin to separate label from icon
-                  textAlign: 'center',
-                }
-              }
-            }
+                "& .MuiStepLabel-label": {
+                  mt: 1,
+                  textAlign: "center",
+                },
+              },
+            },
           }}
           role="region"
           aria-label={t("socialSupportFormWizard.title")}
@@ -432,7 +394,7 @@ const SocialSupportFormWizard: React.FC = () => {
                   sx={{
                     "& .MuiStepLabel-label": {
                       fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1rem" },
-                      textAlign: 'center',
+                      textAlign: "center",
                     },
                   }}
                   aria-current={index === activeStep ? "step" : undefined}
@@ -444,7 +406,6 @@ const SocialSupportFormWizard: React.FC = () => {
           </Stepper>
         </Box>
 
-        {/* Progress indicator */}
         <Box
           sx={{
             display: "flex",
@@ -481,12 +442,9 @@ const SocialSupportFormWizard: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Form content */}
         <Box id="form-content" tabIndex={-1}>
           {renderStepContent()}
         </Box>
-
-        {/* Navigation buttons */}
 
         <Box
           sx={{
@@ -499,7 +457,6 @@ const SocialSupportFormWizard: React.FC = () => {
           role="group"
           aria-label={t("socialSupportFormWizard.title")}
         >
-          {/* Show the general back button only for steps 1 and 2 (not for step 0) */}
           {activeStep > 0 && (
             <Button
               onClick={handleBack}
@@ -517,7 +474,10 @@ const SocialSupportFormWizard: React.FC = () => {
           {activeStep === 0 && (
             <Button
               variant="contained"
-              onClick={() => {setSubmitError(null); setActiveStep(1);}}
+              onClick={() => {
+                setSubmitError(null);
+                setActiveStep(1);
+              }}
               color="primary"
               sx={{
                 fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -532,7 +492,10 @@ const SocialSupportFormWizard: React.FC = () => {
           {activeStep === 1 && (
             <Button
               variant="contained"
-              onClick={() => {setSubmitError(null); setActiveStep(2);}}
+              onClick={() => {
+                setSubmitError(null);
+                setActiveStep(2);
+              }}
               color="primary"
               sx={{
                 fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -545,7 +508,6 @@ const SocialSupportFormWizard: React.FC = () => {
             </Button>
           )}
 
-          {/* Save buttons for steps */}
           {activeStep === 0 && (
             <Button
               variant="contained"
@@ -645,7 +607,6 @@ const SocialSupportFormWizard: React.FC = () => {
             </Button>
           )}
 
-          {/* Submit button for step 2 */}
           {activeStep === 2 && (
             <Button
               type="button"
@@ -658,7 +619,7 @@ const SocialSupportFormWizard: React.FC = () => {
                 py: { xs: 1.5, sm: 1 },
               }}
               onClick={async () => {
-                setSubmitError(null); // Clear any previous error before attempting to submit again
+                setSubmitError(null);
                 handleSubmitAllForms();
               }}
               aria-label={t("situationDescriptionsForm.submitApplication")}
@@ -669,7 +630,6 @@ const SocialSupportFormWizard: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Snackbar for showing messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

@@ -12,9 +12,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
-import type { FormRef } from "../types/formTypes";
-import { getPersonalInfoSchema, type PersonalInfoFormData } from "../utils/validation.util";
+import { useSocialSupportWizard } from "../../context/useSocialSupportWizard";
+import type { FormRef } from "../../types/formTypes";
+import {
+  getPersonalInfoSchema,
+  type PersonalInfoFormData,
+} from "../../utils/validation.util";
 
 type FormData = PersonalInfoFormData;
 
@@ -23,11 +26,10 @@ interface PersonalInfoFormProps {
 }
 
 const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
- ({ defaultValues }, ref) => {
+  ({ defaultValues }, ref) => {
     const { t } = useTranslation();
     const { updatePersonalInfo } = useSocialSupportWizard();
 
-    // Initialize the form with react-hook-form and yup validation
     const schema = getPersonalInfoSchema(t);
     const {
       register,
@@ -42,45 +44,37 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
       defaultValues: defaultValues || {},
     });
 
-    // Watch the gender field to trigger re-render when it changes
     const watchedGender = watch("gender");
 
-    // Reset form when defaultValues change to ensure selects are properly populated
     React.useEffect(() => {
       if (defaultValues) {
-        // Reset the entire form with new default values
         reset(defaultValues);
       }
     }, [defaultValues, reset]);
 
-    // Ensure the select values are properly set when defaultValues change
     React.useEffect(() => {
       if (defaultValues?.gender) {
         setValue("gender", defaultValues.gender);
       }
     }, [defaultValues?.gender, setValue]);
 
-    // Handle form submission
     const handleFormSubmit = (data: FormData) => {
       console.log("Form Data:", data);
-      // Update the context with form data
       updatePersonalInfo(data);
     };
 
-    // Expose the submitForm and saveForm functions via ref
     useImperativeHandle(ref, () => ({
       submitForm: async () => {
         return new Promise((resolve) => {
           const handleValidSubmit = (data: FormData) => {
             handleFormSubmit(data);
-            resolve(true); // Validation passed and form was submitted
+            resolve(true);
           };
-  
+
           const handleInvalidSubmit = () => {
-            // This is called when validation fails
-            resolve(false); // Validation failed
+            resolve(false);
           };
-  
+
           handleSubmit(handleValidSubmit, handleInvalidSubmit)();
         });
       },
@@ -88,14 +82,13 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
         return new Promise((resolve) => {
           const handleValidSubmit = (data: FormData) => {
             handleFormSubmit(data);
-            resolve(true); // Validation passed and form was submitted
+            resolve(true);
           };
-  
+
           const handleInvalidSubmit = () => {
-            // This is called when validation fails
-            resolve(false); // Validation failed
+            resolve(false);
           };
-  
+
           handleSubmit(handleValidSubmit, handleInvalidSubmit)();
         });
       },
@@ -131,7 +124,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 gap: { xs: 1.5, sm: 2, md: 2 },
               }}
             >
-              {/* Name Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <TextField
                   fullWidth
@@ -171,7 +163,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 </Typography>
               )}
 
-              {/* National ID Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <TextField
                   fullWidth
@@ -213,7 +204,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 </Typography>
               )}
 
-              {/* Date of Birth Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Controller
                   name="dateOfBirth"
@@ -229,7 +219,7 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                       }}
                       id="date-of-birth-input"
                       inputProps={{
-                        max: new Date().toISOString().split("T")[0], // Prevent future dates
+                        max: new Date().toISOString().split("T")[0],
                         "aria-describedby": errors.dateOfBirth
                           ? "date-of-birth-error"
                           : undefined,
@@ -274,7 +264,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 </Typography>
               )}
 
-              {/* Gender Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <FormControl
                   fullWidth
@@ -332,7 +321,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 </Typography>
               )}
 
-              {/* Address Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <TextField
                   fullWidth
@@ -374,7 +362,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 </Typography>
               )}
 
-              {/* City and State Fields (in a row) */}
               <Box
                 sx={{
                   display: "flex",
@@ -475,7 +462,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 )}
               </Box>
 
-              {/* Country and Phone Fields (in a row) */}
               <Box
                 sx={{
                   display: "flex",
@@ -576,7 +562,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                 )}
               </Box>
 
-              {/* Email Field */}
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <TextField
                   fullWidth

@@ -10,15 +10,16 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
-import { useAiSuggestion } from "../hooks/useAiSuggestion";
-import AiSuggestionPopup from "./AiSuggestionPopup";
-import type { FormRef } from '../types/formTypes';
-import { getSituationDescriptionsSchema, type SituationDescriptionsFormData } from "../utils/validation.util";
+import { useSocialSupportWizard } from "../../context/useSocialSupportWizard";
+import { useAiSuggestion } from "../../hooks/useAiSuggestion";
+import AiSuggestionPopup from "../popups/AiSuggestionPopup";
+import type { FormRef } from "../../types/formTypes";
+import {
+  getSituationDescriptionsSchema,
+  type SituationDescriptionsFormData,
+} from "../../utils/validation.util";
 
 type FormData = SituationDescriptionsFormData;
-
-
 
 interface SituationDescriptionsFormProps {
   defaultValues?: Partial<FormData>;
@@ -31,7 +32,6 @@ const SituationDescriptionsForm = forwardRef<
   const { updateSituationDescriptions } = useSocialSupportWizard();
   const { t } = useTranslation();
 
-  // Initialize the form with react-hook-form and yup validation
   const schema = getSituationDescriptionsSchema(t);
   const {
     register,
@@ -44,7 +44,6 @@ const SituationDescriptionsForm = forwardRef<
     defaultValues: defaultValues || {},
   });
 
-  // Use the AI suggestion hook
   const {
     editableSuggestion,
     isGenerating,
@@ -58,10 +57,9 @@ const SituationDescriptionsForm = forwardRef<
   } = useAiSuggestion({
     onAccept: (field, value) => {
       setValue(field, value);
-    }
+    },
   });
 
-  // Wrapper functions to maintain existing interface
   const handleGenerateSuggestion = async (fieldName: keyof FormData) => {
     const currentValue = getValues(fieldName) || "";
     await handleGenerateSuggestionHook(fieldName, currentValue);
@@ -75,26 +73,23 @@ const SituationDescriptionsForm = forwardRef<
     handleDiscardSuggestionHook();
   };
 
-   // Handle form submission
-   const handleFormSubmit = (data: FormData) => {
-     console.log("Situation Descriptions Data:", data);
+  const handleFormSubmit = (data: FormData) => {
+    console.log("Situation Descriptions Data:", data);
     updateSituationDescriptions(data);
-   };
+  };
 
-  // Expose the submitForm and saveForm functions via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
       return new Promise((resolve) => {
         const handleValidSubmit = (data: FormData) => {
           handleFormSubmit(data);
-          resolve(true); // Validation passed and form was submitted
+          resolve(true);
         };
-        
+
         const handleInvalidSubmit = () => {
-          // This is called when validation fails
-          resolve(false); // Validation failed
+          resolve(false);
         };
-        
+
         handleSubmit(handleValidSubmit, handleInvalidSubmit)();
       });
     },
@@ -102,14 +97,13 @@ const SituationDescriptionsForm = forwardRef<
       return new Promise((resolve) => {
         const handleValidSubmit = (data: FormData) => {
           handleFormSubmit(data);
-          resolve(true); // Validation passed and form was submitted
+          resolve(true);
         };
-        
+
         const handleInvalidSubmit = () => {
-          // This is called when validation fails
-          resolve(false); // Validation failed
+          resolve(false);
         };
-        
+
         handleSubmit(handleValidSubmit, handleInvalidSubmit)();
       });
     },
@@ -146,7 +140,6 @@ const SituationDescriptionsForm = forwardRef<
                 gap: { xs: 1.5, sm: 2, md: 2 },
               }}
             >
-              {/* Current Financial Situation Field */}
               <Box
                 sx={{
                   display: "flex",
@@ -232,7 +225,6 @@ const SituationDescriptionsForm = forwardRef<
                 </Typography>
               )}
 
-              {/* Employment Circumstances Field */}
               <Box
                 sx={{
                   display: "flex",
@@ -316,7 +308,6 @@ const SituationDescriptionsForm = forwardRef<
                 </Typography>
               )}
 
-              {/* Reason for Applying Field */}
               <Box
                 sx={{
                   display: "flex",
@@ -403,7 +394,6 @@ const SituationDescriptionsForm = forwardRef<
         </Box>
       </Container>
 
-      {/* AI Suggestion Popup */}
       <AiSuggestionPopup
         open={showSuggestionPopup}
         onClose={handleDiscardSuggestion}

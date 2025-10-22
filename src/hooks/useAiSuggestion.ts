@@ -20,7 +20,6 @@ export interface UseAiSuggestionReturn {
 }
 
 export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSuggestionReturn => {
-  // State for AI suggestions and popup
   const [aiSuggestion, setAiSuggestion] = useState<string>("");
   const [editableSuggestion, setEditableSuggestion] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -28,7 +27,6 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
   const [showSuggestionPopup, setShowSuggestionPopup] = useState<boolean>(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
-  // Function to handle AI suggestion generation
  const handleGenerateSuggestion = async (fieldName: keyof SituationDescriptionsFormData, currentValue: string = "") => {
     setCurrentField(fieldName);
     setIsGenerating(true);
@@ -38,7 +36,7 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
       const suggestion = await openAIService.generateText({
         fieldName,
         currentValue,
-        timeout: 100000, // 70 second timeout
+        timeout: 100000,
       });
       setAiSuggestion(suggestion);
       setEditableSuggestion(suggestion);
@@ -58,7 +56,6 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
     }
   };
 
-  // Function to accept the AI suggestion
  const handleAcceptSuggestion = () => {
     if (currentField) {
       const suggestionToUse = editableSuggestion || aiSuggestion;
@@ -72,7 +69,6 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
     }
  };
 
-  // Function to discard the suggestion
   const handleDiscardSuggestion = () => {
     setShowSuggestionPopup(false);
     setAiSuggestion("");

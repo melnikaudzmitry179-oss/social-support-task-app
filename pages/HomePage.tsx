@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import SocialSupportFormWizard from "./SocialSupportFormWizard";
+import SocialSupportFormWizard from "../src/components/forms/SocialSupportFormWizard";
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();

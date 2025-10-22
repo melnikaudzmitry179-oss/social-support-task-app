@@ -3,7 +3,7 @@ import api from './index';
 interface PersonalInfoFormData {
   name: string;
   nationalId: string;
-  dateOfBirth: string; // Always string when sending to API
+  dateOfBirth: string;
   gender: string;
   address: string;
   city: string;

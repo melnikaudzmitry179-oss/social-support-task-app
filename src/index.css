@@ -32,11 +32,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  direction: ltr; /* Default direction */
-  text-align: left; /* Default alignment */
+  direction: ltr;
+  text-align: left;
 }
 
-/* RTL support */
 body.rtl {
   direction: rtl;
   text-align: right;
@@ -66,9 +65,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* Light theme is now default, dark mode specific styles removed */
 
-/* Ensure proper focus indicators for all interactive elements */
 button:focus,
 input:focus,
 select:focus,
@@ -78,7 +75,6 @@ a:focus {
   outline-offset: 2px;
 }
 
-/* Skip link for keyboard navigation */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -95,7 +91,6 @@ a:focus {
   top: 6px;
 }
 
-/* RTL support for skip link */
 body.rtl .skip-link {
   left: auto;
   right: 6px;

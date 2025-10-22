@@ -6,7 +6,6 @@
  * Custom reviver function to handle Date objects during JSON parsing
  */
 const dateReviver = (key: string, value: unknown): unknown => {
-  // Check if the value is a string that matches the date format (YYYY-MM-DD)
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return new Date(value);
   }

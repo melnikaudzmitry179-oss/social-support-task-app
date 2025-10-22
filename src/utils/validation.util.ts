@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import * as yup from "yup";
 
-// Define the validation schema for Family & Financial Info using Yup with translated error messages
 export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
   yup
     .object({
@@ -25,7 +24,6 @@ export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
     })
     .required();
 
-// Define the validation schema for Personal Info using Yup with translated error messages
 export const getPersonalInfoSchema = (t: (key: string) => string) =>
   yup
     .object({
@@ -142,7 +140,6 @@ export const getPersonalInfoSchema = (t: (key: string) => string) =>
     })
     .required();
 
-// Define the validation schema for Situation Descriptions using Yup with translated error messages
 export const getSituationDescriptionsSchema = (t: (key: string) => string) =>
   yup
     .object({
@@ -158,17 +155,10 @@ export const getSituationDescriptionsSchema = (t: (key: string) => string) =>
     })
     .required();
 
-// Define the form data types
 export type FamilyFinancialInfoFormData = yup.InferType<ReturnType<typeof getFamilyFinancialInfoSchema>>;
 export type PersonalInfoFormData = yup.InferType<ReturnType<typeof getPersonalInfoSchema>>;
 export type SituationDescriptionsFormData = yup.InferType<ReturnType<typeof getSituationDescriptionsSchema>>;
 
-/**
- * Validates the personal info form data against its schema.
- * @param data - The personal info form data.
- * @param t - The translation function.
- * @returns A promise that resolves to true if valid, or rejects with validation errors.
- */
 export const validatePersonalInfo = (
   data: Partial<PersonalInfoFormData>,
   t: typeof i18next.t

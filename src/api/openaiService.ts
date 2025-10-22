@@ -1,10 +1,9 @@
 import type { SituationDescriptionsFormData } from "../types/formTypes";
 import { t } from "../utils/i18n.util";
 
-const OPENAI_API_URL = "/api/openai/chat/completions"; // Using proxy endpoint to avoid CORS issues
-const OPENAI_MODEL = "glm-4.6"; // Using the correct model for the Zhipu AI API
+const OPENAI_API_URL = "/api/openai/chat/completions";
+const OPENAI_MODEL = "glm-4.6";
 
-// Define the type for the field being generated
 type FieldName = keyof SituationDescriptionsFormData;
 
 interface GenerateTextParams {
@@ -32,14 +31,12 @@ class OpenAIService {
     currentValue,
     timeout = 100000,
   }: GenerateTextParams): Promise<string> {
-    // Check if API key is available
     if (!this.apiKey) {
       throw new Error(
         "OpenAI API key is not configured. Please set VITE_OPENAI_API_KEY environment variable."
       );
     }
 
-    // Create a descriptive prompt based on the field name using i18n translations
     let prompt = "";
     switch (fieldName) {
       case "currentFinancialSituation":
@@ -67,7 +64,6 @@ class OpenAIService {
         throw new Error(`Unknown field name: ${fieldName}`);
     }
 
-    // Create the request payload
     const requestBody = {
       model: OPENAI_MODEL,
       messages: [
@@ -76,11 +72,8 @@ class OpenAIService {
           content: prompt,
         },
       ],
-      //temperature: 0.7,
-      //max_tokens: 300,
     };
 
-    // Create AbortController for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 

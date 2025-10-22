@@ -2,7 +2,7 @@ export interface FormData {
   personalInfo: {
     name: string;
     nationalId: string;
-    dateOfBirth: Date; // Date object for internal state management
+    dateOfBirth: Date;
     gender: string;
     address: string;
     city: string;
