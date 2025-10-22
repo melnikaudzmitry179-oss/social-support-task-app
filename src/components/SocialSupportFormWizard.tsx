@@ -19,6 +19,11 @@ import FamilyFinancialInfoForm from "./FamilyFinancialInfoForm";
 import SituationDescriptionsForm from "./SituationDescriptionsForm";
 import type { FormRef } from "../types/formTypes";
 import { getItem, setItem } from "../utils/localStorage.util";
+import {
+  validatePersonalInfo,
+  validateFamilyFinancialInfo,
+} from "../utils/validation.util";
+
 // Removed unused import: import { submitFormData } from '../api/formService';
 
 // Define the structure for localStorage data (with date as string)
@@ -143,6 +148,44 @@ const SocialSupportFormWizard: React.FC = () => {
   }, [formData, hasLoaded]);
 
   const handleSubmitAllForms = async () => {
+    try {
+      // Validate the current (and only mounted) form via its ref
+      const isSituationDescriptionsValid =
+        await situationDescriptionsFormRef.current?.submitForm();
+
+      // Programmatically validate data for other forms from context
+      const isPersonalInfoValid = await validatePersonalInfo(
+        formData.personalInfo || {},
+        t
+      );
+      const isFamilyFinancialInfoValid = await validateFamilyFinancialInfo(
+        formData.familyFinancialInfo || {},
+        t
+      );
+
+      // Check if all forms are valid
+      if (
+        !isPersonalInfoValid ||
+        !isFamilyFinancialInfoValid ||
+        !isSituationDescriptionsValid
+      ) {
+        setSubmitError(
+          t("socialSupportFormWizard.validationError") ||
+            "Please correct errors in the forms before submitting."
+        );
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+
+      setSubmitError(
+        t("socialSupportFormWizard.validationError") ||
+          "Please correct errors in the forms before submitting."
+          
+      );
+      return;
+    }
+
     // Prepare the form data to submit, converting date to string
     // At this point, all form data should be available since user has completed all steps
     const fullFormData = {
@@ -153,7 +196,8 @@ const SocialSupportFormWizard: React.FC = () => {
       familyFinancialInfo: formData.familyFinancialInfo,
       situationDescriptions: formData.situationDescriptions,
     };
-    console.log("full form data", fullFormData);
+    console.log("Full Form Data:", fullFormData);
+
     // Verify that all required data is present before submitting
     if (
       !fullFormData.personalInfo ||
@@ -550,6 +594,7 @@ const SocialSupportFormWizard: React.FC = () => {
           {/* Submit button for step 2 */}
           {activeStep === 2 && (
             <Button
+              type="button"
               variant="contained"
               color="primary"
               size="large"

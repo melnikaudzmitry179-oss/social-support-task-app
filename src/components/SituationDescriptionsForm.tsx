@@ -2,7 +2,6 @@ import { forwardRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import {
   Box,
   Button,
@@ -15,25 +14,9 @@ import { useSocialSupportWizard } from "../context/useSocialSupportWizard";
 import { useAiSuggestion } from "../hooks/useAiSuggestion";
 import AiSuggestionPopup from "./AiSuggestionPopup";
 import type { FormRef } from '../types/formTypes';
+import { getSituationDescriptionsSchema, type SituationDescriptionsFormData } from "../utils/validation.util";
 
-// Define the validation schema using Yup with translated error messages
-const getSchema = (t: (key: string) => string) =>
-  yup
-    .object({
-      currentFinancialSituation: yup
-        .string()
-        .required(t("validation.currentFinancialSituationRequired")),
-      employmentCircumstances: yup
-        .string()
-        .required(t("validation.employmentCircumstancesRequired")),
-      reasonForApplying: yup
-        .string()
-        .required(t("validation.reasonForApplyingRequired")),
-    })
-    .required();
-
-// Define the form data type
-export type FormData = yup.InferType<ReturnType<typeof getSchema>>;
+type FormData = SituationDescriptionsFormData;
 
 
 
@@ -49,7 +32,7 @@ const SituationDescriptionsForm = forwardRef<
   const { t } = useTranslation();
 
   // Initialize the form with react-hook-form and yup validation
-  const schema = getSchema(t);
+  const schema = getSituationDescriptionsSchema(t);
   const {
     register,
     handleSubmit,
