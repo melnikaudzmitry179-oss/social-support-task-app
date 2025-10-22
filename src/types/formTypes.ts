@@ -34,4 +34,5 @@ export interface FormData {
 // Define the ref type for form submission used across all forms
 export interface FormRef {
   submitForm: () => Promise<boolean>; // Returns true if validation passes
+  saveForm?: () => Promise<boolean>; // Optional alias for submitForm for backward compatibility
 };

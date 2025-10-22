@@ -81,9 +81,24 @@ const SituationDescriptionsForm = forwardRef<
     updateSituationDescriptions(data);
    };
 
-  // Expose the submitForm function via ref
+  // Expose the submitForm and saveForm functions via ref
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
+      return new Promise((resolve) => {
+        const handleValidSubmit = (data: FormData) => {
+          handleFormSubmit(data);
+          resolve(true); // Validation passed and form was submitted
+        };
+        
+        const handleInvalidSubmit = () => {
+          // This is called when validation fails
+          resolve(false); // Validation failed
+        };
+        
+        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
+      });
+    },
+    saveForm: async () => {
       return new Promise((resolve) => {
         const handleValidSubmit = (data: FormData) => {
           handleFormSubmit(data);

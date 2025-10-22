@@ -148,6 +148,7 @@ const SocialSupportFormWizard: React.FC = () => {
   }, [formData, hasLoaded]);
 
   const handleSubmitAllForms = async () => {
+
     try {
       // Validate the current (and only mounted) form via its ref
       const isSituationDescriptionsValid =
@@ -173,11 +174,18 @@ const SocialSupportFormWizard: React.FC = () => {
           t("socialSupportFormWizard.validationError") ||
             "Please correct errors in the forms before submitting."
         );
+        // Move to the step with validation errors so user can see them
+        if (!isPersonalInfoValid) {
+          setActiveStep(0);
+        } else if (!isFamilyFinancialInfoValid) {
+          setActiveStep(1);
+        } else if (!isSituationDescriptionsValid) {
+          setActiveStep(2); // Stay on the current step where the error occurred
+        }
         return;
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log(error);
-
       setSubmitError(
         t("socialSupportFormWizard.validationError") ||
           "Please correct errors in the forms before submitting."
@@ -236,12 +244,14 @@ const SocialSupportFormWizard: React.FC = () => {
   };
 
   const handleBack = () => {
+    setSubmitError(null); // Clear error when navigating away
     setActiveStep((prev) => Math.max(prev - 1, 0));
   };
 
   const handleReset = () => {
     resetFormData();
     setActiveStep(0);
+    setSubmitError(null); // Clear error when resetting
     // Clear saved data from localStorage
     localStorage.removeItem("formData");
   };
@@ -250,24 +260,51 @@ const SocialSupportFormWizard: React.FC = () => {
     switch (activeStep) {
       case 0:
         return (
-          <PersonalInfoForm
-            ref={personalInfoFormRef}
-            defaultValues={formData.personalInfo || undefined}
-          />
+          <>
+            {submitError && (
+              <Box sx={{ mb: 2 }}>
+                <Alert severity="error" onClose={() => setSubmitError(null)}>
+                  {submitError}
+                </Alert>
+              </Box>
+            )}
+            <PersonalInfoForm
+              ref={personalInfoFormRef}
+              defaultValues={formData.personalInfo || undefined}
+            />
+          </>
         );
       case 1:
         return (
-          <FamilyFinancialInfoForm
-            ref={familyFinancialInfoFormRef}
-            defaultValues={formData.familyFinancialInfo || undefined}
-          />
+          <>
+            {submitError && (
+              <Box sx={{ mb: 2 }}>
+                <Alert severity="error" onClose={() => setSubmitError(null)}>
+                  {submitError}
+                </Alert>
+              </Box>
+            )}
+            <FamilyFinancialInfoForm
+              ref={familyFinancialInfoFormRef}
+              defaultValues={formData.familyFinancialInfo || undefined}
+            />
+          </>
         );
       case 2:
         return (
-          <SituationDescriptionsForm
-            ref={situationDescriptionsFormRef}
-            defaultValues={formData.situationDescriptions || undefined}
-          />
+          <>
+            {submitError && (
+              <Box sx={{ mb: 2 }}>
+                <Alert severity="error" onClose={() => setSubmitError(null)}>
+                  {submitError}
+                </Alert>
+              </Box>
+            )}
+            <SituationDescriptionsForm
+              ref={situationDescriptionsFormRef}
+              defaultValues={formData.situationDescriptions || undefined}
+            />
+          </>
         );
       case 3:
         return (
@@ -292,7 +329,7 @@ const SocialSupportFormWizard: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => setActiveStep(2)} // Go back to form to try again
+                    onClick={() => {setSubmitError(null); setActiveStep(2);}} // Go back to form to try again
                   >
                     {t("socialSupportFormWizard.tryAgain") || "Try Again"}
                   </Button>
@@ -463,7 +500,7 @@ const SocialSupportFormWizard: React.FC = () => {
           {activeStep === 0 && (
             <Button
               variant="contained"
-              onClick={() => setActiveStep(1)}
+              onClick={() => {setSubmitError(null); setActiveStep(1);}}
               color="primary"
               sx={{
                 fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -478,7 +515,7 @@ const SocialSupportFormWizard: React.FC = () => {
           {activeStep === 1 && (
             <Button
               variant="contained"
-              onClick={() => setActiveStep(2)}
+              onClick={() => {setSubmitError(null); setActiveStep(2);}}
               color="primary"
               sx={{
                 fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -604,6 +641,7 @@ const SocialSupportFormWizard: React.FC = () => {
                 py: { xs: 1.5, sm: 1 },
               }}
               onClick={async () => {
+                setSubmitError(null); // Clear any previous error before attempting to submit again
                 handleSubmitAllForms();
               }}
               aria-label={t("situationDescriptionsForm.submitApplication")}
