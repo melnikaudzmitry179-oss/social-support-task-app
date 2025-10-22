@@ -96,13 +96,18 @@ const AiSuggestionPopup: React.FC<AiSuggestionPopupProps> = ({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          sx={{ mr: 1, ml: 1 }}
+        >
           {t("situationDescriptionsForm.discard")}
         </Button>
         <Button
           onClick={onAccept}
           variant="contained"
           color="primary"
+          sx={{ ml: 1, mr: 1 }}
         >
           {t("situationDescriptionsForm.accept")}
         </Button>

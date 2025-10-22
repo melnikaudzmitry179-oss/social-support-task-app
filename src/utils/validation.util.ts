@@ -10,14 +10,34 @@ export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
       dependents: yup
         .number()
         .min(0, t("validation.dependentsMin"))
-        .required(t("validation.dependentsRequired")),
+        .required(t("validation.dependentsRequired"))
+        .test(
+          'no-leading-zeros',
+          t("validation.dependentsNoLeadingZeros") || "Number should be 0 or start with 1-9",
+          function(value) {
+            if (value === undefined || value === null) return true;
+            // Convert to string and check if it starts with 0 but is not exactly "0"
+            const stringValue = String(value);
+            return !stringValue.startsWith('0') || stringValue === '0';
+          }
+        ),
       employmentStatus: yup
         .string()
         .required(t("validation.employmentStatusRequired")),
       monthlyIncome: yup
         .number()
         .min(0, t("validation.monthlyIncomeMin"))
-        .required(t("validation.monthlyIncomeRequired")),
+        .required(t("validation.monthlyIncomeRequired"))
+        .test(
+          'no-leading-zeros',
+          t("validation.monthlyIncomeNoLeadingZeros") || "Number should be 0 or start with 1-9",
+          function(value) {
+            if (value === undefined || value === null) return true;
+            // Convert to string and check if it starts with 0 but is not exactly "0"
+            const stringValue = String(value);
+            return !stringValue.startsWith('0') || stringValue === '0';
+          }
+        ),
       housingStatus: yup
         .string()
         .required(t("validation.housingStatusRequired")),

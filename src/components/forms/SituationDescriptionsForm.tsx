@@ -212,18 +212,6 @@ const SituationDescriptionsForm = forwardRef<
                   }}
                 />
               </Box>
-              {errors.currentFinancialSituation && (
-                <Typography
-                  id="current-financial-situation-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.currentFinancialSituation.message}
-                </Typography>
-              )}
 
               <Box
                 sx={{
@@ -295,18 +283,6 @@ const SituationDescriptionsForm = forwardRef<
                   }}
                 />
               </Box>
-              {errors.employmentCircumstances && (
-                <Typography
-                  id="employment-circumstances-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.employmentCircumstances.message}
-                </Typography>
-              )}
 
               <Box
                 sx={{
@@ -377,18 +353,6 @@ const SituationDescriptionsForm = forwardRef<
                   }}
                 />
               </Box>
-              {errors.reasonForApplying && (
-                <Typography
-                  id="reason-for-applying-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.reasonForApplying.message}
-                </Typography>
-              )}
             </Box>
           </form>
         </Box>

@@ -1,8 +1,8 @@
 import type { SituationDescriptionsFormData } from "../types/formTypes";
 import { t } from "../utils/i18n.util";
 
-const OPENAI_API_URL = "/api/openai/chat/completions";
-const OPENAI_MODEL = "glm-4.6";
+const OPENAI_API_URL = import.meta.env.VITE_OPENAI_API_URL;
+const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL;
 
 type FieldName = keyof SituationDescriptionsFormData;
 

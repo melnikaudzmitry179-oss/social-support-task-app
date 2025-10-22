@@ -150,18 +150,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   }}
                 />
               </Box>
-              {errors.name && (
-                <Typography
-                  id="name-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.name.message}
-                </Typography>
-              )}
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <TextField
@@ -191,18 +179,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   }}
                 />
               </Box>
-              {errors.nationalId && (
-                <Typography
-                  id="national-id-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.nationalId.message}
-                </Typography>
-              )}
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Controller
@@ -251,18 +227,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   )}
                 />
               </Box>
-              {errors.dateOfBirth && (
-                <Typography
-                  id="date-of-birth-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.dateOfBirth.message}
-                </Typography>
-              )}
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <FormControl
@@ -349,18 +313,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   }}
                 />
               </Box>
-              {errors.address && (
-                <Typography
-                  id="address-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.address.message}
-                </Typography>
-              )}
 
               <Box
                 sx={{
@@ -403,18 +355,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     }}
                   />
                 </Box>
-                {errors.city && (
-                  <Typography
-                    id="city-error"
-                    variant="caption"
-                    color="error"
-                    sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {errors.city.message}
-                  </Typography>
-                )}
                 <Box
                   sx={{
                     flex: 1,
@@ -448,18 +388,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     }}
                   />
                 </Box>
-                {errors.state && (
-                  <Typography
-                    id="state-error"
-                    variant="caption"
-                    color="error"
-                    sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {errors.state.message}
-                  </Typography>
-                )}
               </Box>
 
               <Box
@@ -503,18 +431,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     }}
                   />
                 </Box>
-                {errors.country && (
-                  <Typography
-                    id="country-error"
-                    variant="caption"
-                    color="error"
-                    sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {errors.country.message}
-                  </Typography>
-                )}
                 <Box
                   sx={{
                     flex: 1,
@@ -548,18 +464,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     }}
                   />
                 </Box>
-                {errors.phone && (
-                  <Typography
-                    id="phone-error"
-                    variant="caption"
-                    color="error"
-                    sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {errors.phone.message}
-                  </Typography>
-                )}
               </Box>
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -590,18 +494,6 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   }}
                 />
               </Box>
-              {errors.email && (
-                <Typography
-                  id="email-error"
-                  variant="caption"
-                  color="error"
-                  sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                  role="alert"
-                  aria-live="polite"
-                >
-                  {errors.email.message}
-                </Typography>
-              )}
             </Box>
           </form>
         </Box>

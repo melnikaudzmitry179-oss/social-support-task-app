@@ -219,6 +219,20 @@ const FamilyFinancialInfoForm = forwardRef<
                     ? "dependents-error"
                     : undefined,
                 }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Prevent leading zeros by removing them when user types
+                  if (value.startsWith('0') && value.length > 1) {
+                    // If the value starts with 0 and has more than one character,
+                    // remove the leading zero
+                    const correctedValue = value.replace(/^0+/, '');
+                    if (correctedValue) {
+                      setValue('dependents', parseInt(correctedValue, 10));
+                    } else {
+                      setValue('dependents', 0);
+                    }
+                  }
+                }}
                 sx={{
                   "& .MuiInputBase-input": {
                     fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -229,18 +243,6 @@ const FamilyFinancialInfoForm = forwardRef<
                 }}
               />
             </Box>
-            {errors.dependents && (
-              <Typography
-                id="dependents-error"
-                variant="caption"
-                color="error"
-                sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                role="alert"
-                aria-live="polite"
-              >
-                {errors.dependents.message}
-              </Typography>
-            )}
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <FormControl
@@ -339,6 +341,20 @@ const FamilyFinancialInfoForm = forwardRef<
                     ? "monthly-income-error"
                     : undefined,
                 }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Prevent leading zeros by removing them when user types
+                  if (value.startsWith('0') && value.length > 1) {
+                    // If the value starts with 0 and has more than one character,
+                    // remove the leading zero
+                    const correctedValue = value.replace(/^0+/, '');
+                    if (correctedValue) {
+                      setValue('monthlyIncome', parseInt(correctedValue, 10));
+                    } else {
+                      setValue('monthlyIncome', 0);
+                    }
+                  }
+                }}
                 sx={{
                   "& .MuiInputBase-input": {
                     fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -349,18 +365,6 @@ const FamilyFinancialInfoForm = forwardRef<
                 }}
               />
             </Box>
-            {errors.monthlyIncome && (
-              <Typography
-                id="monthly-income-error"
-                variant="caption"
-                color="error"
-                sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
-                role="alert"
-                aria-live="polite"
-              >
-                {errors.monthlyIncome.message}
-              </Typography>
-            )}
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <FormControl
