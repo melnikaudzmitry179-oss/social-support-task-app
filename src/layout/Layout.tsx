@@ -41,8 +41,12 @@ const Layout: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <div className="flex justify-center w-full mt-[80px]">
-        <main className="max-w-[1200px] px-8 flex-grow pb-8">
-          {renderContent()}
+        <main className="w-full max-w-[1200px] px-4 sm:px-6 md:px-8 flex-grow pb-8">
+          <div className="flex justify-center w-full">
+            <div className="w-full">
+              {renderContent()}
+            </div>
+          </div>
         </main>
       </div>
     </div>

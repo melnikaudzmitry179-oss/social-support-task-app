@@ -28,7 +28,7 @@ const Header: React.FC = () => {
       style={{ backgroundColor: "#1e40af", color: "white" }}
     >
       <div className="h-full flex items-center justify-end">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4" style={{marginLeft: '16px'}}>
           <FormControl
             variant="outlined"
             size="small"
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
               minWidth: 80,
               backgroundColor: "white",
               borderRadius: 1,
-              margin: "0 16px",
+              margin: "0 40px",
             }}
           >
             <Select

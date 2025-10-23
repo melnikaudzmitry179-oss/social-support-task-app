@@ -3,5 +3,20 @@
   min-height: 100vh;
   margin: 0 auto;
   text-align: center;
+  direction: ltr;
+}
+
+
+#root[dir="rtl"],
+body.rtl #root {
+  direction: rtl;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  #root {
+    min-width: 100vw;
+    min-height: 100vh;
+  }
 }
 

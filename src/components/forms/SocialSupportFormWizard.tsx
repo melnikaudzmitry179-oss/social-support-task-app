@@ -376,6 +376,7 @@ const SocialSupportFormWizard: React.FC = () => {
         <Box
           sx={{
             mb: { xs: 2, sm: 3 },
+            ml: 2,
             "& .MuiStepper-root": {
               "& .MuiStep-root": {
                 "& .MuiStepLabel-root": {
@@ -421,6 +422,7 @@ const SocialSupportFormWizard: React.FC = () => {
             display: "flex",
             alignItems: "center",
             mb: 2,
+            ml:2,
             flexDirection: { xs: "column", sm: "row" },
             gap: { xs: 1, sm: 2 },
           }}
@@ -462,6 +464,7 @@ const SocialSupportFormWizard: React.FC = () => {
             flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
             mt: 3,
+            ml: 2,
             gap: { xs: 1, sm: 2 },
           }}
           role="group"

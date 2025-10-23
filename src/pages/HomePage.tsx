@@ -6,8 +6,8 @@ const HomePage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="container mx-auto px-4 pt-8 max-w-4xl">
-      <div className="text-center mb-6">
+    <div className="container mx-auto px-4 pt-8 max-w-4xl w-full">
+      <div className="text-center mb-6 ml-2">
         <h1 className="text-3xl font-bold text-gray-800">
           {t("appTitle", "Social Support Application")}
         </h1>
