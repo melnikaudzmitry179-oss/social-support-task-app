@@ -191,16 +191,18 @@ const SituationDescriptionsForm = forwardRef<
                   error={!!errors.currentFinancialSituation}
                   helperText={errors.currentFinancialSituation?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "current-financial-situation-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "current-financial-situation-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.currentFinancialSituation
+                        ? "current-financial-situation-error"
+                        : undefined,
+                    },
                   }}
                   id="current-financial-situation-input"
-                  inputProps={{
-                    "aria-describedby": errors.currentFinancialSituation
-                      ? "current-financial-situation-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -262,16 +264,18 @@ const SituationDescriptionsForm = forwardRef<
                   error={!!errors.employmentCircumstances}
                   helperText={errors.employmentCircumstances?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "employment-circumstances-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "employment-circumstances-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.employmentCircumstances
+                        ? "employment-circumstances-error"
+                        : undefined,
+                    },
                   }}
                   id="employment-circumstances-input"
-                  inputProps={{
-                    "aria-describedby": errors.employmentCircumstances
-                      ? "employment-circumstances-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -332,16 +336,18 @@ const SituationDescriptionsForm = forwardRef<
                   error={!!errors.reasonForApplying}
                   helperText={errors.reasonForApplying?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "reason-for-applying-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "reason-for-applying-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.reasonForApplying
+                        ? "reason-for-applying-error"
+                        : undefined,
+                    },
                   }}
                   id="reason-for-applying-input"
-                  inputProps={{
-                    "aria-describedby": errors.reasonForApplying
-                      ? "reason-for-applying-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },

@@ -41,8 +41,10 @@ const AiSuggestionPopup: React.FC<AiSuggestionPopupProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        sx: { minHeight: "400px", maxHeight: "70vh" },
+      slotProps={{
+        paper: {
+          sx: { minHeight: "400px", maxHeight: "70vh" },
+        }
       }}
     >
       <DialogTitle
@@ -61,7 +63,7 @@ const AiSuggestionPopup: React.FC<AiSuggestionPopupProps> = ({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent sx={{ pb: 2 }}>
         {aiError ? (
           <Alert severity="error" sx={{ mb: 2 }}>
             {aiError}
@@ -86,10 +88,12 @@ const AiSuggestionPopup: React.FC<AiSuggestionPopupProps> = ({
             value={editableSuggestion}
             onChange={(e) => setEditableSuggestion(e.target.value)}
             variant="outlined"
-            InputProps={{
-              sx: {
-                fontSize: "1rem",
-                lineHeight: 1.6,
+            slotProps={{
+              input: {
+                sx: {
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                }
               }
             }}
           />

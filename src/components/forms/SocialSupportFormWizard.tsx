@@ -90,6 +90,16 @@ const SocialSupportFormWizard: React.FC = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [hasLoaded, setHasLoaded] = React.useState(false);
 
+  const hasData = (data: Record<string, unknown> | null): boolean => {
+    if (!data) return false;
+    return Object.entries(data).some(([key, value]) => {
+      if (key === 'dateOfBirth') {
+        return value instanceof Date && value.getTime() !== new Date().getTime();
+      }
+      return value !== '' && value !== 0;
+    });
+  };
+
   useEffect(() => {
     const savedData = getItem<LocalStorageFormData>("formData");
     if (savedData) {
@@ -106,11 +116,11 @@ const SocialSupportFormWizard: React.FC = () => {
         updateSituationDescriptions(savedData.situationDescriptions);
       }
 
-      if (savedData.situationDescriptions) {
+      if (hasData(savedData.situationDescriptions)) {
         setActiveStep(2);
-      } else if (savedData.familyFinancialInfo) {
+      } else if (hasData(savedData.familyFinancialInfo)) {
         setActiveStep(1);
-      } else if (savedData.personalInfo) {
+      } else if (hasData(savedData.personalInfo)) {
         setActiveStep(0);
       }
     }
@@ -121,14 +131,14 @@ const SocialSupportFormWizard: React.FC = () => {
   useEffect(() => {
     if (hasLoaded) {
       const localStorageData: LocalStorageFormData = {
-        personalInfo: formData.personalInfo
+        personalInfo: hasData(formData.personalInfo)
           ? {
               ...formData.personalInfo,
               dateOfBirth: formData.personalInfo.dateOfBirth.toString(),
             }
           : null,
-        familyFinancialInfo: formData.familyFinancialInfo,
-        situationDescriptions: formData.situationDescriptions,
+        familyFinancialInfo: hasData(formData.familyFinancialInfo) ? formData.familyFinancialInfo : null,
+        situationDescriptions: hasData(formData.situationDescriptions) ? formData.situationDescriptions : null,
       };
       setItem("formData", localStorageData);
     }

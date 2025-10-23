@@ -164,11 +164,13 @@ const FamilyFinancialInfoForm = forwardRef<
                   value={
                     watchedMaritalStatus || defaultValues?.maritalStatus || ""
                   }
-                  inputProps={{
-                    id: "marital-status-select",
-                    "aria-describedby": errors.maritalStatus
-                      ? "marital-status-error"
-                      : undefined,
+                  slotProps={{
+                    input: {
+                      id: "marital-status-select",
+                      "aria-describedby": errors.maritalStatus
+                        ? "marital-status-error"
+                        : undefined,
+                    },
                   }}
                 >
                   <MenuItem value="single">
@@ -208,23 +210,22 @@ const FamilyFinancialInfoForm = forwardRef<
                 error={!!errors.dependents}
                 helperText={errors.dependents?.message}
                 variant="outlined"
-                InputLabelProps={{
-                  htmlFor: "dependents-input",
-                  shrink: true,
+                slotProps={{
+                  inputLabel: {
+                    htmlFor: "dependents-input",
+                    shrink: true,
+                  },
+                  htmlInput: {
+                    min: 0,
+                    "aria-describedby": errors.dependents
+                      ? "dependents-error"
+                      : undefined,
+                  },
                 }}
                 id="dependents-input"
-                inputProps={{
-                  min: 0,
-                  "aria-describedby": errors.dependents
-                    ? "dependents-error"
-                    : undefined,
-                }}
                 onChange={(e) => {
                   const value = e.target.value;
-                  // Prevent leading zeros by removing them when user types
                   if (value.startsWith('0') && value.length > 1) {
-                    // If the value starts with 0 and has more than one character,
-                    // remove the leading zero
                     const correctedValue = value.replace(/^0+/, '');
                     if (correctedValue) {
                       setValue('dependents', parseInt(correctedValue, 10));
@@ -273,11 +274,13 @@ const FamilyFinancialInfoForm = forwardRef<
                     defaultValues?.employmentStatus ||
                     ""
                   }
-                  inputProps={{
-                    id: "employment-status-select",
-                    "aria-describedby": errors.employmentStatus
-                      ? "employment-status-error"
-                      : undefined,
+                  slotProps={{
+                    input: {
+                      id: "employment-status-select",
+                      "aria-describedby": errors.employmentStatus
+                        ? "employment-status-error"
+                        : undefined,
+                    },
                   }}
                 >
                   <MenuItem value="employed">
@@ -330,23 +333,22 @@ const FamilyFinancialInfoForm = forwardRef<
                 error={!!errors.monthlyIncome}
                 helperText={errors.monthlyIncome?.message}
                 variant="outlined"
-                InputLabelProps={{
-                  htmlFor: "monthly-income-input",
-                  shrink: true,
+                slotProps={{
+                  inputLabel: {
+                    htmlFor: "monthly-income-input",
+                    shrink: true,
+                  },
+                  htmlInput: {
+                    min: 0,
+                    "aria-describedby": errors.monthlyIncome
+                      ? "monthly-income-error"
+                      : undefined,
+                  },
                 }}
                 id="monthly-income-input"
-                inputProps={{
-                  min: 0,
-                  "aria-describedby": errors.monthlyIncome
-                    ? "monthly-income-error"
-                    : undefined,
-                }}
                 onChange={(e) => {
                   const value = e.target.value;
-                  // Prevent leading zeros by removing them when user types
                   if (value.startsWith('0') && value.length > 1) {
-                    // If the value starts with 0 and has more than one character,
-                    // remove the leading zero
                     const correctedValue = value.replace(/^0+/, '');
                     if (correctedValue) {
                       setValue('monthlyIncome', parseInt(correctedValue, 10));
@@ -393,11 +395,13 @@ const FamilyFinancialInfoForm = forwardRef<
                   value={
                     watchedHousingStatus || defaultValues?.housingStatus || ""
                   }
-                  inputProps={{
-                    id: "housing-status-select",
-                    "aria-describedby": errors.housingStatus
-                      ? "housing-status-error"
-                      : undefined,
+                  slotProps={{
+                    input: {
+                      id: "housing-status-select",
+                      "aria-describedby": errors.housingStatus
+                        ? "housing-status-error"
+                        : undefined,
+                    },
                   }}
                 >
                   <MenuItem value="own">

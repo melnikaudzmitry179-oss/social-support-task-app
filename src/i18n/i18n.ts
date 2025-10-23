@@ -6,7 +6,6 @@ import enTranslation from './en.json';
 import arTranslation from './ar.json';
 
 i18n
-  // .use(Backend) // Temporarily disable Backend as we are importing translations directly
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({

@@ -33,7 +33,7 @@ Before running this project, ensure you have the following installed:
    npm run dev
    ```
 
-5. **Open your browser** and navigate to `http://localhost:5173` to view the application
+5. **Open your browser** and navigate to `http://localhost:5173` (or the next available port like 5174) to view the application
 
 6. **(Optional) Start the JSON server** for local API functionality:
    ```bash
@@ -46,14 +46,18 @@ Before running this project, ensure you have the following installed:
 
 2. **Create a `.env` file** in the root directory of the project (if it doesn't already exist)
 
-3. **Add your API key** to the `.env` file:
+3. **Add the required environment variables** to the `.env` file:
    ```
-   VITE_OPENAI_API_KEY=your_api_key_here
+   VITE_OPENAI_API_KEY=your api key
+   VITE_OPENAI_API_URL=your api url
+   VITE_OPENAI_MODEL=your model
    ```
 
 4. **Important**: Make sure the `.env` file is included in your `.gitignore` file to keep your API key secure
 
-5. **Restart the development server** after adding the API key for the changes to take effect
+5. **Restart the development server** after adding the environment variables for the changes to take effect
+
+6. **Test the API connection** by using the AI suggestion feature in the application once it's running
 
 ## Available Scripts
 

@@ -16,7 +16,6 @@ export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
           t("validation.dependentsNoLeadingZeros") || "Number should be 0 or start with 1-9",
           function(value) {
             if (value === undefined || value === null) return true;
-            // Convert to string and check if it starts with 0 but is not exactly "0"
             const stringValue = String(value);
             return !stringValue.startsWith('0') || stringValue === '0';
           }
@@ -33,7 +32,6 @@ export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
           t("validation.monthlyIncomeNoLeadingZeros") || "Number should be 0 or start with 1-9",
           function(value) {
             if (value === undefined || value === null) return true;
-            // Convert to string and check if it starts with 0 but is not exactly "0"
             const stringValue = String(value);
             return !stringValue.startsWith('0') || stringValue === '0';
           }

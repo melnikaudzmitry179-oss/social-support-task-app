@@ -132,14 +132,16 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   error={!!errors.name}
                   helperText={errors.name?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "name-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "name-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.name ? "name-error" : undefined,
+                    },
                   }}
                   id="name-input"
-                  inputProps={{
-                    "aria-describedby": errors.name ? "name-error" : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -159,16 +161,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   error={!!errors.nationalId}
                   helperText={errors.nationalId?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "national-id-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "national-id-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.nationalId
+                        ? "national-id-error"
+                        : undefined,
+                    },
                   }}
                   id="national-id-input"
-                  inputProps={{
-                    "aria-describedby": errors.nationalId
-                      ? "national-id-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -189,17 +193,19 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                       fullWidth
                       label={t("personalInfoForm.dateOfBirth")}
                       type="date"
-                      InputLabelProps={{
-                        htmlFor: "date-of-birth-input",
-                        shrink: true,
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "date-of-birth-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          max: new Date().toISOString().split("T")[0],
+                          "aria-describedby": errors.dateOfBirth
+                            ? "date-of-birth-error"
+                            : undefined,
+                        },
                       }}
                       id="date-of-birth-input"
-                      inputProps={{
-                        max: new Date().toISOString().split("T")[0],
-                        "aria-describedby": errors.dateOfBirth
-                          ? "date-of-birth-error"
-                          : undefined,
-                      }}
                       onChange={(e) => {
                         const dateValue = e.target.value
                           ? new Date(e.target.value)
@@ -253,11 +259,13 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     {...register("gender")}
                     label={t("personalInfoForm.gender")}
                     value={watchedGender || defaultValues?.gender || ""}
-                    inputProps={{
-                      id: "gender-select",
-                      "aria-describedby": errors.gender
-                        ? "gender-error"
-                        : undefined,
+                    slotProps={{
+                      input: {
+                        id: "gender-select",
+                        "aria-describedby": errors.gender
+                          ? "gender-error"
+                          : undefined,
+                      },
                     }}
                   >
                     <MenuItem value="male">
@@ -293,16 +301,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   error={!!errors.address}
                   helperText={errors.address?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "address-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "address-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.address
+                        ? "address-error"
+                        : undefined,
+                    },
                   }}
                   id="address-input"
-                  inputProps={{
-                    "aria-describedby": errors.address
-                      ? "address-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -335,16 +345,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     error={!!errors.city}
                     helperText={errors.city?.message}
                     variant="outlined"
-                    InputLabelProps={{
-                      htmlFor: "city-input",
-                      shrink: true,
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "city-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        "aria-describedby": errors.city
+                          ? "city-error"
+                          : undefined,
+                      },
                     }}
                     id="city-input"
-                    inputProps={{
-                      "aria-describedby": errors.city
-                        ? "city-error"
-                        : undefined,
-                    }}
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -368,16 +380,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     error={!!errors.state}
                     helperText={errors.state?.message}
                     variant="outlined"
-                    InputLabelProps={{
-                      htmlFor: "state-input",
-                      shrink: true,
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "state-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        "aria-describedby": errors.state
+                          ? "state-error"
+                          : undefined,
+                      },
                     }}
                     id="state-input"
-                    inputProps={{
-                      "aria-describedby": errors.state
-                        ? "state-error"
-                        : undefined,
-                    }}
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -411,16 +425,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     error={!!errors.country}
                     helperText={errors.country?.message}
                     variant="outlined"
-                    InputLabelProps={{
-                      htmlFor: "country-input",
-                      shrink: true,
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "country-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        "aria-describedby": errors.country
+                          ? "country-error"
+                          : undefined,
+                      },
                     }}
                     id="country-input"
-                    inputProps={{
-                      "aria-describedby": errors.country
-                        ? "country-error"
-                        : undefined,
-                    }}
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -444,16 +460,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     error={!!errors.phone}
                     helperText={errors.phone?.message}
                     variant="outlined"
-                    InputLabelProps={{
-                      htmlFor: "phone-input",
-                      shrink: true,
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "phone-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        "aria-describedby": errors.phone
+                          ? "phone-error"
+                          : undefined,
+                      },
                     }}
                     id="phone-input"
-                    inputProps={{
-                      "aria-describedby": errors.phone
-                        ? "phone-error"
-                        : undefined,
-                    }}
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: { xs: "0.875rem", sm: "1rem" },
@@ -474,16 +492,18 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   error={!!errors.email}
                   helperText={errors.email?.message}
                   variant="outlined"
-                  InputLabelProps={{
-                    htmlFor: "email-input",
-                    shrink: true,
+                  slotProps={{
+                    inputLabel: {
+                      htmlFor: "email-input",
+                      shrink: true,
+                    },
+                    htmlInput: {
+                      "aria-describedby": errors.email
+                        ? "email-error"
+                        : undefined,
+                    },
                   }}
                   id="email-input"
-                  inputProps={{
-                    "aria-describedby": errors.email
-                      ? "email-error"
-                      : undefined,
-                  }}
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: { xs: "0.875rem", sm: "1rem" },

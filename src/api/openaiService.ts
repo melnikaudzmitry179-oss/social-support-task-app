@@ -19,13 +19,6 @@ class OpenAIService {
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY;
   }
 
-  /**
-   * Generates text content for a specific field using OpenAI API
-   * @param fieldName The field name to generate content for
-   * @param currentValue Current value in the field (if any)
-   * @param timeout Request timeout in milliseconds (default: 10000ms)
-   * @returns Generated text content
-   */
   async generateText({
     fieldName,
     currentValue,

@@ -1,22 +1,11 @@
-/**
- * Utility functions for working with LocalStorage API
- */
 
-/**
- * Custom reviver function to handle Date objects during JSON parsing
- */
-const dateReviver = (key: string, value: unknown): unknown => {
+const dateReviver = (_key: string, value: unknown): unknown => {
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return new Date(value);
   }
   return value;
 };
 
-/**
- * Get an item from localStorage
- * @param key The key of the item to retrieve
- * @returns The value stored at the key, or null if not found or if parsing fails
- */
 export const getItem = <T>(key: string): T | null => {
   try {
     const item = window.localStorage.getItem(key);
@@ -27,11 +16,6 @@ export const getItem = <T>(key: string): T | null => {
   }
 };
 
-/**
- * Set an item in localStorage
- * @param key The key to store the item under
- * @param value The value to store
- */
 export const setItem = <T>(key: string, value: T): void => {
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
@@ -40,10 +24,6 @@ export const setItem = <T>(key: string, value: T): void => {
   }
 };
 
-/**
- * Remove an item from localStorage
- * @param key The key of the item to remove
- */
 export const removeItem = (key: string): void => {
   try {
     window.localStorage.removeItem(key);
@@ -52,9 +32,6 @@ export const removeItem = (key: string): void => {
   }
 };
 
-/**
- * Clear all items from localStorage
- */
 export const clear = (): void => {
   try {
     window.localStorage.clear();
@@ -63,10 +40,6 @@ export const clear = (): void => {
   }
 };
 
-/**
- * Check if localStorage is supported in the current environment
- * @returns Boolean indicating whether localStorage is supported
- */
 export const isSupported = (): boolean => {
    try {
      const testKey = '__localStorage_test';
@@ -79,10 +52,6 @@ export const isSupported = (): boolean => {
    }
  };
 
-/**
- * Get all keys stored in localStorage
- * @returns Array of all keys in localStorage
- */
 export const getKeys = (): string[] => {
   try {
     return Object.keys(window.localStorage);
@@ -92,10 +61,6 @@ export const getKeys = (): string[] => {
   }
 };
 
-/**
- * Get the number of items stored in localStorage
- * @returns The number of items in localStorage
- */
 export const getLength = (): number => {
   try {
     return window.localStorage.length;
