@@ -48,9 +48,9 @@ Before running this project, ensure you have the following installed:
 
 3. **Add the required environment variables** to the `.env` file:
    ```
-   VITE_OPENAI_API_KEY=your api key
-   VITE_OPENAI_API_URL=your api url
-   VITE_OPENAI_MODEL=your model
+   VITE_OPENAI_API_KEY=your api key // it should be changed with your api key
+   VITE_OPENAI_API_URL=/api/openai/chat/completions
+   VITE_OPENAI_MODEL=your model=gpt-5 
    ```
 
 4. **Important**: Make sure the `.env` file is included in your `.gitignore` file to keep your API key secure
