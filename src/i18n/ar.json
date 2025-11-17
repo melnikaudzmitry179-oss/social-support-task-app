@@ -104,6 +104,7 @@
     "dateOfBirthRequired": "تاريخ الميلاد مطلوب",
     "dateOfBirthPast": "يجب أن يكون تاريخ الميلاد في الماضي",
     "dateOfBirthNotTooOld": "يجب أن يكون تاريخ الميلاد ضمن نطاق معقول (لا يزيد عن 120 سنة)",
+    "dateOfBirthMinAge": "يجب أن يكون عمر 18 سنة على الأقل",
     "genderRequired": "الجنس مطلوب",
     "addressRequired": "العنوان مطلوب",
     "addressMinLength": "يجب أن يكون العنوان مكونًا من 5 أحرف على الأقل",

@@ -87,6 +87,23 @@ export const getPersonalInfoSchema = (t: (key: string) => string) =>
             const age = today.getFullYear() - birthDate.getFullYear();
             return age <= 120;
           }
+        )
+        .test(
+          "minimum-age",
+          t("validation.dateOfBirthMinAge") ||
+            "Must be at least 18 years old",
+          function (value) {
+            if (!value) return true;
+            const today = new Date();
+            const birthDate = new Date(value);
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+            
+            // Adjust age if birthday hasn't occurred yet this year
+            const exactAge = age - (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? 1 : 0);
+            return exactAge >= 18;
+          }
         ),
       gender: yup.string().required(t("validation.genderRequired")),
       address: yup

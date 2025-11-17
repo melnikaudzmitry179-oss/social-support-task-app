@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useFormSubmission } from "../../hooks/useFormSubmission";
 import {
   Box,
   Container,
@@ -73,35 +74,14 @@ const FamilyFinancialInfoForm = forwardRef<
     updateFamilyFinancialInfo(data);
   };
 
+  const { submitForm, saveForm } = useFormSubmission(
+    handleSubmit,
+    handleFormSubmit
+  );
+
   useImperativeHandle(ref, () => ({
-    submitForm: async () => {
-      return new Promise((resolve) => {
-        const handleValidSubmit = (data: FormData) => {
-          handleFormSubmit(data);
-          resolve(true);
-        };
-
-        const handleInvalidSubmit = () => {
-          resolve(false);
-        };
-
-        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
-      });
-    },
-    saveForm: async () => {
-      return new Promise((resolve) => {
-        const handleValidSubmit = (data: FormData) => {
-          handleFormSubmit(data);
-          resolve(true);
-        };
-
-        const handleInvalidSubmit = () => {
-          resolve(false);
-        };
-
-        handleSubmit(handleValidSubmit, handleInvalidSubmit)();
-      });
-    },
+    submitForm,
+    saveForm,
   }));
   return (
     <Container

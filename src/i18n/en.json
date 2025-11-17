@@ -104,6 +104,7 @@
     "dateOfBirthRequired": "Date of Birth is required",
     "dateOfBirthPast": "Date of birth must be in the past",
     "dateOfBirthNotTooOld": "Date of birth must be within reasonable range (not older than 120 years)",
+    "dateOfBirthMinAge": "Must be at least 18 years old",
     "genderRequired": "Gender is required",
     "addressRequired": "Address is required",
     "addressMinLength": "Address must be at least 5 characters",

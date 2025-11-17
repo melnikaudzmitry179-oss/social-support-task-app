@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useFormSubmission } from "../../hooks/useFormSubmission";
 import {
   Box,
   Container,
@@ -26,6 +27,13 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
     const { t } = useTranslation();
     const { updatePersonalInfo } = useSocialSupportWizard();
 
+    // Calculate default date for 18 years ago
+    const getDefaultDate = React.useCallback(() => {
+      const today = new Date();
+      const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      return eighteenYearsAgo;
+    }, []);
+
     const schema = getPersonalInfoSchema(t);
     const {
       register,
@@ -37,16 +45,29 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
       watch,
     } = useForm<FormData>({
       resolver: yupResolver(schema),
-      defaultValues: defaultValues || {},
+      defaultValues: {
+        ...defaultValues,
+        dateOfBirth: defaultValues?.dateOfBirth || getDefaultDate(),
+      },
     });
 
     const watchedGender = watch("gender");
+    const watchedDateOfBirth = watch("dateOfBirth");
 
     React.useEffect(() => {
       if (defaultValues) {
         reset(defaultValues);
+      } else {
+        reset({ dateOfBirth: getDefaultDate() });
       }
-    }, [defaultValues, reset]);
+    }, [defaultValues, reset, getDefaultDate]);
+
+    // Set default date when form loads without default values
+    React.useEffect(() => {
+      if (!defaultValues && !watchedDateOfBirth) {
+        setValue("dateOfBirth", getDefaultDate());
+      }
+    }, [defaultValues, watchedDateOfBirth, setValue, getDefaultDate]);
 
     React.useEffect(() => {
       if (defaultValues?.gender) {
@@ -58,36 +79,15 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
       console.log("Form Data:", data);
       updatePersonalInfo(data);
     };
-
+  
+    const { submitForm, saveForm } = useFormSubmission(
+      handleSubmit,
+      handleFormSubmit
+    );
+  
     useImperativeHandle(ref, () => ({
-      submitForm: async () => {
-        return new Promise((resolve) => {
-          const handleValidSubmit = (data: FormData) => {
-            handleFormSubmit(data);
-            resolve(true);
-          };
-
-          const handleInvalidSubmit = () => {
-            resolve(false);
-          };
-
-          handleSubmit(handleValidSubmit, handleInvalidSubmit)();
-        });
-      },
-      saveForm: async () => {
-        return new Promise((resolve) => {
-          const handleValidSubmit = (data: FormData) => {
-            handleFormSubmit(data);
-            resolve(true);
-          };
-
-          const handleInvalidSubmit = () => {
-            resolve(false);
-          };
-
-          handleSubmit(handleValidSubmit, handleInvalidSubmit)();
-        });
-      },
+      submitForm,
+      saveForm,
     }));
 
     return (
@@ -195,7 +195,11 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                           shrink: true,
                         },
                         htmlInput: {
-                          max: new Date().toISOString().split("T")[0],
+                          max: (() => {
+                            const today = new Date();
+                            const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                            return eighteenYearsAgo.toISOString().split("T")[0];
+                          })(),
                           "aria-describedby": errors.dateOfBirth
                             ? "date-of-birth-error"
                             : undefined,
