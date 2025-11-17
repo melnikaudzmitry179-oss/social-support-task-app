@@ -1,0 +1,15 @@
+#root {
+  min-width: 100vw;
+  min-height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+  direction: ltr;
+}
+
+@media (max-width: 768px) {
+  #root {
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+}
+
