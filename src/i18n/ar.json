@@ -68,7 +68,12 @@
       "retired": "متقاعد",
       "student": "طالب"
     },
-    "monthlyIncome": "الدخل الشهري ($)",
+    "monthlyIncome": "الدخل الشهري",
+    "monthlyIncomeCurrency": "العملة",
+    "currencyOptions": {
+      "USD": "دولار أمريكي (USD)",
+      "AED": "درهم إماراتي (AED)"
+    },
     "housingStatus": "حالة السكن",
     "housingStatusOptions": {
       "own": "ملك",
@@ -99,8 +104,9 @@
     "nameMinLength": "يجب أن يكون الاسم مكونًا من حرفين على الأقل",
     "nameMaxLength": "يجب ألا يتجاوز الاسم 100 حرف",
     "nationalIdRequired": "الرقم الوطني مطلوب",
-    "nationalIdMinLength": "يجب أن يكون الرقم الوطني مكونًا من 5 أحرف على الأقل",
-    "nationalIdMaxLength": "يجب ألا يتجاوز الرقم الوطني 20 حرفًا",
+    "nationalIdMinLength": "يجب أن يكون الرقم الوطني مكونًا من 12 رقمًا على الأقل",
+    "nationalIdMaxLength": "يجب ألا يتجاوز الرقم الوطني 15 رقمًا",
+    "dubaiNationalIdInvalid": "صيغة الرقم الوطني غير صحيحة. يجب أن يتكون من 12 رقمًا مع رقم تحقق صالح.",
     "dateOfBirthRequired": "تاريخ الميلاد مطلوب",
     "dateOfBirthPast": "يجب أن يكون تاريخ الميلاد في الماضي",
     "dateOfBirthNotTooOld": "يجب أن يكون تاريخ الميلاد ضمن نطاق معقول (لا يزيد عن 120 سنة)",
@@ -131,6 +137,7 @@
     "monthlyIncomeRequired": "الدخل الشهري مطلوب",
     "monthlyIncomeMin": "يجب أن يكون الدخل الشهري على الأقل 0",
     "monthlyIncomeNoLeadingZeros": "يجب أن يكون الرقم 0 أو يبدأ بـ 1-9",
+    "currencyRequired": "العملة مطلوبة",
     "housingStatusRequired": "حالة السكن مطلوبة",
     "currentFinancialSituationRequired": "الوضع المالي الحالي مطلوب",
     "employmentCircumstancesRequired": "ظروف العمل مطلوبة",
@@ -140,7 +147,7 @@
     "currentFinancialSituation": "صف وضعك المالي الحالي بالتفصيل، بما في ذلك مصادر دخلك، والمصروفات الشهرية، وأي تحديات مالية تواجهها.",
     "employmentCircumstances": "صف ظروف عملك الحالية، بما في ذلك حالة وظيفتك، وساعات العمل، ونوع التوظيف، وأي تحديات متعلقة بالعمل تواجهها.",
     "reasonForApplying": "اكتب وصفًا لسبب تقدم شخص ما بطلب للحصول على الدعم الاجتماعي.",
-    "expandPrompt": "لقد كتب المستخدم بالفعل: \"{{currentValue}}\". يرجى التوسع في هذا الوصف أو تحسينه.",
-    "expandPromptShort": "لقد كتب المستخدم بالفعل: \"{{currentValue}}\". يرجى التوسع في هذا أو تحسينه."
+    "financialContextPrompt": "ضع في اعتبارك المعلومات التالية عند إنشاء ردك:\n- الحالة الاجتماعية: {{maritalStatus}}\n- عدد المعالين: {{dependents}}\n- حالة العمل: {{employmentStatus}}\n- الدخل الشهري: {{monthlyIncome}}\n- حالة السكن: {{housingStatus}}\n\nاستخدم هذا السياق لتقديم رد أكثر تخصيصًا وملاءمة يأخذ في الاعتبار الوضع العائلي والمالي المحدد للشخص.",
+    "notSpecified": "لم يتم تحديده"
   }
 }

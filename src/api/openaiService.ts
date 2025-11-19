@@ -1,4 +1,4 @@
-import type { SituationDescriptionsFormData } from "../types/formTypes";
+import type { SituationDescriptionsFormData, FamilyFinancialInfoFormData } from "../types/formTypes";
 import { t } from "../utils/i18n.util";
 
 const OPENAI_API_URL = import.meta.env.VITE_OPENAI_API_URL;
@@ -9,6 +9,7 @@ type FieldName = keyof SituationDescriptionsFormData;
 interface GenerateTextParams {
   fieldName: FieldName;
   currentValue?: string;
+  familyFinancialInfo?: FamilyFinancialInfoFormData | null;
   timeout?: number;
 }
 
@@ -22,6 +23,7 @@ class OpenAIService {
   async generateText({
     fieldName,
     currentValue,
+    familyFinancialInfo,
     timeout = 100000,
   }: GenerateTextParams): Promise<string> {
     if (!this.apiKey) {
@@ -34,27 +36,32 @@ class OpenAIService {
     switch (fieldName) {
       case "currentFinancialSituation":
         if (currentValue && currentValue.trim() !== "") {
-          prompt = `${t("aiPrompts.currentFinancialSituation")} ${t("aiPrompts.expandPrompt", { currentValue })}`;
+          prompt = `${t("aiPrompts.currentFinancialSituation")}`;
         } else {
           prompt = t("aiPrompts.currentFinancialSituation");
         }
         break;
       case "employmentCircumstances":
         if (currentValue && currentValue.trim() !== "") {
-          prompt = `${t("aiPrompts.employmentCircumstances")} ${t("aiPrompts.expandPrompt", { currentValue })}`;
+          prompt = `${t("aiPrompts.employmentCircumstances")}`;
         } else {
           prompt = t("aiPrompts.employmentCircumstances");
         }
         break;
       case "reasonForApplying":
         if (currentValue && currentValue.trim() !== "") {
-          prompt = `${t("aiPrompts.reasonForApplying")} ${t("aiPrompts.expandPromptShort", { currentValue })}`;
+          prompt = `${t("aiPrompts.reasonForApplying")}`;
         } else {
           prompt = t("aiPrompts.reasonForApplying");
         }
         break;
       default:
         throw new Error(`Unknown field name: ${fieldName}`);
+    }
+
+    if (familyFinancialInfo) {
+      const financialContext = this.buildFinancialContext(familyFinancialInfo);
+      prompt = `${prompt}\n\nAdditional Context:\n${financialContext}`;
     }
 
     const requestBody = {
@@ -112,6 +119,34 @@ class OpenAIService {
 
       throw new Error("An unknown error occurred while generating text");
     }
+  }
+
+  private buildFinancialContext(financialInfo: FamilyFinancialInfoFormData): string {
+    
+    const contextObj: Record<string, unknown> = {};
+    contextObj.maritalStatus = financialInfo.maritalStatus && financialInfo.maritalStatus.trim() !== ""
+      ? financialInfo.maritalStatus
+      : t('notSpecified');
+
+    contextObj.dependents = financialInfo.dependents !== undefined && financialInfo.dependents !== 0
+      ? financialInfo.dependents
+      : t('notSpecified');
+    
+   
+    contextObj.employmentStatus = financialInfo.employmentStatus && financialInfo.employmentStatus.trim() !== ""
+      ? financialInfo.employmentStatus
+      : t('notSpecified');
+    
+    
+    contextObj.monthlyIncome = financialInfo.monthlyIncome !== undefined && financialInfo.monthlyIncome !== 0
+      ? `${financialInfo.monthlyIncome} ${financialInfo.monthlyIncomeCurrency || 'USD'}`
+      : t('notSpecified');
+    
+    
+    contextObj.housingStatus = financialInfo.housingStatus && financialInfo.housingStatus.trim() !== ""
+      ? financialInfo.housingStatus
+      : t('notSpecified');
+    return t("aiPrompts.financialContextPrompt", contextObj);
   }
 }
 

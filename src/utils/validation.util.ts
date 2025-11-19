@@ -1,6 +1,23 @@
 import i18next from "i18next";
 import * as yup from "yup";
 
+export const validateDubaiNationalId = (id: string): boolean => {
+  const cleanedId = id.replace(/[\s-]/g, '');
+  
+  if (!/^\d{12}$/.test(cleanedId)) {
+    return false;
+  }
+  
+  const digits = cleanedId.split('').map(Number);
+  
+  const checkDigit = digits[11];
+  const calculatedCheck = digits.slice(0, 11).reduce((sum, digit, index) => {
+    return sum + (digit * (11 - index));
+  }, 0) % 10;
+  
+  return calculatedCheck === checkDigit;
+};
+
 export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
   yup
     .object({
@@ -36,11 +53,15 @@ export const getFamilyFinancialInfoSchema = (t: (key: string) => string) =>
             return !stringValue.startsWith('0') || stringValue === '0';
           }
         ),
+      monthlyIncomeCurrency: yup
+        .string()
+        .oneOf(['USD', 'AED'], t("validation.currencyRequired") || "Currency is required")
+        .required(t("validation.currencyRequired")),
       housingStatus: yup
         .string()
         .required(t("validation.housingStatusRequired")),
     })
-    .required();
+    .defined();
 
 export const getPersonalInfoSchema = (t: (key: string) => string) =>
   yup
@@ -60,18 +81,28 @@ export const getPersonalInfoSchema = (t: (key: string) => string) =>
         .string()
         .required(t("validation.nationalIdRequired"))
         .min(
-          5,
+          12,
           t("validation.nationalIdMinLength") ||
-            "National ID must be at least 5 characters"
+            "National ID must be at least 12 characters"
         )
         .max(
-          20,
+          15,
           t("validation.nationalIdMaxLength") ||
-            "National ID must not exceed 20 characters"
+            "National ID must not exceed 15 characters"
+        )
+        .test(
+          "dubai-national-id",
+          t("validation.dubaiNationalIdInvalid") ||
+            "Invalid Dubai National ID format",
+          function(value) {
+            if (!value) return true;
+            return validateDubaiNationalId(value);
+          }
         ),
       dateOfBirth: yup
         .date()
-        .required(t("validation.dateOfBirthRequired"))
+        .nullable()
+        .optional()
         .max(
           new Date(),
           t("validation.dateOfBirthPast") || "Date of birth must be in the past"
@@ -100,7 +131,6 @@ export const getPersonalInfoSchema = (t: (key: string) => string) =>
             const monthDiff = today.getMonth() - birthDate.getMonth();
             const dayDiff = today.getDate() - birthDate.getDate();
             
-            // Adjust age if birthday hasn't occurred yet this year
             const exactAge = age - (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? 1 : 0);
             return exactAge >= 18;
           }
@@ -173,7 +203,7 @@ export const getPersonalInfoSchema = (t: (key: string) => string) =>
             "Email must not exceed 100 characters"
         ),
     })
-    .required();
+    .defined();
 
 export const getSituationDescriptionsSchema = (t: (key: string) => string) =>
   yup
@@ -188,7 +218,7 @@ export const getSituationDescriptionsSchema = (t: (key: string) => string) =>
         .string()
         .required(t("validation.reasonForApplyingRequired")),
     })
-    .required();
+    .defined();
 
 
 import type { PersonalInfoFormData, FamilyFinancialInfoFormData, SituationDescriptionsFormData } from '../types/formTypes';

@@ -4,7 +4,6 @@ import type {
   SituationDescriptionsFormData
 } from './formTypes';
 
-// Form component props interfaces
 export interface FamilyFinancialInfoFormProps {
   defaultValues?: Partial<FamilyFinancialInfoFormData>;
 }
@@ -17,7 +16,6 @@ export interface SituationDescriptionsFormProps {
   defaultValues?: Partial<SituationDescriptionsFormData>;
 }
 
-// Popup component props interfaces
 export interface AiSuggestionPopupProps {
   open: boolean;
   onClose: () => void;

@@ -107,7 +107,7 @@ const SocialSupportFormWizard: React.FC = () => {
         personalInfo: hasData(formData.personalInfo as unknown as Record<string, unknown>)
           ? {
               ...formData.personalInfo,
-              dateOfBirth: formData.personalInfo.dateOfBirth.toString(),
+              dateOfBirth: formData.personalInfo.dateOfBirth?.toString() || '',
             }
           : null,
         familyFinancialInfo: hasData(formData.familyFinancialInfo as unknown as Record<string, unknown>) ? formData.familyFinancialInfo : null,
@@ -149,8 +149,8 @@ const SocialSupportFormWizard: React.FC = () => {
         }
         return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("Error during form submission:", error);
       setSubmitError(
         t("socialSupportFormWizard.validationError") ||
           "Please correct errors in the forms before submitting."
@@ -161,7 +161,7 @@ const SocialSupportFormWizard: React.FC = () => {
     const fullFormData = {
       personalInfo: {
         ...formData.personalInfo,
-        dateOfBirth: formData.personalInfo.dateOfBirth.toString(),
+        dateOfBirth: formData.personalInfo.dateOfBirth?.toString() || '',
       },
       familyFinancialInfo: formData.familyFinancialInfo,
       situationDescriptions: formData.situationDescriptions,

@@ -20,67 +20,52 @@ import {
 } from "../../utils/validation.util";
 import type { PersonalInfoFormProps } from "../../types/componentTypes";
 
-type FormData = PersonalInfoFormData;
+const castToPersonalInfoFormData = (data: PersonalInfoFormData): PersonalInfoFormData => {
+  return {
+    ...data,
+    dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+  };
+};
 
 const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
   ({ defaultValues }, ref) => {
     const { t } = useTranslation();
     const { updatePersonalInfo } = useSocialSupportWizard();
 
-    // Calculate default date for 18 years ago
-    const getDefaultDate = React.useCallback(() => {
-      const today = new Date();
-      const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-      return eighteenYearsAgo;
-    }, []);
-
     const schema = getPersonalInfoSchema(t);
     const {
-      register,
       handleSubmit,
       control,
       formState: { errors },
       reset,
-      setValue,
-      watch,
-    } = useForm<FormData>({
-      resolver: yupResolver(schema),
+    } = useForm<PersonalInfoFormData>({
+      resolver: yupResolver(schema) as import('react-hook-form').Resolver<PersonalInfoFormData>,
       defaultValues: {
-        ...defaultValues,
-        dateOfBirth: defaultValues?.dateOfBirth || getDefaultDate(),
+        name: "",
+        nationalId: "",
+        dateOfBirth: undefined,
+        gender: "",
+        address: "",
+        city: "",
+        state: "",
+        country: "",
+        phone: "",
+        email: "",
       },
     });
-
-    const watchedGender = watch("gender");
-    const watchedDateOfBirth = watch("dateOfBirth");
 
     React.useEffect(() => {
       if (defaultValues) {
         reset(defaultValues);
-      } else {
-        reset({ dateOfBirth: getDefaultDate() });
       }
-    }, [defaultValues, reset, getDefaultDate]);
+    }, [defaultValues, reset]);
 
-    // Set default date when form loads without default values
-    React.useEffect(() => {
-      if (!defaultValues && !watchedDateOfBirth) {
-        setValue("dateOfBirth", getDefaultDate());
-      }
-    }, [defaultValues, watchedDateOfBirth, setValue, getDefaultDate]);
-
-    React.useEffect(() => {
-      if (defaultValues?.gender) {
-        setValue("gender", defaultValues.gender);
-      }
-    }, [defaultValues?.gender, setValue]);
-
-    const handleFormSubmit = (data: FormData) => {
+    const handleFormSubmit = (data: PersonalInfoFormData) => {
       console.log("Form Data:", data);
-      updatePersonalInfo(data);
+      updatePersonalInfo(castToPersonalInfoFormData(data));
     };
   
-    const { submitForm, saveForm } = useFormSubmission(
+    const { submitForm, saveForm } = useFormSubmission<PersonalInfoFormData>(
       handleSubmit,
       handleFormSubmit
     );
@@ -93,6 +78,7 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
     return (
       <Container
         maxWidth="md"
+        className="PersonalInfoForm"
         sx={{
           px: { xs: 1, sm: 2, md: 0 },
           mt: { xs: 2, sm: 3, md: 4 },
@@ -121,62 +107,80 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  label={t("personalInfoForm.name")}
-                  {...register("name")}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                  variant="outlined"
-                  slotProps={{
-                    inputLabel: {
-                      htmlFor: "name-input",
-                      shrink: true,
-                    },
-                    htmlInput: {
-                      "aria-describedby": errors.name ? "name-error" : undefined,
-                    },
-                  }}
-                  id="name-input"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                  }}
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      fullWidth
+                      label={t("personalInfoForm.name")}
+                      {...field}
+                      error={!!error}
+                      helperText={(error?.message as React.ReactNode) || ''}
+                      variant="outlined"
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "name-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          "aria-describedby": error ? "name-error" : undefined,
+                        },
+                      }}
+                      id="name-input"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Box>
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  label={t("personalInfoForm.nationalId")}
-                  {...register("nationalId")}
-                  error={!!errors.nationalId}
-                  helperText={errors.nationalId?.message}
-                  variant="outlined"
-                  slotProps={{
-                    inputLabel: {
-                      htmlFor: "national-id-input",
-                      shrink: true,
-                    },
-                    htmlInput: {
-                      "aria-describedby": errors.nationalId
-                        ? "national-id-error"
-                        : undefined,
-                    },
-                  }}
-                  id="national-id-input"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                  }}
+                <Controller
+                  name="nationalId"
+                  control={control}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <TextField
+                      fullWidth
+                      label={t("personalInfoForm.nationalId")}
+                      value={value || ""}
+                      onChange={(e) => {
+                        const formattedValue = e.target.value.replace(/\D/g, '').slice(0, 12);
+                        onChange(formattedValue);
+                      }}
+                      error={!!errors.nationalId}
+                      helperText={(errors.nationalId?.message as React.ReactNode) || ''}
+                      variant="outlined"
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "national-id-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          "aria-describedby": errors.nationalId
+                            ? "national-id-error"
+                            : undefined,
+                          maxLength: 12,
+                        },
+                      }}
+                      id="national-id-input"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                      }}
+                      {...field}
+                    />
+                  )}
                 />
               </Box>
 
@@ -215,10 +219,10 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                       value={
                         value instanceof Date
                           ? value.toISOString().split("T")[0]
-                          : value || ""
+                          : ""
                       }
                       error={!!errors.dateOfBirth}
-                      helperText={errors.dateOfBirth?.message}
+                      helperText={(errors.dateOfBirth?.message as React.ReactNode) || ''}
                       variant="outlined"
                       sx={{
                         "& .MuiInputBase-input": {
@@ -235,54 +239,58 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
               </Box>
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <FormControl
-                  fullWidth
-                  variant="outlined"
-                  error={!!errors.gender}
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                      textAlign: "left",
-                    },
-                    "& .MuiSelect-select": {
-                      textAlign: "left",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                    "& .MuiFormHelperText-root": {
-                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    },
-                  }}
-                  id="gender-form-control"
-                >
-                  <InputLabel htmlFor="gender-select">
-                    {t("personalInfoForm.gender")}
-                  </InputLabel>
-                  <Select
-                    {...register("gender")}
-                    label={t("personalInfoForm.gender")}
-                    value={watchedGender || defaultValues?.gender || ""}
-                    slotProps={{
-                      input: {
-                        id: "gender-select",
-                        "aria-describedby": errors.gender
-                          ? "gender-error"
-                          : undefined,
-                      },
-                    }}
-                  >
-                    <MenuItem value="male">
-                      {t("personalInfoForm.genderOptions.male")}
-                    </MenuItem>
-                    <MenuItem value="female">
-                      {t("personalInfoForm.genderOptions.female")}
-                    </MenuItem>
-                    <MenuItem value="other">
-                      {t("personalInfoForm.genderOptions.other")}
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+                <Controller
+                  name="gender"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <FormControl
+                      fullWidth
+                      variant="outlined"
+                      error={!!error}
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                          textAlign: "left",
+                        },
+                        "& .MuiSelect-select": {
+                          textAlign: "left",
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiFormHelperText-root": {
+                          fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                        },
+                      }}
+                      id="gender-form-control"
+                    >
+                      <InputLabel htmlFor="gender-select">
+                        {t("personalInfoForm.gender")}
+                      </InputLabel>
+                      <Select
+                        {...field}
+                        label={t("personalInfoForm.gender")}
+                        value={field.value || defaultValues?.gender || ""}
+                        slotProps={{
+                          input: {
+                            id: "gender-select",
+                            "aria-describedby": error ? "gender-error" : undefined,
+                          },
+                        }}
+                      >
+                        <MenuItem value="male">
+                          {t("personalInfoForm.genderOptions.male")}
+                        </MenuItem>
+                        <MenuItem value="female">
+                          {t("personalInfoForm.genderOptions.female")}
+                        </MenuItem>
+                        <MenuItem value="other">
+                          {t("personalInfoForm.genderOptions.other")}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  )}
+                />
               </Box>
               {errors.gender && (
                 <Typography
@@ -293,38 +301,42 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                   role="alert"
                   aria-live="polite"
                 >
-                  {errors.gender.message}
+                  {(errors.gender?.message as React.ReactNode) || ''}
                 </Typography>
               )}
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  label={t("personalInfoForm.address")}
-                  {...register("address")}
-                  error={!!errors.address}
-                  helperText={errors.address?.message}
-                  variant="outlined"
-                  slotProps={{
-                    inputLabel: {
-                      htmlFor: "address-input",
-                      shrink: true,
-                    },
-                    htmlInput: {
-                      "aria-describedby": errors.address
-                        ? "address-error"
-                        : undefined,
-                    },
-                  }}
-                  id="address-input"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                  }}
+                <Controller
+                  name="address"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      fullWidth
+                      label={t("personalInfoForm.address")}
+                      {...field}
+                      error={!!error}
+                      helperText={(error?.message as React.ReactNode) || ''}
+                      variant="outlined"
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "address-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          "aria-describedby": error ? "address-error" : undefined,
+                        },
+                      }}
+                      id="address-input"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Box>
 
@@ -342,33 +354,37 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     width: { xs: "100%", sm: "auto" },
                   }}
                 >
-                  <TextField
-                    fullWidth
-                    label={t("personalInfoForm.city")}
-                    {...register("city")}
-                    error={!!errors.city}
-                    helperText={errors.city?.message}
-                    variant="outlined"
-                    slotProps={{
-                      inputLabel: {
-                        htmlFor: "city-input",
-                        shrink: true,
-                      },
-                      htmlInput: {
-                        "aria-describedby": errors.city
-                          ? "city-error"
-                          : undefined,
-                      },
-                    }}
-                    id="city-input"
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                    }}
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        fullWidth
+                        label={t("personalInfoForm.city")}
+                        {...field}
+                        error={!!error}
+                        helperText={(error?.message as React.ReactNode) || ''}
+                        variant="outlined"
+                        slotProps={{
+                          inputLabel: {
+                            htmlFor: "city-input",
+                            shrink: true,
+                          },
+                          htmlInput: {
+                            "aria-describedby": error ? "city-error" : undefined,
+                          },
+                        }}
+                        id="city-input"
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                        }}
+                      />
+                    )}
                   />
                 </Box>
                 <Box
@@ -377,33 +393,37 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     width: { xs: "100%", sm: "auto" },
                   }}
                 >
-                  <TextField
-                    fullWidth
-                    label={t("personalInfoForm.state")}
-                    {...register("state")}
-                    error={!!errors.state}
-                    helperText={errors.state?.message}
-                    variant="outlined"
-                    slotProps={{
-                      inputLabel: {
-                        htmlFor: "state-input",
-                        shrink: true,
-                      },
-                      htmlInput: {
-                        "aria-describedby": errors.state
-                          ? "state-error"
-                          : undefined,
-                      },
-                    }}
-                    id="state-input"
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                    }}
+                  <Controller
+                    name="state"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        fullWidth
+                        label={t("personalInfoForm.state")}
+                        {...field}
+                        error={!!error}
+                        helperText={(error?.message as React.ReactNode) || ''}
+                        variant="outlined"
+                        slotProps={{
+                          inputLabel: {
+                            htmlFor: "state-input",
+                            shrink: true,
+                          },
+                          htmlInput: {
+                            "aria-describedby": error ? "state-error" : undefined,
+                          },
+                        }}
+                        id="state-input"
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                        }}
+                      />
+                    )}
                   />
                 </Box>
               </Box>
@@ -422,33 +442,37 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     width: { xs: "auto", sm: "auto" },
                   }}
                 >
-                  <TextField
-                    fullWidth
-                    label={t("personalInfoForm.country")}
-                    {...register("country")}
-                    error={!!errors.country}
-                    helperText={errors.country?.message}
-                    variant="outlined"
-                    slotProps={{
-                      inputLabel: {
-                        htmlFor: "country-input",
-                        shrink: true,
-                      },
-                      htmlInput: {
-                        "aria-describedby": errors.country
-                          ? "country-error"
-                          : undefined,
-                      },
-                    }}
-                    id="country-input"
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                    }}
+                  <Controller
+                    name="country"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        fullWidth
+                        label={t("personalInfoForm.country")}
+                        {...field}
+                        error={!!error}
+                        helperText={(error?.message as React.ReactNode) || ''}
+                        variant="outlined"
+                        slotProps={{
+                          inputLabel: {
+                            htmlFor: "country-input",
+                            shrink: true,
+                          },
+                          htmlInput: {
+                            "aria-describedby": error ? "country-error" : undefined,
+                          },
+                        }}
+                        id="country-input"
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                        }}
+                      />
+                    )}
                   />
                 </Box>
                 <Box
@@ -457,65 +481,73 @@ const PersonalInfoForm = forwardRef<FormRef, PersonalInfoFormProps>(
                     width: { xs: "100%", sm: "auto" },
                   }}
                 >
-                  <TextField
-                    fullWidth
-                    label={t("personalInfoForm.phone")}
-                    {...register("phone")}
-                    error={!!errors.phone}
-                    helperText={errors.phone?.message}
-                    variant="outlined"
-                    slotProps={{
-                      inputLabel: {
-                        htmlFor: "phone-input",
-                        shrink: true,
-                      },
-                      htmlInput: {
-                        "aria-describedby": errors.phone
-                          ? "phone-error"
-                          : undefined,
-                      },
-                    }}
-                    id="phone-input"
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      },
-                    }}
+                  <Controller
+                    name="phone"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        fullWidth
+                        label={t("personalInfoForm.phone")}
+                        {...field}
+                        error={!!error}
+                        helperText={(error?.message as React.ReactNode) || ''}
+                        variant="outlined"
+                        slotProps={{
+                          inputLabel: {
+                            htmlFor: "phone-input",
+                            shrink: true,
+                          },
+                          htmlInput: {
+                            "aria-describedby": error ? "phone-error" : undefined,
+                          },
+                        }}
+                        id="phone-input"
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                          "& .MuiInputLabel-root": {
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          },
+                        }}
+                      />
+                    )}
                   />
                 </Box>
               </Box>
 
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  label={t("personalInfoForm.email")}
-                  {...register("email")}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  variant="outlined"
-                  slotProps={{
-                    inputLabel: {
-                      htmlFor: "email-input",
-                      shrink: true,
-                    },
-                    htmlInput: {
-                      "aria-describedby": errors.email
-                        ? "email-error"
-                        : undefined,
-                    },
-                  }}
-                  id="email-input"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                  }}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      fullWidth
+                      label={t("personalInfoForm.email")}
+                      {...field}
+                      error={!!error}
+                      helperText={(error?.message as React.ReactNode) || ''}
+                      variant="outlined"
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "email-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          "aria-describedby": error ? "email-error" : undefined,
+                        },
+                      }}
+                      id="email-input"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Box>
             </Box>

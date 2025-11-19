@@ -68,7 +68,12 @@
       "retired": "Retired",
       "student": "Student"
     },
-    "monthlyIncome": "Monthly Income ($)",
+    "monthlyIncome": "Monthly Income",
+    "monthlyIncomeCurrency": "Currency",
+    "currencyOptions": {
+      "USD": "USD (US Dollar)",
+      "AED": "AED (UAE Dirham)"
+    },
     "housingStatus": "Housing Status",
     "housingStatusOptions": {
       "own": "Own",
@@ -99,8 +104,9 @@
     "nameMinLength": "Name must be at least 2 characters",
     "nameMaxLength": "Name must not exceed 100 characters",
     "nationalIdRequired": "National ID is required",
-    "nationalIdMinLength": "National ID must be at least 5 characters",
-    "nationalIdMaxLength": "National ID must not exceed 20 characters",
+    "nationalIdMinLength": "National ID must be at least 12 characters",
+    "nationalIdMaxLength": "National ID must not exceed 15 characters",
+    "dubaiNationalIdInvalid": "Invalid Dubai National ID format. Must be 12 digits with valid check digit.",
     "dateOfBirthRequired": "Date of Birth is required",
     "dateOfBirthPast": "Date of birth must be in the past",
     "dateOfBirthNotTooOld": "Date of birth must be within reasonable range (not older than 120 years)",
@@ -131,6 +137,7 @@
     "monthlyIncomeRequired": "Monthly Income is required",
     "monthlyIncomeMin": "Monthly Income must be at least 0",
     "monthlyIncomeNoLeadingZeros": "Number should be 0 or start with 1-9",
+    "currencyRequired": "Currency is required",
     "housingStatusRequired": "Housing Status is required",
     "currentFinancialSituationRequired": "Current Financial Situation is required",
     "employmentCircumstancesRequired": "Employment Circumstances is required",
@@ -140,7 +147,7 @@
     "currentFinancialSituation": "Describe your current financial situation in detail, including your income sources, monthly expenses, and any financial challenges you are facing.",
     "employmentCircumstances": "Describe your current employment circumstances, including your job status, work hours, type of employment, and any employment-related challenges you are experiencing.",
     "reasonForApplying": "Write a description of why someone is applying for social support.",
-    "expandPrompt": "The user has already written: \"{{currentValue}}\". Please expand or improve this description.",
-    "expandPromptShort": "The user has already written: \"{{currentValue}}\". Please expand or improve this."
+    "financialContextPrompt": "Consider the following information when generating your response:\n- Marital Status: {{maritalStatus}}\n- Number of Dependents: {{dependents}}\n- Employment Status: {{employmentStatus}}\n- Monthly Income: {{monthlyIncome}}\n- Housing Status: {{housingStatus}}\n\nUse this context to provide a more personalized and relevant response that takes into account the person's specific family and financial situation.",
+    "notSpecified": "Not specified"
   }
 }

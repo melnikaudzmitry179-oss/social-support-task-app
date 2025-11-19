@@ -7,7 +7,7 @@ const initialFormData: FormData = {
   personalInfo: {
     name: '',
     nationalId: '',
-    dateOfBirth: new Date(),
+    dateOfBirth: undefined,
     gender: '',
     address: '',
     city: '',
@@ -21,6 +21,7 @@ const initialFormData: FormData = {
     dependents: 0,
     employmentStatus: '',
     monthlyIncome: 0,
+    monthlyIncomeCurrency: 'USD',
     housingStatus: '',
   },
   situationDescriptions: {

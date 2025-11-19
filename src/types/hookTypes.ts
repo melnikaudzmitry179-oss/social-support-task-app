@@ -1,6 +1,5 @@
-import type { SituationDescriptionsFormData } from './formTypes';
+import type { SituationDescriptionsFormData, FamilyFinancialInfoFormData } from './formTypes';
 
-// Hook parameter and return type interfaces
 export interface UseAiSuggestionParams {
   onAccept: (field: keyof SituationDescriptionsFormData, value: string) => void;
 }
@@ -13,6 +12,7 @@ export interface UseAiSuggestionReturn {
   showSuggestionPopup: boolean;
   aiError: string | null;
   setEditableSuggestion: React.Dispatch<React.SetStateAction<string>>;
+  setFamilyFinancialInfoForPrompt: (info: FamilyFinancialInfoFormData) => void;
   handleGenerateSuggestion: (fieldName: keyof SituationDescriptionsFormData, currentValue?: string) => Promise<void>;
   handleAcceptSuggestion: () => void;
   handleDiscardSuggestion: () => void;

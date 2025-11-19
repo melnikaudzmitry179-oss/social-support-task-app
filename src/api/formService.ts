@@ -3,14 +3,14 @@ import api from './index';
 interface PersonalInfoFormData {
   name: string;
   nationalId: string;
-  dateOfBirth: string;
+  dateOfBirth?: string;
   gender: string;
   address: string;
   city: string;
   state: string;
   country: string;
   phone: string;
- email: string;
+  email: string;
 }
 
 interface FamilyFinancialInfoFormData {

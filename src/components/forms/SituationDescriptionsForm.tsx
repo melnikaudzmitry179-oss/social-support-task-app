@@ -1,6 +1,6 @@
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFormSubmission } from "../../hooks/useFormSubmission";
 import {
@@ -26,7 +26,7 @@ const SituationDescriptionsForm = forwardRef<
   FormRef,
   SituationDescriptionsFormProps
 >(({ defaultValues }, ref) => {
-  const { updateSituationDescriptions } = useSocialSupportWizard();
+  const { updateSituationDescriptions, formData } = useSocialSupportWizard();
   const { t } = useTranslation();
 
   const schema = getSituationDescriptionsSchema(t);
@@ -35,6 +35,7 @@ const SituationDescriptionsForm = forwardRef<
     handleSubmit,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -48,6 +49,7 @@ const SituationDescriptionsForm = forwardRef<
     showSuggestionPopup,
     aiError,
     setEditableSuggestion,
+    setFamilyFinancialInfoForPrompt,
     handleGenerateSuggestion: handleGenerateSuggestionHook,
     handleAcceptSuggestion: handleAcceptSuggestionHook,
     handleDiscardSuggestion: handleDiscardSuggestionHook,
@@ -56,6 +58,12 @@ const SituationDescriptionsForm = forwardRef<
       setValue(field, value);
     },
   });
+
+  useEffect(() => {
+    if (formData.familyFinancialInfo) {
+      setFamilyFinancialInfoForPrompt(formData.familyFinancialInfo);
+    }
+  }, [formData.familyFinancialInfo, setFamilyFinancialInfoForPrompt]);
 
   const handleGenerateSuggestion = async (fieldName: keyof FormData) => {
     const currentValue = getValues(fieldName) || "";
@@ -156,38 +164,40 @@ const SituationDescriptionsForm = forwardRef<
                     )}
                   </Button>
                 </Box>
-                <TextField
-                  fullWidth
-                  label={t(
-                    "situationDescriptionsForm.currentFinancialSituation"
+                <Controller
+                  name="currentFinancialSituation"
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      fullWidth
+                      label={t("situationDescriptionsForm.currentFinancialSituation")}
+                      {...field}
+                      multiline
+                      rows={4}
+                      error={!!error}
+                      helperText={(error?.message as React.ReactNode) || ''}
+                      variant="outlined"
+                      slotProps={{
+                        inputLabel: {
+                          htmlFor: "current-financial-situation-input",
+                          shrink: true,
+                        },
+                        htmlInput: {
+                          "aria-describedby": error ? "current-financial-situation-error" : undefined,
+                        },
+                      }}
+                      id="current-financial-situation-input"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                          py: { xs: 1, sm: 1.25 },
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                      }}
+                    />
                   )}
-                  multiline
-                  rows={4}
-                  {...register("currentFinancialSituation")}
-                  error={!!errors.currentFinancialSituation}
-                  helperText={errors.currentFinancialSituation?.message}
-                  variant="outlined"
-                  slotProps={{
-                    inputLabel: {
-                      htmlFor: "current-financial-situation-input",
-                      shrink: true,
-                    },
-                    htmlInput: {
-                      "aria-describedby": errors.currentFinancialSituation
-                        ? "current-financial-situation-error"
-                        : undefined,
-                    },
-                  }}
-                  id="current-financial-situation-input"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                      py: { xs: 1, sm: 1.25 },
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    },
-                  }}
                 />
               </Box>
 

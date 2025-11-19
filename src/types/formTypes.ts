@@ -1,7 +1,7 @@
 export interface PersonalInfoFormData {
   name: string;
   nationalId: string;
-  dateOfBirth: Date;
+  dateOfBirth?: Date | null | undefined;
   gender: string;
   address: string;
   city: string;
@@ -16,6 +16,7 @@ export interface FamilyFinancialInfoFormData {
   dependents: number;
   employmentStatus: string;
   monthlyIncome: number;
+  monthlyIncomeCurrency: 'USD' | 'AED';
   housingStatus: string;
 }
 
@@ -36,7 +37,6 @@ export interface FormRef {
   saveForm?: () => Promise<boolean>;
 };
 
-// Type for local storage with date as string
 export interface LocalStorageFormData {
   personalInfo: {
     name: string;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { openAIService } from "../api/openaiService";
-import type { SituationDescriptionsFormData } from "../types/formTypes";
+import type { SituationDescriptionsFormData, FamilyFinancialInfoFormData } from "../types/formTypes";
 import type { UseAiSuggestionParams, UseAiSuggestionReturn } from "../types/hookTypes";
 
 export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSuggestionReturn => {
@@ -10,8 +10,13 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
   const [currentField, setCurrentField] = useState<keyof SituationDescriptionsFormData | null>(null);
   const [showSuggestionPopup, setShowSuggestionPopup] = useState<boolean>(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [familyFinancialInfo, setFamilyFinancialInfo] = useState<FamilyFinancialInfoFormData | null>(null);
 
- const handleGenerateSuggestion = async (fieldName: keyof SituationDescriptionsFormData, currentValue: string = "") => {
+  const setFamilyFinancialInfoForPrompt = (info: FamilyFinancialInfoFormData) => {
+    setFamilyFinancialInfo(info);
+  };
+
+  const handleGenerateSuggestion = async (fieldName: keyof SituationDescriptionsFormData, currentValue: string = "") => {
     setCurrentField(fieldName);
     setIsGenerating(true);
     setAiError(null);
@@ -20,6 +25,7 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
       const suggestion = await openAIService.generateText({
         fieldName,
         currentValue,
+        familyFinancialInfo,
         timeout: 100000,
       });
       setAiSuggestion(suggestion);
@@ -68,6 +74,7 @@ export const useAiSuggestion = ({ onAccept }: UseAiSuggestionParams): UseAiSugge
     showSuggestionPopup,
     aiError,
     setEditableSuggestion,
+    setFamilyFinancialInfoForPrompt,
     handleGenerateSuggestion,
     handleAcceptSuggestion,
     handleDiscardSuggestion,

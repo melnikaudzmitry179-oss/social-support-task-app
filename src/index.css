@@ -108,6 +108,32 @@ body.rtl {
   text-align: right;
 }
 
+.PersonalInfoForm .MuiInputBase-root,
+.PersonalInfoForm .MuiOutlinedInput-root,
+.PersonalInfoForm .MuiSelect-root,
+.PersonalInfoForm .MuiSelect-select,
+.PersonalInfoForm input,
+.PersonalInfoForm select,
+.FamilyFinancialInfoForm .MuiInputBase-root,
+.FamilyFinancialInfoForm .MuiOutlinedInput-root,
+.FamilyFinancialInfoForm .MuiSelect-root,
+.FamilyFinancialInfoForm .MuiSelect-select,
+.FamilyFinancialInfoForm input,
+.FamilyFinancialInfoForm select {
+  height: 3.625em;
+  min-height: 3.625em;
+  line-height: 3.625em;
+}
+
+.PersonalInfoForm .MuiInputBase-input,
+.PersonalInfoForm .MuiSelect-select,
+.FamilyFinancialInfoForm .MuiInputBase-input,
+.FamilyFinancialInfoForm .MuiSelect-select {
+  height: 3.625em;
+  min-height: 3.625em;
+  line-height: 3.625em;
+}
+
 html[dir="rtl"] .container,
 body.rtl .container {
   text-align: right;

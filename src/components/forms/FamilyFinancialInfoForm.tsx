@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFormSubmission } from "../../hooks/useFormSubmission";
 import {
@@ -31,43 +31,20 @@ const FamilyFinancialInfoForm = forwardRef<
 
   const schema = getFamilyFinancialInfoSchema(t);
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
-    watch,
+    control,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: defaultValues || {},
   });
-
-  const watchedMaritalStatus = watch("maritalStatus");
-  const watchedEmploymentStatus = watch("employmentStatus");
-  const watchedHousingStatus = watch("housingStatus");
 
   React.useEffect(() => {
     if (defaultValues) {
       reset(defaultValues);
     }
   }, [defaultValues, reset]);
-
-  React.useEffect(() => {
-    if (defaultValues?.maritalStatus) {
-      setValue("maritalStatus", defaultValues.maritalStatus);
-    }
-    if (defaultValues?.employmentStatus) {
-      setValue("employmentStatus", defaultValues.employmentStatus);
-    }
-    if (defaultValues?.housingStatus) {
-      setValue("housingStatus", defaultValues.housingStatus);
-    }
-  }, [
-    defaultValues?.maritalStatus,
-    defaultValues?.employmentStatus,
-    defaultValues?.housingStatus,
-    setValue,
-  ]);
 
   const handleFormSubmit = (data: FormData) => {
     console.log("Family & Financial Info Data:", data);
@@ -86,6 +63,7 @@ const FamilyFinancialInfoForm = forwardRef<
   return (
     <Container
       maxWidth="md"
+      className="FamilyFinancialInfoForm"
       sx={{
         px: { xs: 1, sm: 2, md: 0 },
         mt: { xs: 2, sm: 3, md: 4 },
@@ -114,59 +92,63 @@ const FamilyFinancialInfoForm = forwardRef<
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors.maritalStatus}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                    textAlign: "left",
-                  },
-                  "& .MuiSelect-select": {
-                    textAlign: "left",
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                  "& .MuiFormHelperText-root": {
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  },
-                }}
-                id="marital-status-form-control"
-              >
-                <InputLabel htmlFor="marital-status-select">
-                  {t("familyFinancialInfoForm.maritalStatus")}
-                </InputLabel>
-                <Select
-                  {...register("maritalStatus")}
-                  label={t("familyFinancialInfoForm.maritalStatus")}
-                  value={
-                    watchedMaritalStatus || defaultValues?.maritalStatus || ""
-                  }
-                  slotProps={{
-                    input: {
-                      id: "marital-status-select",
-                      "aria-describedby": errors.maritalStatus
-                        ? "marital-status-error"
-                        : undefined,
-                    },
-                  }}
-                >
-                  <MenuItem value="single">
-                    {t("familyFinancialInfoForm.maritalStatusOptions.single")}
-                  </MenuItem>
-                  <MenuItem value="married">
-                    {t("familyFinancialInfoForm.maritalStatusOptions.married")}
-                  </MenuItem>
-                  <MenuItem value="divorced">
-                    {t("familyFinancialInfoForm.maritalStatusOptions.divorced")}
-                  </MenuItem>
-                  <MenuItem value="widowed">
-                    {t("familyFinancialInfoForm.maritalStatusOptions.widowed")}
-                  </MenuItem>
-                </Select>
-              </FormControl>
+              <Controller
+                name="maritalStatus"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors.maritalStatus}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                        textAlign: "left",
+                      },
+                      "& .MuiSelect-select": {
+                        textAlign: "left",
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      },
+                    }}
+                    id="marital-status-form-control"
+                  >
+                    <InputLabel htmlFor="marital-status-select">
+                      {t("familyFinancialInfoForm.maritalStatus")}
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      label={t("familyFinancialInfoForm.maritalStatus")}
+                      value={field.value || defaultValues?.maritalStatus || ""}
+                      slotProps={{
+                        input: {
+                          id: "marital-status-select",
+                          "aria-describedby": errors.maritalStatus
+                            ? "marital-status-error"
+                            : undefined,
+                        },
+                      }}
+                    >
+                      <MenuItem value="single">
+                        {t("familyFinancialInfoForm.maritalStatusOptions.single")}
+                      </MenuItem>
+                      <MenuItem value="married">
+                        {t("familyFinancialInfoForm.maritalStatusOptions.married")}
+                      </MenuItem>
+                      <MenuItem value="divorced">
+                        {t("familyFinancialInfoForm.maritalStatusOptions.divorced")}
+                      </MenuItem>
+                      <MenuItem value="widowed">
+                        {t("familyFinancialInfoForm.maritalStatusOptions.widowed")}
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              />
             </Box>
             {errors.maritalStatus && (
               <Typography
@@ -182,118 +164,128 @@ const FamilyFinancialInfoForm = forwardRef<
             )}
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <TextField
-                fullWidth
-                label={t("familyFinancialInfoForm.dependents")}
-                type="number"
-                {...register("dependents", { valueAsNumber: true })}
-                error={!!errors.dependents}
-                helperText={errors.dependents?.message}
-                variant="outlined"
-                slotProps={{
-                  inputLabel: {
-                    htmlFor: "dependents-input",
-                    shrink: true,
-                  },
-                  htmlInput: {
-                    min: 0,
-                    "aria-describedby": errors.dependents
-                      ? "dependents-error"
-                      : undefined,
-                  },
-                }}
-                id="dependents-input"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value.startsWith('0') && value.length > 1) {
-                    const correctedValue = value.replace(/^0+/, '');
-                    if (correctedValue) {
-                      setValue('dependents', parseInt(correctedValue, 10));
-                    } else {
-                      setValue('dependents', 0);
-                    }
-                  }
-                }}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                }}
+              <Controller
+                name="dependents"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    label={t("familyFinancialInfoForm.dependents")}
+                    type="number"
+                    {...field}
+                    error={!!errors.dependents}
+                    helperText={errors.dependents?.message}
+                    variant="outlined"
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "dependents-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        min: 0,
+                        "aria-describedby": errors.dependents
+                          ? "dependents-error"
+                          : undefined,
+                      },
+                    }}
+                    id="dependents-input"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.startsWith('0') && value.length > 1) {
+                        const correctedValue = value.replace(/^0+/, '');
+                        if (correctedValue) {
+                          field.onChange(parseInt(correctedValue, 10));
+                        } else {
+                          field.onChange(0);
+                        }
+                      } else {
+                        field.onChange(value ? parseInt(value, 10) : 0);
+                      }
+                    }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                    }}
+                  />
+                )}
               />
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors.employmentStatus}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                    textAlign: "left",
-                  },
-                  "& .MuiSelect-select": {
-                    textAlign: "left",
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                  "& .MuiFormHelperText-root": {
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  },
-                }}
-                id="employment-status-form-control"
-              >
-                <InputLabel htmlFor="employment-status-select">
-                  {t("familyFinancialInfoForm.employmentStatus")}
-                </InputLabel>
-                <Select
-                  {...register("employmentStatus")}
-                  label={t("familyFinancialInfoForm.employmentStatus")}
-                  value={
-                    watchedEmploymentStatus ||
-                    defaultValues?.employmentStatus ||
-                    ""
-                  }
-                  slotProps={{
-                    input: {
-                      id: "employment-status-select",
-                      "aria-describedby": errors.employmentStatus
-                        ? "employment-status-error"
-                        : undefined,
-                    },
-                  }}
-                >
-                  <MenuItem value="employed">
-                    {t(
-                      "familyFinancialInfoForm.employmentStatusOptions.employed"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="unemployed">
-                    {t(
-                      "familyFinancialInfoForm.employmentStatusOptions.unemployed"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="self-employed">
-                    {t(
-                      "familyFinancialInfoForm.employmentStatusOptions.selfEmployed"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="retired">
-                    {t(
-                      "familyFinancialInfoForm.employmentStatusOptions.retired"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="student">
-                    {t(
-                      "familyFinancialInfoForm.employmentStatusOptions.student"
-                    )}
-                  </MenuItem>
-                </Select>
-              </FormControl>
+              <Controller
+                name="employmentStatus"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors.employmentStatus}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                        textAlign: "left",
+                      },
+                      "& .MuiSelect-select": {
+                        textAlign: "left",
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      },
+                    }}
+                    id="employment-status-form-control"
+                  >
+                    <InputLabel htmlFor="employment-status-select">
+                      {t("familyFinancialInfoForm.employmentStatus")}
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      label={t("familyFinancialInfoForm.employmentStatus")}
+                      value={field.value || defaultValues?.employmentStatus || ""}
+                      slotProps={{
+                        input: {
+                          id: "employment-status-select",
+                          "aria-describedby": errors.employmentStatus
+                            ? "employment-status-error"
+                            : undefined,
+                        },
+                      }}
+                    >
+                      <MenuItem value="employed">
+                        {t(
+                          "familyFinancialInfoForm.employmentStatusOptions.employed"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="unemployed">
+                        {t(
+                          "familyFinancialInfoForm.employmentStatusOptions.unemployed"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="self-employed">
+                        {t(
+                          "familyFinancialInfoForm.employmentStatusOptions.selfEmployed"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="retired">
+                        {t(
+                          "familyFinancialInfoForm.employmentStatusOptions.retired"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="student">
+                        {t(
+                          "familyFinancialInfoForm.employmentStatusOptions.student"
+                        )}
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              />
             </Box>
             {errors.employmentStatus && (
               <Typography
@@ -308,110 +300,200 @@ const FamilyFinancialInfoForm = forwardRef<
               </Typography>
             )}
 
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <TextField
-                fullWidth
-                label={t("familyFinancialInfoForm.monthlyIncome")}
-                {...register("monthlyIncome", { valueAsNumber: true })}
-                error={!!errors.monthlyIncome}
-                helperText={errors.monthlyIncome?.message}
-                variant="outlined"
-                slotProps={{
-                  inputLabel: {
-                    htmlFor: "monthly-income-input",
-                    shrink: true,
-                  },
-                  htmlInput: {
-                    min: 0,
-                    "aria-describedby": errors.monthlyIncome
-                      ? "monthly-income-error"
-                      : undefined,
-                  },
-                }}
-                id="monthly-income-input"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value.startsWith('0') && value.length > 1) {
-                    const correctedValue = value.replace(/^0+/, '');
-                    if (correctedValue) {
-                      setValue('monthlyIncome', parseInt(correctedValue, 10));
-                    } else {
-                      setValue('monthlyIncome', 0);
-                    }
-                  }
-                }}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                }}
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, alignItems: "center" }}>
+              <Controller
+                name="monthlyIncome"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    label={t("familyFinancialInfoForm.monthlyIncome")}
+                    {...field}
+                    error={!!errors.monthlyIncome}
+                    helperText={errors.monthlyIncome?.message}
+                    variant="outlined"
+                    slotProps={{
+                      inputLabel: {
+                        htmlFor: "monthly-income-input",
+                        shrink: true,
+                      },
+                      htmlInput: {
+                        min: 0,
+                        "aria-describedby": errors.monthlyIncome
+                          ? "monthly-income-error"
+                          : undefined,
+                      },
+                    }}
+                    id="monthly-income-input"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.startsWith('0') && value.length > 1) {
+                        const correctedValue = value.replace(/^0+/, '');
+                        if (correctedValue) {
+                          field.onChange(parseInt(correctedValue, 10));
+                        } else {
+                          field.onChange(0);
+                        }
+                      } else {
+                        field.onChange(value ? parseInt(value, 10) : 0);
+                      }
+                    }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      minWidth: { sm: "150px" },
+                    }}
+                  />
+                )}
+              />
+              
+              <Controller
+                name="monthlyIncomeCurrency"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors.monthlyIncomeCurrency}
+                    sx={{
+                      minWidth: { sm: "200px" },
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                        textAlign: "left",
+                      },
+                      "& .MuiSelect-select": {
+                        textAlign: "left",
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      },
+                    }}
+                    id="monthly-income-currency-form-control"
+                  >
+                    <InputLabel htmlFor="monthly-income-currency-select">
+                      {t("familyFinancialInfoForm.monthlyIncomeCurrency")}
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      label={t("familyFinancialInfoForm.monthlyIncomeCurrency")}
+                      value={field.value || defaultValues?.monthlyIncomeCurrency || "USD"}
+                      slotProps={{
+                        input: {
+                          id: "monthly-income-currency-select",
+                          "aria-describedby": errors.monthlyIncomeCurrency
+                            ? "monthly-income-currency-error"
+                            : undefined,
+                        },
+                      }}
+                    >
+                      <MenuItem value="USD">
+                        {t("familyFinancialInfoForm.currencyOptions.USD")}
+                      </MenuItem>
+                      <MenuItem value="AED">
+                        {t("familyFinancialInfoForm.currencyOptions.AED")}
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
               />
             </Box>
+            {errors.monthlyIncome && (
+              <Typography
+                id="monthly-income-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.monthlyIncome.message}
+              </Typography>
+            )}
+            {errors.monthlyIncomeCurrency && (
+              <Typography
+                id="monthly-income-currency-error"
+                variant="caption"
+                color="error"
+                sx={{ pl: { xs: "14px", sm: "24px" }, mt: -0.5 }}
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.monthlyIncomeCurrency.message}
+              </Typography>
+            )}
 
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors.housingStatus}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                    textAlign: "left",
-                  },
-                  "& .MuiSelect-select": {
-                    textAlign: "left",
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontSize: { xs: "0.875rem", sm: "1rem" },
-                  },
-                  "& .MuiFormHelperText-root": {
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  },
-                }}
-                id="housing-status-form-control"
-              >
-                <InputLabel htmlFor="housing-status-select">
-                  {t("familyFinancialInfoForm.housingStatus")}
-                </InputLabel>
-                <Select
-                  {...register("housingStatus")}
-                  label={t("familyFinancialInfoForm.housingStatus")}
-                  value={
-                    watchedHousingStatus || defaultValues?.housingStatus || ""
-                  }
-                  slotProps={{
-                    input: {
-                      id: "housing-status-select",
-                      "aria-describedby": errors.housingStatus
-                        ? "housing-status-error"
-                        : undefined,
-                    },
-                  }}
-                >
-                  <MenuItem value="own">
-                    {t("familyFinancialInfoForm.housingStatusOptions.own")}
-                  </MenuItem>
-                  <MenuItem value="rent">
-                    {t("familyFinancialInfoForm.housingStatusOptions.rent")}
-                  </MenuItem>
-                  <MenuItem value="with-family-friends">
-                    {t(
-                      "familyFinancialInfoForm.housingStatusOptions.withFamilyFriends"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="temporary">
-                    {t(
-                      "familyFinancialInfoForm.housingStatusOptions.temporary"
-                    )}
-                  </MenuItem>
-                  <MenuItem value="homeless">
-                    {t("familyFinancialInfoForm.housingStatusOptions.homeless")}
-                  </MenuItem>
-                </Select>
-              </FormControl>
+              <Controller
+                name="housingStatus"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    error={!!errors.housingStatus}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                        textAlign: "left",
+                      },
+                      "& .MuiSelect-select": {
+                        textAlign: "left",
+                      },
+                      "& .MuiInputLabel-root": {
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      },
+                    }}
+                    id="housing-status-form-control"
+                  >
+                    <InputLabel htmlFor="housing-status-select">
+                      {t("familyFinancialInfoForm.housingStatus")}
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      label={t("familyFinancialInfoForm.housingStatus")}
+                      value={field.value || defaultValues?.housingStatus || ""}
+                      slotProps={{
+                        input: {
+                          id: "housing-status-select",
+                          "aria-describedby": errors.housingStatus
+                            ? "housing-status-error"
+                            : undefined,
+                        },
+                      }}
+                    >
+                      <MenuItem value="own">
+                        {t("familyFinancialInfoForm.housingStatusOptions.own")}
+                      </MenuItem>
+                      <MenuItem value="rent">
+                        {t("familyFinancialInfoForm.housingStatusOptions.rent")}
+                      </MenuItem>
+                      <MenuItem value="with-family-friends">
+                        {t(
+                          "familyFinancialInfoForm.housingStatusOptions.withFamilyFriends"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="temporary">
+                        {t(
+                          "familyFinancialInfoForm.housingStatusOptions.temporary"
+                        )}
+                      </MenuItem>
+                      <MenuItem value="homeless">
+                        {t("familyFinancialInfoForm.housingStatusOptions.homeless")}
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
+              />
             </Box>
             {errors.housingStatus && (
               <Typography
